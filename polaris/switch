@@ -1,0 +1,206 @@
+// Switch case components -*- C++ -*-
+
+// Copyright (C) 1997-2017 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file switch
+ *  This is a Polaris C++ Library header.
+ */
+
+// Written by Jingyu Zhao.
+
+#ifndef _POLLIB_SWITCH
+#define _POLLIB_SWITCH 1
+
+#include <polaris/version>
+#include <utility>
+#include <vector>
+#include <tuple>
+#include <polaris/type_traits>
+
+namespace polaris
+{
+
+// switch_case
+template<typename _Tp, typename _Up, typename... _Vp>
+auto
+switch_case(_Tp&&, _Up&&, _Vp&&...);
+
+// switch_case_helper: use default do_func
+template<typename _Tp, typename _Up>
+auto
+switch_case_helper(_Tp&&, _Up&&);
+
+// switch_case_helper: use value-do_func pair
+template<typename _Tp, typename _Up, typename _Vp,
+	typename _Wp, typename... _Xp>
+auto
+switch_case_helper(_Tp&&, _Up&&, std::pair<_Vp, _Wp>&&, _Xp&&...);
+
+// switch_case_helper: use value_tuple-do_func pair
+template<typename _Tp, typename _Up, typename... _Vp,
+	typename _Wp, typename... _Xp>
+auto
+switch_case_helper(_Tp&&, _Up&&, std::pair<std::tuple<_Vp...>, _Wp>&&,
+	_Xp&&...);
+
+// switch_case_helper: use sw_func-value-do_func tuple
+template<typename _Tp, typename _Up, typename _Vp,
+	typename _Wp, typename _Xp, typename... _Yp>
+auto
+switch_case_helper(_Tp&&, _Up&&, std::tuple<_Vp, _Wp, _Xp>&&, _Yp&&...);
+
+// @switch_case_helper: use sw_func-value_tuple-do_func tuple
+template<typename _Tp, typename _Up, typename _Vp,
+	typename... _Wp, typename _Xp, typename... _Yp>
+auto
+switch_case_helper(_Tp&&, _Up&&, std::tuple<_Vp, std::tuple<_Wp...>, _Xp>&&,
+	_Yp&&...);
+
+// @switch_case_tuple_compare: test if the value is in the tuple
+template<typename _Tp, typename... _Up>
+bool
+switch_case_tuple_compare(_Tp&&, std::tuple<_Up...>&&);
+
+// switch_case_tuple_compare_helper: __i < __n
+template<std::size_t __i, std::size_t __n, typename _Tp, typename... _Up,
+	typename = require_bool<(__i < __n)>>
+bool
+switch_case_tuple_compare_helper(_Tp&&, std::tuple<_Up...>&&);
+
+// switch_case_tuple_compare_helper: __i >= __n
+template<std::size_t __i, std::size_t __n, typename _Tp, typename... _Up,
+	typename = require_bool<(__i >= __n)>,
+	typename = template_placeholder>
+bool
+switch_case_tuple_compare_helper(_Tp&&, std::tuple<_Up...>&&);
+
+// @switch_case
+template<typename _Tp, typename _Up, typename... _Vp>
+auto
+switch_case(_Tp&& __switch, _Up&& __default, _Vp&&... __case)
+{
+	return switch_case_helper(std::forward<_Tp&&>(__switch),
+		std::forward<_Up&&>(__default), std::forward<_Vp&&>(__case)...);
+}
+
+// @switch_case_helper: use default do_func
+template<typename _Tp, typename _Up>
+auto
+switch_case_helper(_Tp&& __switch, _Up&& __default)
+{
+	return __default();
+}
+
+// @switch_case_helper: use value-do_func pair
+template<typename _Tp, typename _Up, typename _Vp,
+	typename _Wp, typename... _Xp>
+auto
+switch_case_helper(_Tp&& __switch, _Up&& __default,
+	std::pair<_Vp, _Wp>&& __now, _Xp&&... __case)
+{
+	if (__switch == __now.first)
+		return __now.second();
+	else
+		return switch_case_helper(std::forward<_Tp&&>(__switch),
+			std::forward<_Up&&>(__default), std::forward<_Xp&&>(__case)...);
+}
+
+// @switch_case_helper: use value_tuple-do_func pair
+template<typename _Tp, typename _Up, typename... _Vp,
+	typename _Wp, typename... _Xp>
+auto
+switch_case_helper(_Tp&& __switch, _Up&& __default,
+	std::pair<std::tuple<_Vp...>, _Wp>&& __now, _Xp&&... __case)
+{
+	if (switch_case_tuple_compare(std::forward<_Tp&&>(__switch),
+		std::forward<std::tuple<_Vp...>&&>(__now.first)))
+		return __now.second();
+	else
+		return switch_case_helper(std::forward<_Tp&&>(__switch),
+			std::forward<_Up&&>(__default), std::forward<_Xp&&>(__case)...);
+}
+
+// @switch_case_helper: use sw_func-value-do_func tuple
+template<typename _Tp, typename _Up, typename _Vp,
+	typename _Wp, typename _Xp, typename... _Yp>
+auto
+switch_case_helper(_Tp&& __switch, _Up&& __default,
+	std::tuple<_Vp, _Wp, _Xp>&& __now, _Yp&&... __case)
+{
+	if (std::get<0>(__now)(__switch) == std::get<1>(__now))
+		return std::get<2>(__now)();
+	else
+		return switch_case_helper(std::forward<_Tp&&>(__switch),
+			std::forward<_Up&&>(__default), std::forward<_Yp&&>(__case)...);
+}
+
+// @switch_case_helper: use sw_func-value_tuple-do_func tuple
+template<typename _Tp, typename _Up, typename _Vp,
+	typename... _Wp, typename _Xp, typename... _Yp>
+auto
+switch_case_helper(_Tp&& __switch, _Up&& __default,
+	std::tuple<_Vp, std::tuple<_Wp...>, _Xp>&& __now, _Yp&&... __case)
+{
+	if (switch_case_tuple_compare(std::forward<_Vp&&>(std::get<0>(__now)
+		(__switch)), std::forward<std::tuple<_Wp...>&&>(std::get<1>(__now))))
+		return std::get<2>(__now)();
+	else
+		return switch_case_helper(std::forward<_Tp&&>(__switch),
+			std::forward<_Up&&>(__default), std::forward<_Yp&&>(__case)...);
+}
+
+// @switch_case_tuple_compare: test if the value is in the tuple
+template<typename _Tp, typename... _Up>
+bool
+switch_case_tuple_compare(_Tp&& __switch, std::tuple<_Up...>&& __now)
+{
+	return switch_case_tuple_compare_helper<0, sizeof...(_Up)>(std::forward
+		<_Tp&&>(__switch), std::forward<std::tuple<_Up...>&&>(__now));
+}
+
+// @switch_case_tuple_compare_helper: __i < __n
+template<std::size_t __i, std::size_t __n, typename _Tp, typename... _Up,
+	typename = require_bool<(__i < __n)>>
+bool
+switch_case_tuple_compare_helper(_Tp&& __switch, std::tuple<_Up...>&& __now)
+{
+	if (__switch == std::get<__i>(__now))
+		return true;
+	else
+		return switch_case_tuple_compare_helper<__i + 1, __n>(std::forward
+			<_Tp&&>(__switch), std::forward<std::tuple<_Up...>&&>(__now));
+}
+
+// @switch_case_tuple_compare_helper: __i >= __n
+template<std::size_t __i, std::size_t __n, typename _Tp, typename... _Up,
+	typename = require_bool<(__i >= __n)>,
+	typename = template_placeholder>
+bool
+switch_case_tuple_compare_helper(_Tp&& __switch, std::tuple<_Up...>&& __now)
+{
+	return false;
+}
+
+}
+
+#endif /* _POLLIB_SWITCH */
