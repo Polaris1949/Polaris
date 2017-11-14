@@ -1,0 +1,66 @@
+// Library version and configurations -*- C++ -*-
+
+// Copyright (C) 1997-2017 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file version
+ *  This is a Polaris C++ Library header.
+ */
+
+// Written by Jingyu Zhao.
+
+#ifndef _POLLIB_VERSION
+#define _POLLIB_VERSION 1
+
+#include <polaris/bits/config.h>
+
+namespace polaris
+{
+
+#define CPP_USING_VERSION __cplusplus
+#define CPP_1998_VERSION 199711L
+#define CPP_2003_VERSION 200300L
+#define CPP_2011_VERSION 201103L
+#define CPP_2014_VERSION 201402L
+#define CPP_2017_VERSION 201500L
+
+#if CPP_USING_VERSION >= CPP_2017_VERSION
+#define CPP_USING 2017
+#elif CPP_USING_VERSION >= CPP_2014_VERSION
+#define CPP_USING 2014
+#elif CPP_USING_VERSION >= CPP_2011_VERSION
+#define CPP_USING 2011
+#elif CPP_USING_VERSION >= CPP_2003_VERSION
+#define CPP_USING 2003
+#elif CPP_USING_VERSION >= CPP_1998_VERSION
+#define CPP_USING 1998
+#else
+#error bad c++ version
+#endif
+
+#define POLLIB_VERSION "3.0"
+#define POLLIB_VERSION_MAJOR 3
+#define POLLIB_VERSION_MINOR 0
+
+}
+
+#endif /* _POLLIB_VERSION */
