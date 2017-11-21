@@ -31,6 +31,7 @@
 #ifndef _POLLIB_BYTE
 #define _POLLIB_BYTE 1
 
+#include <polaris/version>
 #include <polaris/bits/byte.h>
 #include <polaris/bits/byte.tcc>
 
