@@ -32,14 +32,8 @@
 #ifndef _POL_BYTE_H
 #define _POL_BYTE_H 1
 
-#include <polaris/bits/config.h>
-#include <polaris/bits/type.h>
-
 namespace polaris
 {
-
-template<typename>
-struct byte_helper;
 
 template<typename>
 class byte;
@@ -66,32 +60,135 @@ struct byte_helper<unsigned_type>
 	typedef unsigned_short  io_type;
 };
 
+template<typename _S>
+std::istream&
+operator >> (std::istream& __in, byte<_S>& __x);
+
+template<typename _S>
+std::ostream&
+operator << (std::ostream& __out, const byte<_S>& __x);
+
 template<typename _Sig>
-class byte : public integer_type<typename byte_helper<_Sig>::type>
+class byte
 {
 public:
 	typedef _Sig                              sign_type;
+	typedef byte<_Sig>                        self_type;
 	typedef typename byte_helper<_Sig>::type  value_type;
+	typedef size_t                            size_type;
+	
+private:
+	typename byte_helper<_Sig>::type _M_data;
 	
 public:
-	byte() noexcept;
+	byte() noexcept = default;
 	
 	byte(const value_type& __x) noexcept;
 	
 	byte(value_type&& __x) noexcept;
 	
-	byte(const byte<sign_type>& __x) noexcept;
+	byte(const self_type& __x) noexcept = default;
 	
-	byte(byte<sign_type>&& __x) noexcept;
+	byte(self_type&& __x) noexcept = default;
 	
-	virtual
-	~byte() noexcept;
+	~byte() noexcept = default;
 	
-	byte<sign_type>&
-	operator = (const byte<sign_type>& __x) noexcept;
+	void
+	swap(value_type& __x) noexcept;
 	
-	byte<sign_type>&
-	operator = (byte<sign_type>&& __x) noexcept;
+	void
+	swap(self_type& __x) noexcept;
+
+#define POL_MAKE_REF_true &
+#define POL_MAKE_REF_false
+#define POL_MAKE_PLACEHOLDER_true int
+#define POL_MAKE_PLACEHOLDER_false
+
+#define POL_MAKE_BYTE_OPERATOR_UNARY(__op, __ref, __ph) \
+	self_type POL_MAKE_REF_##__ref \
+	operator __op (POL_MAKE_PLACEHOLDER_##__ph) noexcept;
+
+#define POL_MAKE_BYTE_OPERATOR_BINARY_SIZE_true(__op, __ref) \
+	self_type POL_MAKE_REF_##__ref \
+	operator __op (size_type __n) noexcept;
+
+#define POL_MAKE_BYTE_OPERATOR_BINARY_SIZE_false(__op, __ref) \
+	self_type POL_MAKE_REF_##__ref \
+	operator __op (const value_type& __x) noexcept; \
+	\
+	self_type POL_MAKE_REF_##__ref \
+	operator __op (const self_type& __x) noexcept; \
+	\
+	self_type POL_MAKE_REF_##__ref \
+	operator __op (value_type&& __x) noexcept; \
+	\
+	self_type POL_MAKE_REF_##__ref \
+	operator __op (self_type&& __x) noexcept;
+
+#define POL_MAKE_BYTE_OPERATOR_BINARY_BOOL_true(__op, __ref, __size) \
+	bool \
+	operator __op (const value_type& __x) noexcept; \
+	\
+	bool \
+	operator __op (const self_type& __x) noexcept; \
+	\
+	bool \
+	operator __op (value_type&& __x) noexcept; \
+	\
+	bool \
+	operator __op (self_type&& __x) noexcept;
+
+#define POL_MAKE_BYTE_OPERATOR_BINARY_BOOL_false(__op, __ref, __size) \
+	POL_MAKE_BYTE_OPERATOR_BINARY_SIZE_##__size(__op, __ref)
+
+#define POL_MAKE_BYTE_OPERATOR_BINARY(__op, __ref, __bool, __size) \
+	POL_MAKE_BYTE_OPERATOR_BINARY_BOOL_##__bool(__op, __ref, __size)
+
+	POL_MAKE_BYTE_OPERATOR_UNARY(+, false, false)
+	POL_MAKE_BYTE_OPERATOR_UNARY(-, false, false)
+	POL_MAKE_BYTE_OPERATOR_UNARY(++, true, false)
+	POL_MAKE_BYTE_OPERATOR_UNARY(--, true, false)
+	POL_MAKE_BYTE_OPERATOR_UNARY(++, false, true)
+	POL_MAKE_BYTE_OPERATOR_UNARY(--, false, true)
+	
+	POL_MAKE_BYTE_OPERATOR_BINARY(=, true, false, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(+=, true, false, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(-=, true, false, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(*=, true, false, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(/=, true, false, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(%=, true, false, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(<<=, true, false, true)
+	POL_MAKE_BYTE_OPERATOR_BINARY(>>=, true, false, true)
+	POL_MAKE_BYTE_OPERATOR_BINARY(&=, true, false, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(|=, true, false, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(^=, true, false, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(+, false, false, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(-, false, false, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(*, false, false, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(/, false, false, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(%, false, false, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(<<, false, false, true)
+	POL_MAKE_BYTE_OPERATOR_BINARY(>>, false, false, true)
+	POL_MAKE_BYTE_OPERATOR_BINARY(&, false, false, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(|, false, false, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(^, false, false, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(==, false, true, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(!=, false, true, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(<, false, true, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(<=, false, true, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(>, false, true, false)
+	POL_MAKE_BYTE_OPERATOR_BINARY(>=, false, true, false)
+
+#undef POL_MAKE_REF_true
+#undef POL_MAKE_REF_false
+#undef POL_MAKE_PLACEHOLDER_true
+#undef POL_MAKE_PLACEHOLDER_false
+#undef POL_MAKE_BYTE_OPERATOR_UNARY
+#undef POL_MAKE_BYTE_OPERATOR_BINARY_SIZE_true
+#undef POL_MAKE_BYTE_OPERATOR_BINARY_SIZE_false
+#undef POL_MAKE_BYTE_OPERATOR_BINARY_BOOL_true
+#undef POL_MAKE_BYTE_OPERATOR_BINARY_BOOL_false
+#undef POL_MAKE_BYTE_OPERATOR_BINARY
 	
 	template<typename _S>
 	friend std::istream&
@@ -104,4 +201,4 @@ public:
 
 }
 
-#endif
+#endif /* _POL_BYTE_H */
