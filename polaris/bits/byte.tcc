@@ -32,76 +32,238 @@
 #ifndef _POL_BYTE_TCC
 #define _POL_BYTE_TCC 1
 
-#include <stdexcept>
 #include <iostream>
+#include <utility>
 #include <limits>
-#include <polaris/bits/byte.h>
-#include <polaris/bits/type.tcc>
 
 namespace polaris
 {
 
 template<typename _Sig>
 byte<_Sig>::
-byte() noexcept
-	: integer_type<typename byte_helper<_Sig>::type>()
+byte(const value_type& __x) noexcept
+	: _M_data(__x)
 {
 }
 
 template<typename _Sig>
 byte<_Sig>::
-byte(const typename byte_helper<_Sig>::type& __x) noexcept
-	: integer_type<typename byte_helper<_Sig>::type>(__x)
-{
-}
-
-template<typename _Sig>
-byte<_Sig>::
-byte(typename byte_helper<_Sig>::type&& __x) noexcept
-	: integer_type<typename byte_helper<_Sig>::type>()
+byte(value_type&& __x) noexcept
 {
 	this->swap(__x);
 }
 
 template<typename _Sig>
+void
 byte<_Sig>::
-byte(const byte<_Sig>& __x) noexcept
-	: integer_type<typename byte_helper<_Sig>::type>(__x._M_data)
+swap(value_type& __x) noexcept
 {
+	std::swap(_M_data, __x);
 }
 
 template<typename _Sig>
+void
 byte<_Sig>::
-byte(byte<_Sig>&& __x) noexcept
-	: integer_type<typename byte_helper<_Sig>::type>()
+swap(self_type& __x) noexcept
 {
-	this->swap(__x);
+	std::swap(_M_data, __x._M_data);
 }
 
-template<typename _Sig>
-byte<_Sig>::
-~byte() noexcept
-{
-}
+#define POL_DEF_REF_true &
+#define POL_DEF_REF_false
 
-template<typename _Sig>
-byte<_Sig>&
-byte<_Sig>::
-operator = (const byte<_Sig>& __x) noexcept
-{
-	this->_M_data = __x._M_data;
-	return *this;
-}
+#define POL_DEF_BYTE_OPERATOR_UNARY_PLACEHOLDER_true(__op, __ref) \
+	template<typename _Sig> \
+	byte<_Sig> POL_DEF_REF_##__ref \
+	byte<_Sig>:: \
+	operator __op (int) noexcept \
+	{ \
+		_M_data __op; \
+		return *this; \
+	}
 
-template<typename _Sig>
-byte<_Sig>&
-byte<_Sig>::
-operator = (byte<_Sig>&& __x) noexcept
-{
-	this->_M_data = typename byte_helper<_Sig>::type();
-	this->swap(__x);
-	return *this;
-}
+#define POL_DEF_BYTE_OPERATOR_UNARY_PLACEHOLDER_false(__op, __ref) \
+	template<typename _Sig> \
+	byte<_Sig> POL_DEF_REF_##__ref \
+	byte<_Sig>:: \
+	operator __op () noexcept \
+	{ \
+		__op _M_data; \
+		return *this; \
+	}
+
+#define POL_DEF_BYTE_OPERATOR_UNARY(__op, __ref, __ph) \
+	POL_DEF_BYTE_OPERATOR_UNARY_PLACEHOLDER_##__ph(__op, __ref)
+
+#define POL_DEF_BYTE_OPERATOR_BINARY_SIZE_true(__op, __ref, __gen) \
+	template<typename _Sig> \
+	byte<_Sig> POL_DEF_REF_##__ref \
+	byte<_Sig>:: \
+	operator __op (size_type __n) noexcept \
+	{ \
+		_M_data __op __n; \
+		return *this; \
+	}
+
+#define POL_DEF_BYTE_OPERATOR_BINARY_GENERATE_true(__op, __ref) \
+	template<typename _Sig> \
+	byte<_Sig> POL_DEF_REF_##__ref \
+	byte<_Sig>:: \
+	operator __op (const value_type& __x) noexcept \
+	{ \
+		return self_type(_M_data __op __x); \
+	} \
+	\
+	template<typename _Sig> \
+	byte<_Sig> POL_DEF_REF_##__ref \
+	byte<_Sig>:: \
+	operator __op (const self_type& __x) noexcept \
+	{ \
+		return self_type(_M_data __op __x._M_data); \
+	} \
+	\
+	template<typename _Sig> \
+	byte<_Sig> POL_DEF_REF_##__ref \
+	byte<_Sig>:: \
+	operator __op (value_type&& __x) noexcept \
+	{ \
+		return self_type(_M_data __op __x); \
+	} \
+	\
+	template<typename _Sig> \
+	byte<_Sig> POL_DEF_REF_##__ref \
+	byte<_Sig>:: \
+	operator __op (self_type&& __x) noexcept \
+	{ \
+		return self_type(_M_data __op __x._M_data); \
+	}
+
+#define POL_DEF_BYTE_OPERATOR_BINARY_GENERATE_false(__op, __ref) \
+	template<typename _Sig> \
+	byte<_Sig> POL_DEF_REF_##__ref \
+	byte<_Sig>:: \
+	operator __op (const value_type& __x) noexcept \
+	{ \
+		_M_data __op __x; \
+		return *this; \
+	} \
+	\
+	template<typename _Sig> \
+	byte<_Sig> POL_DEF_REF_##__ref \
+	byte<_Sig>:: \
+	operator __op (const self_type& __x) noexcept \
+	{ \
+		_M_data __op __x._M_data; \
+		return *this; \
+	} \
+	\
+	template<typename _Sig> \
+	byte<_Sig> POL_DEF_REF_##__ref \
+	byte<_Sig>:: \
+	operator __op (value_type&& __x) noexcept \
+	{ \
+		_M_data __op __x; \
+		return *this; \
+	} \
+	\
+	template<typename _Sig> \
+	byte<_Sig> POL_DEF_REF_##__ref \
+	byte<_Sig>:: \
+	operator __op (self_type&& __x) noexcept \
+	{ \
+		_M_data __op __x._M_data; \
+		return *this; \
+	}
+
+#define POL_DEF_BYTE_OPERATOR_BINARY_SIZE_false(__op, __ref, __gen) \
+	POL_DEF_BYTE_OPERATOR_BINARY_GENERATE_##__gen(__op, __ref)
+
+#define POL_DEF_BYTE_OPERATOR_BINARY_BOOL_true(__op, __ref, __size, __gen) \
+	template<typename _Sig> \
+	bool \
+	byte<_Sig>:: \
+	operator __op (const value_type& __x) noexcept \
+	{ \
+		return _M_data __op __x; \
+	} \
+	\
+	template<typename _Sig> \
+	bool \
+	byte<_Sig>:: \
+	operator __op (const self_type& __x) noexcept \
+	{ \
+		return _M_data __op __x._M_data; \
+	} \
+	\
+	template<typename _Sig> \
+	bool \
+	byte<_Sig>:: \
+	operator __op (value_type&& __x) noexcept \
+	{ \
+		return _M_data __op __x; \
+	} \
+	\
+	template<typename _Sig> \
+	bool \
+	byte<_Sig>:: \
+	operator __op (self_type&& __x) noexcept \
+	{ \
+		return _M_data __op __x._M_data; \
+	}
+
+#define POL_DEF_BYTE_OPERATOR_BINARY_BOOL_false(__op, __ref, __size, __gen) \
+	POL_DEF_BYTE_OPERATOR_BINARY_SIZE_##__size(__op, __ref, __gen)
+
+#define POL_DEF_BYTE_OPERATOR_BINARY(__op, __ref, __bool, __size, __gen) \
+	POL_DEF_BYTE_OPERATOR_BINARY_BOOL_##__bool(__op, __ref, __size, __gen)
+
+	POL_DEF_BYTE_OPERATOR_UNARY(+, false, false)
+	POL_DEF_BYTE_OPERATOR_UNARY(-, false, false)
+	POL_DEF_BYTE_OPERATOR_UNARY(++, true, false)
+	POL_DEF_BYTE_OPERATOR_UNARY(--, true, false)
+	POL_DEF_BYTE_OPERATOR_UNARY(++, false, true)
+	POL_DEF_BYTE_OPERATOR_UNARY(--, false, true)
+	
+	POL_DEF_BYTE_OPERATOR_BINARY(=, true, false, false, false)
+	POL_DEF_BYTE_OPERATOR_BINARY(+=, true, false, false, false)
+	POL_DEF_BYTE_OPERATOR_BINARY(-=, true, false, false, false)
+	POL_DEF_BYTE_OPERATOR_BINARY(*=, true, false, false, false)
+	POL_DEF_BYTE_OPERATOR_BINARY(/=, true, false, false, false)
+	POL_DEF_BYTE_OPERATOR_BINARY(%=, true, false, false, false)
+	POL_DEF_BYTE_OPERATOR_BINARY(<<=, true, false, true, false)
+	POL_DEF_BYTE_OPERATOR_BINARY(>>=, true, false, true, false)
+	POL_DEF_BYTE_OPERATOR_BINARY(&=, true, false, false, false)
+	POL_DEF_BYTE_OPERATOR_BINARY(|=, true, false, false, false)
+	POL_DEF_BYTE_OPERATOR_BINARY(^=, true, false, false, false)
+	POL_DEF_BYTE_OPERATOR_BINARY(+, false, false, false, true)
+	POL_DEF_BYTE_OPERATOR_BINARY(-, false, false, false, true)
+	POL_DEF_BYTE_OPERATOR_BINARY(*, false, false, false, true)
+	POL_DEF_BYTE_OPERATOR_BINARY(/, false, false, false, true)
+	POL_DEF_BYTE_OPERATOR_BINARY(%, false, false, false, true)
+	POL_DEF_BYTE_OPERATOR_BINARY(<<, false, false, true, true)
+	POL_DEF_BYTE_OPERATOR_BINARY(>>, false, false, true, true)
+	POL_DEF_BYTE_OPERATOR_BINARY(&, false, false, false, true)
+	POL_DEF_BYTE_OPERATOR_BINARY(|, false, false, false, true)
+	POL_DEF_BYTE_OPERATOR_BINARY(^, false, false, false, true)
+	POL_DEF_BYTE_OPERATOR_BINARY(==, false, true, false, false)
+	POL_DEF_BYTE_OPERATOR_BINARY(!=, false, true, false, false)
+	POL_DEF_BYTE_OPERATOR_BINARY(<, false, true, false, false)
+	POL_DEF_BYTE_OPERATOR_BINARY(<=, false, true, false, false)
+	POL_DEF_BYTE_OPERATOR_BINARY(>, false, true, false, false)
+	POL_DEF_BYTE_OPERATOR_BINARY(>=, false, true, false, false)
+
+#undef POL_DEF_REF_true
+#undef POL_DEF_REF_false
+#undef POL_DEF_BYTE_OPERATOR_UNARY_PLACEHOLDER_true
+#undef POL_DEF_BYTE_OPERATOR_UNARY_PLACEHOLDER_false
+#undef POL_DEF_BYTE_OPERATOR_UNARY
+#undef POL_DEF_BYTE_OPERATOR_BINARY_GENERATE_true
+#undef POL_DEF_BYTE_OPERATOR_BINARY_GENERATE_false
+#undef POL_DEF_BYTE_OPERATOR_BINARY_SIZE_true
+#undef POL_DEF_BYTE_OPERATOR_BINARY_SIZE_false
+#undef POL_DEF_BYTE_OPERATOR_BINARY_BOOL_true
+#undef POL_DEF_BYTE_OPERATOR_BINARY_BOOL_false
+#undef POL_DEF_BYTE_OPERATOR_BINARY
 
 template<typename _S>
 std::istream&
@@ -141,4 +303,4 @@ operator << (std::ostream& __out, const byte<_S>& __x)
 
 }
 
-#endif
+#endif /* _POL_BYTE_TCC */
