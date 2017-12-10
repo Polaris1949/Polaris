@@ -28,10 +28,10 @@
 
 // Written by Jingyu Zhao.
 
-#ifndef _POLLIB_EXT_EXPRESSION
-#define _POLLIB_EXT_EXPRESSION 1
+#ifndef _POLLIB_EXPRESSION
+#define _POLLIB_EXPRESSION 1
 
 #include <polaris/ext/bits/expr.h>
 #include <polaris/ext/bits/expr.tcc>
 
-#endif /* _POLLIB_EXT_EXPRESSION */
+#endif /* _POLLIB_EXPRESSION */
