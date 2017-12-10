@@ -28,10 +28,10 @@
 
 // Written by Jingyu Zhao.
 
-#ifndef _POLLIB_EXP_CSTRING
-#define _POLLIB_EXP_CSTRING 1
+#ifndef _POLLIB_CSTRING
+#define _POLLIB_CSTRING 1
 
 #include <polaris/experimental/bits/cstring.h>
 #include <polaris/experimental/bits/cstring.tcc>
 
-#endif /* _POLLIB_EXP_CSTRING */
+#endif /* _POLLIB_CSTRING */
