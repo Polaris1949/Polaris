@@ -60,7 +60,7 @@ public:
 	
 	segment_tree_node(size_type __begin, size_type __end);
 	
-	~segment_tree_node() noexcept_pol;
+	~segment_tree_node() noexcept;
 	
 	node_type&
 	construct(size_type __begin, size_type __end);
@@ -135,7 +135,7 @@ public:
 	
 	segment_tree_node(size_type __begin, size_type __end);
 	
-	~segment_tree_node() noexcept_pol;
+	~segment_tree_node() noexcept;
 	
 	node_type&
 	construct(size_type __begin, size_type __end);
@@ -205,7 +205,7 @@ public:
 	template<typename _Sequence>
 	segment_tree(size_type __begin, size_type __end, const _Sequence& __data);
 	
-	~segment_tree() noexcept_pol;
+	~segment_tree() noexcept;
 	
 	template<typename _Sequence>
 	tree_type&
@@ -301,7 +301,7 @@ public:
 	template<typename _Sequence>
 	segment_tree(size_type __begin, size_type __end, const _Sequence& __data);
 	
-	~segment_tree() noexcept_pol;
+	~segment_tree() noexcept;
 	
 	template<typename _Sequence>
 	tree_type&
@@ -393,7 +393,7 @@ public:
 	segment_tree_simple(size_type __begin, size_type __end,
 		const _Sequence& __data);
 	
-	~segment_tree_simple() noexcept_pol;
+	~segment_tree_simple() noexcept;
 	
 	node_type*&
 	root();
