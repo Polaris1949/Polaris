@@ -59,7 +59,7 @@ segment_tree_node(size_type __begin, size_type __end)
 template<typename _Tp, typename _MarkT>
 inline
 segment_tree_node<_Tp, _MarkT>::
-~segment_tree_node() noexcept_pol
+~segment_tree_node() noexcept
 {
 	delete _M_left;
 	delete _M_right;
@@ -237,7 +237,7 @@ segment_tree_node(size_type __begin, size_type __end)
 template<typename _Tp>
 inline
 segment_tree_node<_Tp, void>::
-~segment_tree_node() noexcept_pol
+~segment_tree_node() noexcept
 {
 	delete _M_left;
 	delete _M_right;
@@ -401,7 +401,7 @@ segment_tree(size_type __begin, size_type __end, const _Sequence& __data)
 template<typename _Tp, typename _MarkT, typename _Func>
 inline
 segment_tree<_Tp, _MarkT, _Func>::
-~segment_tree() noexcept_pol
+~segment_tree() noexcept
 {
 	delete _M_root;
 }
@@ -667,7 +667,7 @@ segment_tree(size_type __begin, size_type __end, const _Sequence& __data)
 template<typename _Tp, typename _Func>
 inline
 segment_tree<_Tp, void, _Func>::
-~segment_tree() noexcept_pol
+~segment_tree() noexcept
 {
 	delete _M_root;
 }
