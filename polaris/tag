@@ -1,0 +1,88 @@
+// Tags to specify concepts -*- C++ -*-
+
+// Copyright (C) 1997-2017 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file tag
+ *  This is a Polaris C++ Library header.
+ */
+
+// Written by Jingyu Zhao.
+
+#ifndef _POLLIB_TAG
+#define _POLLIB_TAG 1
+
+#pragma GCC system_header
+
+namespace polaris
+{
+
+template<typename _Tp>
+class tag
+{
+public:
+	typedef _Tp value_tag;
+	
+private:
+	_Tp* _M_t;
+	
+public:
+	tag();
+	tag(value_tag* __tag);
+	
+	const value_tag& operator* () const;
+	value_tag* operator-> () const;
+};
+
+template<typename _Tp>
+tag<_Tp>::
+tag()
+	: _M_t(nullptr)
+{
+}
+
+template<typename _Tp>
+tag<_Tp>::
+tag(value_tag* __tag)
+	: _M_t(__tag)
+{
+}
+
+template<typename _Tp>
+const _Tp&
+tag<_Tp>::
+operator* () const
+{
+	return *_M_t;
+}
+
+template<typename _Tp>
+_Tp*
+tag<_Tp>::
+operator-> () const
+{
+	return _M_t;
+}
+
+}
+
+#endif /* _POLLIB_TAG */
