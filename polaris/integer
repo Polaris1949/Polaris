@@ -31,19 +31,26 @@
 #ifndef _POLLIB_INTEGER
 #define _POLLIB_INTEGER 1
 
-#include <polaris/version>
-#include <polaris/boolean>
-#include <polaris/bits/intfwd.h>
-#include <polaris/bits/intref.h>
-#include <polaris/bits/intalloc.h>
-#include <polaris/bits/intexcept.h>
-#include <polaris/bits/intbase.h>
-#include <polaris/bits/integer.h>
-#include <polaris/bits/intref.tcc>
-#include <polaris/bits/intbase.tcc>
-#include <polaris/bits/intalloc.tcc>
-#include <polaris/bits/intinternal.tcc>
-#include <polaris/bits/intdetail.tcc>
-#include <polaris/bits/integer.tcc>
+#pragma GCC system_header
+
+#include <polaris/version> // Version support
+#include <polaris/boolean> // Boolean support
+#include <polaris/exception> // Exception support
+#include <polaris/bits/intfwd.h> // Forward header
+#include <polaris/bits/intexcept.h> // Integer exception
+#include <polaris/bits/intalloc.h> // Integer allocation
+#include <polaris/bits/intref.h> // Integer reference
+// #include <polaris/bits/intbase.h>
+// #include <polaris/bits/intvfbase.h>
+#include <polaris/bits/intstdbase.h> // Integer standard base type
+#include <polaris/bits/integer.h> // Integer class
+#include <polaris/bits/intfwd.tcc> // Forward header
+#include <polaris/bits/intexcept.tcc> // Integer exception
+#include <polaris/bits/intalloc.tcc> // Integer allocation
+// #include <polaris/bits/intbase.tcc>
+// #include <polaris/bits/intvfbase.tcc>
+#include <polaris/bits/intref.tcc> // Integer standard base type
+#include <polaris/bits/intstdbase.tcc> // Integer base type
+#include <polaris/bits/integer.tcc> // Integer class
 
 #endif /* _POLLIB_INTEGER */
