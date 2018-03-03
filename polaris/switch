@@ -39,6 +39,10 @@
 #include <tuple>
 #include <polaris/type_traits>
 
+#if __cpp_return_type_deduction < 201304L
+#error this library need return type deduction for normal functions
+#else
+
 namespace polaris
 {
 
@@ -204,5 +208,7 @@ switch_case_tuple_compare_helper(_Tp&& __switch, std::tuple<_Up...>&& __now)
 }
 
 }
+
+#endif /* __cpp_return_type_deduction */
 
 #endif /* _POLLIB_SWITCH */
