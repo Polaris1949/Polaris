@@ -31,6 +31,9 @@
 #ifndef _POLLIB_TAG
 #define _POLLIB_TAG 1
 
+#include <polaris/version>
+#include <tuple>
+
 #pragma GCC system_header
 
 namespace polaris
@@ -81,6 +84,57 @@ tag<_Tp>::
 operator-> () const
 {
 	return _M_t;
+}
+
+template<typename _Tp, typename... _Tags>
+class tvalue
+{
+public:
+	typedef _Tp value_type;
+	typedef std::tuple<_Tags...> tags_type;
+	
+	constexpr static size_t tags_size = std::tuple_size<tags_type>::value;
+	
+	template<size_t __i>
+	using tag_type = typename std::tuple_element<__i, tags_type>::type;
+	
+private:
+	_Tp _M_data;
+	
+public:
+	tvalue() = default;
+	
+	tvalue(const value_type& __x)
+		: _M_data(__x)
+	{
+	}
+	
+	value_type&
+	data()
+	{
+		return _M_data;
+	}
+	
+	size_t
+	size() const
+	{
+		return tags_size;
+	}
+	
+	template<size_t __i>
+	tag_type<__i>
+	tag() const
+	{
+		return tag_type<__i>();
+	}
+};
+
+template<typename... _Tags>
+auto
+make_tvalue(const auto& __x)
+	-> tvalue<decltype(__x), _Tags...>
+{
+	return tvalue<decltype(__x), _Tags...>(__x);
 }
 
 }
