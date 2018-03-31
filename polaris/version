@@ -51,4 +51,8 @@ constexpr size_t npos = static_cast<size_t>(-1);
 
 }
 
+#if !_POL_NO_SHORT_NAMESPACE
+namespace pol = polaris;
+#endif
+
 #endif /* _POLLIB_VERSION */
