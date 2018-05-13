@@ -47,20 +47,44 @@ inline namespace type_traits
 // template_placeholder
 typedef void template_placeholder;
 
+#if _POL_NEWLIB
+
+template<typename _Cond, typename _Tp = void>
+struct require
+{
+	typedef typename std::enable_if<_Cond::value, _Tp>::type type;
+};
+
+template<typename _Cond, typename _Tp = void>
+using require_t = typename require<_Cond, _Tp>::type;
+
+template<bool _Cond, typename _Tp = void>
+struct brequire
+{
+	typedef typename std::enable_if<_Cond, _Tp>::type type;
+};
+
+template<bool _Cond, typename _Tp = void>
+using brequire_t = typename brequire<_Cond, _Tp>::type;
+
+#else
+
 // requirement
-template<typename _Tp>
+template<typename _Cond, typename _Tp = void>
 struct requirement
 {
-	typedef typename std::enable_if<_Tp::value>::type type;
+	typedef typename std::enable_if<_Cond::value, _Tp>::type type;
 };
 
 // require
-template<typename _Tp>
-using require = typename requirement<_Tp>::type;
+template<typename _Cond, typename _Tp = void>
+using require = typename requirement<_Cond, _Tp>::type;
 
 // require_bool
-template<bool _Tp>
-using require_bool = typename std::enable_if<_Tp>::type;
+template<bool _Cond, typename _Tp = void>
+using require_bool = typename std::enable_if<_Cond, _Tp>::type;
+
+#endif
 
 // invoke_result
 template<typename _Sig>
@@ -295,6 +319,7 @@ struct is_swappable_with
 {
 };
 
+// TODO...
 inline namespace concepts
 {
 
@@ -427,8 +452,72 @@ struct c_is_copy_constructible
 
 }
 
+inline namespace has_op
+{
+
+#define POL_MAKE_HO_CALL(NAME) \
+	template<typename _Tp> \
+	struct ho_##NAME \
+		: public decltype(__ho_##NAME##_impl::__test<_Tp>(0)) \
+	{ \
+	};
+
+#define POL_MAKE_HO_IMPL1(OP, NAME) \
+	struct __ho_##NAME##_impl \
+	{ \
+		template<typename _Tp, typename = \
+			decltype(OP std::declval<_Tp>())> \
+		static true_type __test(int); \
+		\
+		template<typename> \
+		static false_type __test(...); \
+	};
+
+#define POL_MAKE_HO1(OP, NAME) \
+	POL_MAKE_HO_IMPL1(OP, NAME) \
+	POL_MAKE_HO_CALL(NAME)
+
+POL_MAKE_HO1(!, logical_not)
+POL_MAKE_HO1(~, bitwise_not)
+POL_MAKE_HO1(+, positive)
+POL_MAKE_HO1(-, negative)
+POL_MAKE_HO1(&, address)
+POL_MAKE_HO1(*, dereference)
+
+#undef POL_MAKE_HO1
+#undef POL_MAKE_HO_IMPL1
+
+#define POL_MAKE_HO_IMPL2(OP, NAME) \
+	struct __ho_##NAME##_impl \
+	{ \
+		template<typename _Tp, typename = \
+			decltype(std::declval<_Tp>() OP std::declval<_Tp>())> \
+		static true_type __test(int); \
+		\
+		template<typename> \
+		static false_type __test(...); \
+	};
+
+#define POL_MAKE_HO2(OP, NAME) \
+	POL_MAKE_HO_IMPL2(OP, NAME) \
+	POL_MAKE_HO_CALL(NAME)
+
+POL_MAKE_HO2(+, plus)
+POL_MAKE_HO2(-, minus)
+POL_MAKE_HO2(*, multiplies)
+POL_MAKE_HO2(/, divides)
+POL_MAKE_HO2(%, modulus)
+POL_MAKE_HO2(=, assign)
+
+#undef POL_MAKE_HO2
+#undef POL_MAKE_HO_IMPL2
+#undef POL_MAKE_HO_CALL
+
 }
 
+}
+
+/* Deprecated & Removed
 namespace __tt
 {
 	using namespace type_traits;
@@ -438,6 +527,7 @@ namespace __ttc
 {
 	using namespace type_traits::concepts;
 }
+*/
 
 }
 
