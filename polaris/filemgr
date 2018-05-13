@@ -1,0 +1,93 @@
+// File manager library -*- C++ -*-
+
+// Copyright (C) 1997-2017 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file filemgr
+ *  This is a Polaris C++ Library header.
+ */
+
+// Disclaimer: This library is current in early development. There may
+// be several bugs.
+
+// Written by Jingyu Zhao.
+
+#ifndef _POLLIB_FILEMGR
+#define _POLLIB_FILEMGR 1
+
+#include <fstream>
+#include <string>
+#include <vector>
+
+namespace polaris
+{
+
+typedef std::fstream& file_handle;
+
+class filemgr
+{
+public:
+	typedef std::vector<std::fstream> conatiner_type;
+	
+private:
+	std::vector<std::fstream> _M_mgr;
+	
+public:
+	filemgr();
+	file_handle open(const std::string& __arg, \
+		std::ios_base::openmode __mode = std::ios_base::in | \
+		std::ios_base::out);
+	void close();
+	void clear();
+};
+
+filemgr::
+filemgr()
+	: _M_mgr()
+{
+}
+
+file_handle
+filemgr::
+open(const std::string& __arg, std::ios_base::openmode __mode)
+{
+	_M_mgr.emplace_back(__arg, __mode);
+	return _M_mgr.back();
+}
+
+void
+filemgr::
+close()
+{
+	_M_mgr.pop_back();
+}
+
+void
+filemgr::
+clear()
+{
+	_M_mgr.clear();
+}
+
+}
+
+#endif /* _POLLIB_FILEMGR */
