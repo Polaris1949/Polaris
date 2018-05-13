@@ -115,6 +115,12 @@ public:
 		return _M_data;
 	}
 	
+	const value_type&
+	data() const
+	{
+		return _M_data;
+	}
+	
 	size_t
 	size() const
 	{
@@ -131,10 +137,70 @@ public:
 
 template<typename... _Tags>
 auto
+make_tvalue(auto& __x)
+	-> tvalue<decltype(__x), _Tags...>
+{
+	return tvalue<decltype(__x), _Tags...>(__x);
+}
+
+template<typename... _Tags>
+auto
 make_tvalue(const auto& __x)
 	-> tvalue<decltype(__x), _Tags...>
 {
 	return tvalue<decltype(__x), _Tags...>(__x);
+}
+
+template<typename _Tp, typename... _Args>
+class tpop_wrap
+{
+	tvalue<_Tp, _Args...> _M_obj;
+	typedef typename decltype(_M_obj)::value_type value_type;
+	
+public:
+	tpop_wrap(const tvalue<_Tp, _Args...>& __arg)
+		: _M_obj(__arg)
+	{
+	}
+	
+	auto&
+	data()
+	{
+		return this->_M_obj.data();
+	}
+	
+	const auto&
+	data() const
+	{
+		return this->_M_obj.data();
+	}
+	
+	auto
+	operator! ()
+	{
+		return this->data().template operator!<_Args...>();
+	}
+	
+	template<typename... _A>
+	auto
+	operator += (const tpop_wrap<_Tp, _A...>& __x)
+	{
+		return this->data().template operator+=<_Args...>
+			(__x.data());
+	}
+	
+	auto
+	operator += (const value_type& __x)
+	{
+		return this->data().template operator+=<_Args...>(__x);
+	}
+};
+
+template<typename... _Args>
+tpop_wrap<_Args...>
+make_tpop_wrap(const tvalue<_Args...>& __arg)
+{
+	return tpop_wrap<_Args...>(__arg);
 }
 
 }
