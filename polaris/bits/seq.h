@@ -24,7 +24,7 @@
 
 /** @file bits/seq.h
  *  This is an internal header file, included by other library headers.
- *  Do not attempt to use it directly. @headername{byte}
+ *  Do not attempt to use it directly. @headername{sequence}
  */
 
 // Written by Jingyu Zhao.
@@ -39,8 +39,6 @@ namespace polaris
 {
 
 // TODO: Move to <concepts>?
-// TODO: Remove all the deafult template parameters!
-// Because they are useless and may cause compilers' (internal?) error!
 inline namespace __detail
 {
 
