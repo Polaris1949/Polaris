@@ -1,0 +1,13 @@
+#ifndef _STDEXT_GRAPH
+#define _STDEXT_GRAPH
+
+#pragma GCC system_header
+
+#include "../config"
+#include "edge"
+#include "scc_v"
+#include "adjmatrix"
+#include "adjlist"
+#include "edgeset_array"
+
+#endif

@@ -1,0 +1,11 @@
+#ifndef _POLLIB_UFSET
+#define _POLLIB_UFSET 1
+
+#pragma GCC system_header
+
+#include <polaris/version>
+#include <polaris/sequence>
+#include <polaris/bits/ufset.h>
+#include <polaris/bits/ufset.tcc>
+
+#endif

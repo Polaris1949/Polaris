@@ -1,0 +1,45 @@
+#ifndef _POLLIB_MONOTONY_QUEUE
+#define _POLLIB_MONOTONY_QUEUE 1
+
+#include <deque>
+
+namespace polaris
+{
+
+template<typename _Tp>
+class monotony_queue
+{
+public:
+	typedef _Tp value_type;
+	typedef std::deque<_Tp> container_type;
+	
+private:
+	std::deque<_Tp> _M_q;
+	
+public:
+	container_type&
+	raw();
+	
+	const container_type&
+	raw() const;
+};
+
+template<typename _Tp>
+std::deque<_Tp>&
+monotony_queue<_Tp>::
+raw()
+{
+	return _M_q;
+}
+
+template<typename _Tp>
+const std::deque<_Tp>&
+monotony_queue<_Tp>::
+raw() const
+{
+	return _M_q;
+}
+
+}
+
+#endif

@@ -1,0 +1,8 @@
+#ifndef _POLLIB_BYTE_STREAM
+#define _POLLIB_BYTE_STREAM 1
+
+#include <cstring>
+#include <polaris/bits/bstream.h>
+#include <polaris/bits/bstream.tcc>
+
+#endif /* _POLLIB_BYTE_STREAM */

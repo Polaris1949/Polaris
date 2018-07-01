@@ -1,0 +1,7 @@
+#ifndef _POLEXT_BACKWARD_SEGMENT_TREE
+#define _POLEXT_BACKWARD_SEGMENT_TREE 1
+
+#include <polext/backward/bits/segtree.h>
+#include <polext/backward/bits/segtree.tcc>
+
+#endif

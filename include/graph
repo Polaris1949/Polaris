@@ -1,0 +1,21 @@
+#ifndef _POLLIB_GRAPH
+#define _POLLIB_GRAPH 1
+
+#pragma GCC system_header
+
+#include <polaris/version>
+
+#if _POL_NEWLIB
+#include <polaris/bits/g_adjmatrix.h>
+#include <polaris/bits/g_adjlist.h>
+#include <polaris/bits/g_edgearray.h>
+#include <polaris/bits/g_adjmatrix.tcc>
+#include <polaris/bits/g_adjlist.tcc>
+#include <polaris/bits/g_edgearray.tcc>
+#else
+#include <polaris/bits/graph.impl/adjmatrix>
+#include <polaris/bits/graph.impl/adjlist>
+#include <polaris/bits/graph.impl/edgeset_array>
+#endif
+
+#endif
