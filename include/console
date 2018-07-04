@@ -1,0 +1,176 @@
+// Console support for linux-like system -*- C++ -*-
+
+// Copyright (C) 1997-2017 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file console
+ *  This is a Polaris C++ Library header.
+ */
+
+// Written by Jingyu Zhao.
+
+#ifndef _POLLIB_CONSOLE
+#define _POLLIB_CONSOLE 1
+
+#include <polaris/version>
+
+#if __linux__ || __CYGWIN__
+
+#include <string>
+#include <iostream>
+
+namespace polaris
+{
+
+class console_t
+{
+    std::string _M_data;
+
+    void _M_do() const
+    {
+        std::string __tmp = "\e[";
+        __tmp += _M_data;
+        std::cerr << __tmp;
+    }
+
+public:
+    console_t()
+        : _M_data()
+    {
+        purge();
+    }
+
+    ~console_t() noexcept
+    {
+        purge();
+        clear();
+    }
+
+    void clear()
+    {
+        _M_data.clear();
+    }
+
+    void purge()
+    {
+        _M_data = "0m";
+        _M_do();
+    }
+
+    void highlight()
+    {
+        _M_data = "1m";
+        _M_do();
+    }
+
+    void underline()
+    {
+        _M_data = "4m";
+        _M_do();
+    }
+
+    void coruscate()
+    {
+        _M_data = "5m";
+        _M_do();
+    }
+
+    void reverse_display()
+    {
+        _M_data = "7m";
+        _M_do();
+    }
+
+    void blank()
+    {
+        _M_data = "8m";
+        _M_do();
+    }
+
+    void clear_screen()
+    {
+        _M_data = "2J";
+        _M_do();
+    }
+
+    void foreground_color(int __x)
+    {
+        _M_data = "3_m";
+        _M_data[1] = char(__x + '0');
+        _M_do();
+    }
+
+    void background_color(int __x)
+    {
+        _M_data = "4_m";
+        _M_data[1] = char(__x + '0');
+        _M_do();
+    }
+
+    void locate(int __x, int __y)
+    {
+        _M_data = "y;xH";
+        _M_data.replace(2, 1, std::to_string(++__x));
+        _M_data.replace(0, 1, std::to_string(++__y));
+        _M_do();
+    }
+
+    void clear_line_after()
+    {
+        _M_data = "K";
+        _M_do();
+    }
+
+    void save_cursor()
+    {
+        _M_data = "s";
+        _M_do();
+    }
+
+    void recover_cursor()
+    {
+        _M_data = "u";
+        _M_do();
+    }
+
+    void show_cursor()
+    {
+        _M_data = "?25h";
+        _M_do();
+    }
+
+    void hide_cursor()
+    {
+        _M_data = "?25l";
+        _M_do();
+    }
+};
+
+console_t console;
+
+}
+
+#else
+#error unsupported system
+#endif
+
+#endif /* _POLLIB_CONSOLE */
