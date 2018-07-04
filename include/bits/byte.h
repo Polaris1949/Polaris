@@ -42,31 +42,29 @@ typedef byte<signed_type>    signed_byte;
 typedef byte<unsigned_type>  unsigned_byte;
 
 template<typename>
-struct byte_helper
-{
-};
+struct byte_helper;
 
 template<>
 struct byte_helper<signed_type>
 {
-	typedef signed_char   type;
-	typedef signed_short  io_type;
+	typedef signed char   type;
+	typedef signed short  io_type;
 };
 
 template<>
 struct byte_helper<unsigned_type>
 {
-	typedef unsigned_char   type;
-	typedef unsigned_short  io_type;
+	typedef unsigned char   type;
+	typedef unsigned short  io_type;
 };
 
-template<typename _S>
+template<typename _SigT>
 std::istream&
-operator >> (std::istream& __in, byte<_S>& __x);
+operator >> (std::istream& __in, byte<_SigT>& __x);
 
-template<typename _S>
+template<typename _SigT>
 std::ostream&
-operator << (std::ostream& __out, const byte<_S>& __x);
+operator << (std::ostream& __out, const byte<_SigT>& __x);
 
 template<typename _Sig>
 class byte
@@ -76,26 +74,26 @@ public:
 	typedef byte<_Sig>                        self_type;
 	typedef typename byte_helper<_Sig>::type  value_type;
 	typedef size_t                            size_type;
-	
+
 private:
 	typename byte_helper<_Sig>::type _M_data;
-	
+
 public:
 	byte() noexcept = default;
-	
+
 	byte(const value_type& __x) noexcept;
-	
+
 	byte(value_type&& __x) noexcept;
-	
+
 	byte(const self_type& __x) noexcept = default;
-	
+
 	byte(self_type&& __x) noexcept = default;
-	
+
 	~byte() noexcept = default;
-	
+
 	void
 	swap(value_type& __x) noexcept;
-	
+
 	void
 	swap(self_type& __x) noexcept;
 
@@ -150,7 +148,7 @@ public:
 	POL_MAKE_BYTE_OPERATOR_UNARY(--, true, false)
 	POL_MAKE_BYTE_OPERATOR_UNARY(++, false, true)
 	POL_MAKE_BYTE_OPERATOR_UNARY(--, false, true)
-	
+
 	POL_MAKE_BYTE_OPERATOR_BINARY(=, true, false, false)
 	POL_MAKE_BYTE_OPERATOR_BINARY(+=, true, false, false)
 	POL_MAKE_BYTE_OPERATOR_BINARY(-=, true, false, false)
@@ -189,14 +187,14 @@ public:
 #undef POL_MAKE_BYTE_OPERATOR_BINARY_BOOL_true
 #undef POL_MAKE_BYTE_OPERATOR_BINARY_BOOL_false
 #undef POL_MAKE_BYTE_OPERATOR_BINARY
-	
-	template<typename _S>
+
+	template<typename _SigT>
 	friend std::istream&
-	operator >> (std::istream& __in, byte<_S>& __x);
-	
-	template<typename _S>
+	operator >> (std::istream& __in, byte<_SigT>& __x);
+
+	template<typename _SigT>
 	friend std::ostream&
-	operator << (std::ostream& __out, const byte<_S>& __x);
+	operator << (std::ostream& __out, const byte<_SigT>& __x);
 };
 
 }

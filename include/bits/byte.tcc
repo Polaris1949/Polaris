@@ -223,7 +223,7 @@ swap(self_type& __x) noexcept
 	POL_DEF_BYTE_OPERATOR_UNARY(--, true, false)
 	POL_DEF_BYTE_OPERATOR_UNARY(++, false, true)
 	POL_DEF_BYTE_OPERATOR_UNARY(--, false, true)
-	
+
 	POL_DEF_BYTE_OPERATOR_BINARY(=, true, false, false, false)
 	POL_DEF_BYTE_OPERATOR_BINARY(+=, true, false, false, false)
 	POL_DEF_BYTE_OPERATOR_BINARY(-=, true, false, false, false)
@@ -265,39 +265,39 @@ swap(self_type& __x) noexcept
 #undef POL_DEF_BYTE_OPERATOR_BINARY_BOOL_false
 #undef POL_DEF_BYTE_OPERATOR_BINARY
 
-template<typename _S>
+template<typename _SigT>
 std::istream&
-operator >> (std::istream& __in, byte<_S>& __x)
+operator >> (std::istream& __in, byte<_SigT>& __x)
 {
-	typename byte_helper<_S>::io_type temp;
+	typename byte_helper<_SigT>::io_type temp;
 	__in >> temp;
-	
+
 	if (__in.fail())
 		return __in;
-	
-	if (temp > static_cast<typename byte_helper<_S>::io_type>
-		(std::numeric_limits<typename byte_helper<_S>::type>::max()))
+
+	if (temp > static_cast<typename byte_helper<_SigT>::io_type>
+		(std::numeric_limits<typename byte_helper<_SigT>::type>::max()))
 	{
 		__in.setstate(std::ios_base::failbit);
 		return __in;
 	}
-	
-	if (temp < static_cast<typename byte_helper<_S>::io_type>
-		(std::numeric_limits<typename byte_helper<_S>::type>::min()))
+
+	if (temp < static_cast<typename byte_helper<_SigT>::io_type>
+		(std::numeric_limits<typename byte_helper<_SigT>::type>::min()))
 	{
 		__in.setstate(std::ios_base::failbit);
 		return __in;
 	}
-	
+
 	__x._M_data = temp;
 	return __in;
 }
 
-template<typename _S>
+template<typename _SigT>
 std::ostream&
-operator << (std::ostream& __out, const byte<_S>& __x)
+operator << (std::ostream& __out, const byte<_SigT>& __x)
 {
-	__out << typename byte_helper<_S>::io_type(__x._M_data);
+	__out << typename byte_helper<_SigT>::io_type(__x._M_data);
 	return __out;
 }
 

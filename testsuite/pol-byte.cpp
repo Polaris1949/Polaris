@@ -1,17 +1,17 @@
-#include <polaris/byte>
 #include <iostream>
-using namespace polaris;
-using namespace std;
+#include <polaris/byte>
 
 int main()
 {
-	byte<unsigned_type> bs(255);
-	cout << bs << endl;
-	cout << sizeof(bs) << endl;
-	cout << sizeof(byte<signed_type>) << endl;
-	cout << bs-1 << endl;
-	cout << --bs << endl;
-	cout << (bs=0) << endl;
-	cout << (bs+=100) << endl;
+	pol::byte<pol::unsigned_type> bs(255);
+
+	std::cout << bs << std::endl;
+	std::cout << sizeof(bs) << std::endl;
+	std::cout << sizeof(pol::byte<pol::signed_type>) << std::endl;
+	std::cout << bs-1 << std::endl;
+	std::cout << --bs << std::endl;
+	std::cout << (bs=0) << std::endl;
+	std::cout << (bs+=100) << std::endl;
+
 	return 0;
 }
