@@ -58,6 +58,30 @@ operator << (const _Up& __x)
 	return *this;
 }
 
+template<typename _Tp>
+template<size_t _BNum>
+byte_stream<_Tp>&
+byte_stream<_Tp>::
+operator >> (ignore_byte<_BNum>& __x)
+{
+	std::string __buf;
+	__buf.resize(_BNum);
+	_M_stream.read(const_cast<char*>(__buf.c_str()), __buf.size());
+	return *this;
+}
+
+template<typename _Tp>
+template<size_t _BNum>
+byte_stream<_Tp>&
+byte_stream<_Tp>::
+operator << (const ignore_byte<_BNum>& __x)
+{
+	std::string __buf;
+	__buf.resize(_BNum);
+	_M_stream.write(__buf.c_str(), __buf.size());
+	return *this;
+}
+
 }
 
 #endif
