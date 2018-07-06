@@ -1,3 +1,4 @@
 @echo off
-robocopy .\include "%1\" /mir
+md "%1\polaris"
+robocopy .\include "%1\polaris" /mir
 pause
