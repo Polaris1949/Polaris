@@ -48,6 +48,7 @@ operator >> (_Up& __x)
 	return *this;
 }
 
+
 template<typename _Tp>
 template<typename _Up>
 byte_stream<_Tp>&
@@ -55,6 +56,24 @@ byte_stream<_Tp>::
 operator << (const _Up& __x)
 {
 	_M_stream.write(reinterpret_cast<const char*>(&__x), sizeof(__x));
+	return *this;
+}
+
+template<typename _Tp>
+byte_stream<_Tp>&
+byte_stream<_Tp>::
+operator >> (char* __x)
+{
+	_M_stream.getline(__x, 2147483647, '\0');
+	return *this;
+}
+
+template<typename _Tp>
+byte_stream<_Tp>&
+byte_stream<_Tp>::
+operator << (const char* __x)
+{
+	_M_stream.write(__x, strlen(__x));
 	return *this;
 }
 

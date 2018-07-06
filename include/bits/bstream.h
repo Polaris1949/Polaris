@@ -47,6 +47,10 @@ public:
 	template<typename _Up>
 	byte_stream& operator << (const _Up& __x);
 
+	byte_stream& operator >> (char* __x);
+
+	byte_stream& operator << (const char* __x);
+
 	template<size_t _BNum>
 	byte_stream& operator >> (ignore_byte<_BNum>& __x);
 
