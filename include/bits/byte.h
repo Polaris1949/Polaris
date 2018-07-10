@@ -42,6 +42,12 @@ typedef byte<signed_type>    signed_byte;
 typedef byte<unsigned_type>  unsigned_byte;
 
 template<typename>
+union exbyte;
+
+typedef exbyte<signed_type>    signed_exbyte;
+typedef exbyte<unsigned_type>  unsigned_exbyte;
+
+template<typename>
 struct byte_helper;
 
 template<>
@@ -66,6 +72,14 @@ template<typename _SigT>
 std::ostream&
 operator << (std::ostream& __out, const byte<_SigT>& __x);
 
+template<typename _T>
+std::istream&
+operator >> (std::istream& __in, exbyte<_T>& __x);
+
+template<typename _T>
+std::ostream&
+operator << (std::ostream& __out, const exbyte<_T>& __x);
+
 template<typename _Sig>
 class byte
 {
@@ -89,6 +103,8 @@ public:
 
 	byte(self_type&& __x) noexcept = default;
 
+	byte(const exbyte<sign_type>& __x) noexcept;
+
 	~byte() noexcept = default;
 
 	void
@@ -96,6 +112,9 @@ public:
 
 	void
 	swap(self_type& __x) noexcept;
+
+	explicit
+	operator value_type() const noexcept;
 
 #define POL_MAKE_REF_true &
 #define POL_MAKE_REF_false
@@ -195,6 +214,54 @@ public:
 	template<typename _SigT>
 	friend std::ostream&
 	operator << (std::ostream& __out, const byte<_SigT>& __x);
+};
+
+template<typename _Tp>
+union exbyte
+{
+public:
+	typedef _Tp                              sign_type;
+	typedef typename byte_helper<_Tp>::type  value_type;
+	typedef size_t                           size_type;
+
+private:
+    unsigned char _M_num;
+
+    struct _Bit
+    {
+        bool b0 : 1;
+        bool b1 : 1;
+        bool b2 : 1;
+        bool b3 : 1;
+        bool b4 : 1;
+        bool b5 : 1;
+        bool b6 : 1;
+        bool b7 : 1;
+
+    	bool
+		operator[] (size_t __pos) const noexcept;
+    };
+
+    _Bit _M_bit;
+
+public:
+	exbyte() = default;
+	exbyte(value_type&& __x) noexcept;
+	exbyte(const byte<sign_type>& __x) noexcept;
+
+	explicit
+	operator value_type() const noexcept;
+
+    bool
+	operator[] (size_t __pos) const noexcept;
+
+	template<typename _T>
+    friend std::istream&
+	operator >> (std::istream& __in, exbyte<_T>& __x);
+
+	template<typename _T>
+    friend std::ostream&
+	operator << (std::ostream& __out, const exbyte<_T>& __x);
 };
 
 }

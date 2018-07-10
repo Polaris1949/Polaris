@@ -54,6 +54,13 @@ byte(value_type&& __x) noexcept
 }
 
 template<typename _Sig>
+byte<_Sig>::
+byte(const exbyte<sign_type>& __x) noexcept
+	: _M_data(static_cast<value_type>(__x))
+{
+}
+
+template<typename _Sig>
 void
 byte<_Sig>::
 swap(value_type& __x) noexcept
@@ -67,6 +74,13 @@ byte<_Sig>::
 swap(self_type& __x) noexcept
 {
 	std::swap(_M_data, __x._M_data);
+}
+
+template<typename _Sig>
+byte<_Sig>::
+operator value_type() const noexcept
+{
+	return _M_data;
 }
 
 #define POL_DEF_REF_true &
@@ -298,6 +312,83 @@ std::ostream&
 operator << (std::ostream& __out, const byte<_SigT>& __x)
 {
 	__out << typename byte_helper<_SigT>::io_type(__x._M_data);
+	return __out;
+}
+
+template<typename _Tp>
+exbyte<_Tp>::
+exbyte(value_type&& __x) noexcept
+	: _M_num(std::move(__x))
+{
+}
+
+template<typename _Tp>
+exbyte<_Tp>::
+exbyte(const byte<sign_type>& __x) noexcept
+	: _M_num(static_cast<value_type>(__x))
+{
+}
+
+template<typename _Tp>
+exbyte<_Tp>::
+operator value_type() const noexcept
+{
+	return _M_num;
+}
+
+template<typename _Tp>
+bool
+exbyte<_Tp>::_Bit::
+operator[] (size_t __pos) const noexcept
+{
+	switch (__pos)
+	{
+		case 0: return b0;
+		case 1: return b1;
+		case 2: return b2;
+		case 3: return b3;
+		case 4: return b4;
+		case 5: return b5;
+		case 6: return b6;
+		case 7: return b7;
+		default: return false;
+	}
+}
+
+template<typename _Tp>
+bool
+exbyte<_Tp>::
+operator[] (size_t __pos) const noexcept
+{
+	return _M_bit[__pos];
+}
+
+template<typename _T>
+std::istream&
+operator >> (std::istream& __in, exbyte<_T>& __x)
+{
+	int s{};
+	for (int i=7; i>=0; --i)
+	{
+		char ch;
+		__in >> ch;
+		if (!(ch=='0'||ch=='1'))
+		{
+			__in.setstate(std::ios_base::failbit);
+			return __in;
+		}
+		s+=int(ch-'0')*(1<<i);
+	}
+	__x._M_num = s;
+	return __in;
+}
+
+template<typename _T>
+std::ostream&
+operator << (std::ostream& __out, const exbyte<_T>& __x)
+{
+	for (int i=7; i>=0; --i)
+		__out<<__x[i];
 	return __out;
 }
 
