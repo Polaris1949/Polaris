@@ -23,5 +23,45 @@ int main()
     cerr << endl << endl << endl;
     sleep(1);
     console.show_cursor();
+    sleep(1);
+    console.purge();
+    console.clear_screen();
+    console.hide_cursor();
+    console.locate(39, 11);
+    cerr << "PK" << endl;
+    console.locate(35, 12);
+    cerr << "Loading";
+    for (int i=0; i<2; ++i)
+    {
+        console.locate(42, 12);
+        console.clear_line_after();
+        for (int j=0; j<3; ++j)
+        {
+            cerr<<'.';
+            sleep(1);
+        }
+    }
+    cerr<<endl;
+    console.show_cursor();
+    sleep(1);
+    console.purge();
+    console.clear_screen();
+    console.hide_cursor();
+    console.locate(39, 11);
+    cerr << "PK" << endl;
+    console.locate(35, 12);
+    cerr << "Loading";
+    string s="-\\|/";
+    for (int i=0; i<4; ++i)
+    {
+        for (int j=0; j<4; ++j)
+        {
+            console.locate(44, 12);
+            cerr<<s[j];
+            sleep(1);
+        }
+    }
+    cerr<<endl;
+    console.show_cursor();
     return 0;
 }
