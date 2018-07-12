@@ -33,91 +33,265 @@
 
 #pragma GCC system_header
 
+#include <polaris/version>
+#include <functional>
 #include <type_traits>
-
-#ifndef __cpp_concepts
-#define concept constexpr
-#endif /* !__cpp_concepts */
-
-namespace polaris
-{
-namespace concepts
-{
-
-template<typename _Tp>
-concept bool DefaultConstructible
-	= std::is_default_constructible<_Tp>::value;
-
-template<typename _Tp>
-concept bool MoveConstructible
-	= std::is_move_constructible<_Tp>::value;
-
-template<typename _Tp>
-concept bool CopyConstructible
-	= std::is_copy_constructible<_Tp>::value;
-
-template<typename _Tp>
-concept bool MoveAssignable
-	= std::is_move_assignable<_Tp>::value;
-
-template<typename _Tp>
-concept bool CopyAssignable
-	= std::is_copy_assignable<_Tp>::value;
-
-template<typename _Tp>
-concept bool Destructible
-	= std::is_destructible<_Tp>::value;
-
-template<typename _Tp>
-concept bool TriviallyCopyable
-	= std::is_trivially_copyable<_Tp>::value;
-
-template<typename _Tp>
-concept bool TrivialType
-	= std::is_trivial<_Tp>::value;
-
-template<typename _Tp>
-concept bool StandardLayoutType
-	= std::is_standard_layout<_Tp>::value;
-
-template<typename _Tp>
-concept bool PODType
-	= std::is_pod<_Tp>::value;
-
-} // namespace concepts
-} // namespace polaris
-
-#ifdef __cpp_concepts
 #include <utility>
 
+#if __cpp_concepts
+#if __cplusplus >= 202000L
+// C++20 available support
+#else
+#define concept concept bool
+// Concepts TS available support
+#endif /* C++20 */
+#else
+#error no available support for this library
+#endif /* !__cpp_concepts */
+
+namespace std
+{
+
+// @FIXME
+// @{
+template<typename... _Tp>
+struct common_reference
+{
+	using type = common_type_t<_Tp...>;
+};
+
+template<typename... _Tp>
+using common_reference_t = typename common_reference<_Tp...>::type;
+
+template<typename _Tp>
+struct remove_cvref
+{
+	using type = remove_reference_t<remove_cv_t<_Tp>>;
+};
+
+template<typename _Tp>
+using remove_cvref_t = typename remove_cvref<_Tp>::type;
+// @}
+
+}
+
 namespace polaris
 {
-namespace concepts
+inline namespace concepts
 {
 
-template<typename _Tp>
-concept bool EqualityComparable = requires(_Tp __x, _Tp __y)
-	{{__x == __y} -> bool;};
+template<typename _Tp, typename _Up>
+concept Same = std::is_same_v<_Tp, _Up>;
+
+template<typename _Derived, typename _Base>
+concept DerivedFrom = std::is_base_of_v<_Base, _Derived> &&
+	std::is_convertible_v<const volatile _Derived*, const volatile _Base*>;
+
+template<typename _From, typename _To>
+concept ConvertibleTo = std::is_convertible_v<_From, _To> &&
+	requires(_From (&__f)()) { static_cast<_To>(__f()); };
+
+template<typename _Tp, typename _Up>
+concept CommonReference = Same<std::common_reference_t<_Tp, _Up>,
+	std::common_reference_t<_Up, _Tp>> &&
+	ConvertibleTo<_Tp, std::common_reference_t<_Tp, _Up>> &&
+	ConvertibleTo<_Up, std::common_reference_t<_Tp, _Up>>;
+
+template<typename _Tp, typename _Up>
+concept Common = Same<std::common_type_t<_Tp, _Up>,
+		std::common_type_t<_Up, _Tp>> &&
+	ConvertibleTo<_Tp, std::common_type_t<_Tp, _Up>> &&
+	ConvertibleTo<_Up, std::common_type_t<_Tp, _Up>> &&
+	CommonReference<
+		std::add_lvalue_reference_t<const _Tp>,
+		std::add_lvalue_reference_t<const _Up>> &&
+	CommonReference<
+		std::add_lvalue_reference_t<std::common_type_t<_Tp, _Up>>,
+		std::common_reference_t<
+		std::add_lvalue_reference_t<const _Tp>,
+		std::add_lvalue_reference_t<const _Up>>>;
 
 template<typename _Tp>
-concept bool LessThanComparable = requires(_Tp __x, _Tp __y)
-	{{__x < __y} -> bool;};
+concept Integral = std::is_integral_v<_Tp>;
 
 template<typename _Tp>
-concept bool Swappable = requires(_Tp __x, _Tp __y)
-	{std::swap(__x, __y);};
+concept SignedIntegral = Integral<_Tp> && std::is_signed_v<_Tp>;
 
-template<typename _Iter>
-concept bool Iterator = requires(_Iter __x)
-	{{*__x} -> auto&&;};
+template<typename _Tp>
+concept UnsignedIntegral = Integral<_Tp> && !SignedIntegral<_Tp>;
+
+template<typename _LHS, typename _RHS>
+concept Assignable = std::is_lvalue_reference_v<_LHS> &&
+	CommonReference<const std::remove_reference_t<_LHS>&,
+		const std::remove_reference_t<_RHS>&> &&
+	requires(_LHS __lhs, _RHS&& __rhs)
+	{
+		__lhs = std::forward<_RHS>(__rhs);
+		requires Same<decltype(__lhs = std::forward<_RHS>(__rhs)), _LHS>;
+	};
+
+template<typename _Tp>
+concept Swappable = std::is_swappable_v<_Tp>;
+
+template<typename _Tp, typename _Up>
+concept SwappableWith = std::is_swappable_with_v<_Tp, _Tp> &&
+	std::is_swappable_with_v<_Up, _Up> &&
+	CommonReference<const std::remove_reference_t<_Tp>&,
+		const std::remove_reference_t<_Up>&> &&
+	std::is_swappable_with_v<_Tp, _Up> &&
+	std::is_swappable_with_v<_Up, _Tp>;
+
+template<typename _Tp>
+concept Destructible = std::is_nothrow_destructible_v<_Tp>;
+
+template<typename _Tp, typename... _Args>
+concept Constructible = Destructible<_Tp> &&
+	std::is_constructible_v<_Tp, _Args...>;
+
+template<typename _Tp>
+concept DefaultConstructible = Constructible<_Tp>;
+
+template<typename _Tp>
+concept MoveConstructible = Constructible<_Tp, _Tp> && ConvertibleTo<_Tp, _Tp>;
+
+template<typename _Tp>
+concept CopyConstructible = MoveConstructible<_Tp> &&
+	Constructible<_Tp, _Tp&> && ConvertibleTo<_Tp&, _Tp> &&
+	Constructible<_Tp, const _Tp&> && ConvertibleTo<const _Tp&, _Tp> &&
+	Constructible<_Tp, const _Tp> && ConvertibleTo<const _Tp, _Tp>;
+
+template<typename _Tp>
+concept Movable = std::is_object_v<_Tp> && MoveConstructible<_Tp> &&
+	Assignable<_Tp&, _Tp> && Swappable<_Tp>;
+
+template<typename _Bp>
+concept Boolean = Movable<std::remove_cvref_t<_Bp>> &&
+	requires(const std::remove_reference_t<_Bp>& __b1,
+		const std::remove_reference_t<_Bp>& __b2, const bool __a)
+	{
+		requires ConvertibleTo<const std::remove_reference_t<_Bp>&, bool>;
+		!__b1;        requires ConvertibleTo<decltype(!__b1), bool>;
+		__b1 && __a;  requires Same<decltype(__b1 && __a), bool>;
+		__b1 || __a;  requires Same<decltype(__b1 || __a), bool>;
+		__b1 && __b2; requires Same<decltype(__b1 && __b2), bool>;
+		__a && __b2;  requires Same<decltype(__a && __b2), bool>;
+		__b1 || __b2; requires Same<decltype(__b1 || __b2), bool>;
+		__a || __b2;  requires Same<decltype(__a || __b2), bool>;
+		__b1 == __b2; requires ConvertibleTo<decltype(__b1 == __b2), bool>;
+		__b1 == __a;  requires ConvertibleTo<decltype(__b1 == __a), bool>;
+		__a == __b2;  requires ConvertibleTo<decltype(__a == __b2), bool>;
+		__b1 != __b2; requires ConvertibleTo<decltype(__b1 != __b2), bool>;
+		__b1 != __a;  requires ConvertibleTo<decltype(__b1 != __a), bool>;
+		__a != __b2;  requires ConvertibleTo<decltype(__a != __b2), bool>;
+	};
+
+template<typename _Tp, typename _Up>
+concept __WeaklyEqualityComparableWith = // For exposition only
+	requires(const std::remove_reference_t<_Tp>& __t,
+		const std::remove_reference_t<_Up>& __u)
+	{
+		__t == __u; requires Boolean<decltype(__t == __u)>;
+		__t != __u; requires Boolean<decltype(__t != __u)>;
+		__u == __t; requires Boolean<decltype(__u == __t)>;
+		__u != __t; requires Boolean<decltype(__u != __t)>;
+	};
+
+template<typename _Tp>
+concept EqualityComparable = __WeaklyEqualityComparableWith<_Tp, _Tp>;
+
+template<typename _Tp, typename _Up>
+concept EqualityComparableWith = EqualityComparable<_Tp> &&
+	EqualityComparable<_Up> &&
+	CommonReference<const std::remove_reference_t<_Tp>&,
+		const std::remove_reference_t<_Up>&> &&
+	EqualityComparable<std::common_reference_t<
+		const std::remove_reference_t<_Tp>&,
+		const std::remove_reference_t<_Up>&>> &&
+	__WeaklyEqualityComparableWith<_Tp, _Up>;
+
+template<typename _Tp>
+concept StrictTotallyOrdered = EqualityComparable<_Tp> &&
+	requires(const std::remove_reference_t<_Tp>& __a,
+		const std::remove_reference_t<_Tp>& __b)
+	{
+		__a < __b;  requires Boolean<decltype(__a < __b)>;
+		__a > __b;  requires Boolean<decltype(__a > __b)>;
+		__a <= __b; requires Boolean<decltype(__a <= __b)>;
+		__a >= __b; requires Boolean<decltype(__a >= __b)>;
+	};
+
+template<typename _Tp, typename _Up>
+concept StrictTotallyOrderedWith = StrictTotallyOrdered<_Tp> &&
+	StrictTotallyOrdered<_Up> &&
+	CommonReference<const std::remove_reference_t<_Tp>&,
+		const std::remove_reference_t<_Up>&> &&
+	StrictTotallyOrdered<std::common_reference_t<
+		const std::remove_reference_t<_Tp>&,
+		const std::remove_reference_t<_Up>&>> &&
+	EqualityComparableWith<_Tp, _Up> &&
+	requires(const std::remove_reference_t<_Tp>& __t,
+		const std::remove_reference_t<_Up>& __u)
+	{
+		__t < __u;  requires Boolean<decltype(__t < __u)>;
+		__t > __u;  requires Boolean<decltype(__t > __u)>;
+		__t <= __u; requires Boolean<decltype(__t <= __u)>;
+		__t >= __u; requires Boolean<decltype(__t >= __u)>;
+		__u < __t;  requires Boolean<decltype(__u < __t)>;
+		__u > __t;  requires Boolean<decltype(__u > __t)>;
+		__u <= __t; requires Boolean<decltype(__u <= __t)>;
+		__u >= __t; requires Boolean<decltype(__u >= __t)>;
+	};
+
+/* @FIXME
+template<typename _Tp>
+concept Movable = std::is_object_v<_Tp> && MoveConstructible<_Tp> &&
+	Assignable<_Tp&, _Tp> && Swappable<_Tp>;
+*/
+
+template<typename _Tp>
+concept Copyable = CopyConstructible<_Tp> && Movable<_Tp> &&
+	Assignable<_Tp&, const _Tp&>;
+
+template<typename _Tp>
+concept Semiregular = Copyable<_Tp> && DefaultConstructible<_Tp>;
+
+template<typename _Tp>
+concept Regular = Semiregular<_Tp> && EqualityComparable<_Tp>;
+
+template<typename _Fp, typename... _Args>
+concept Invocable =
+	requires(_Fp&& __f, _Args&&... __args)
+	{
+		std::invoke(std::forward<_Fp>(__f), std::forward<_Args>(__args)...);
+		/* not required to be equality preserving */
+	};
+
+template<typename _Fp, typename... _Args>
+concept RegularInvocable = Invocable<_Fp, _Args...>;
+
+template<typename _Fp, typename... _Args>
+concept Predicate = RegularInvocable<_Fp, _Args...> &&
+	Boolean<std::invoke_result_t<_Fp, _Args...>>;
+
+template<typename _Rp, typename _Tp, typename _Up>
+concept Relation = Predicate<_Rp, _Tp, _Tp> && Predicate<_Rp, _Up, _Up> &&
+	CommonReference<const std::remove_reference_t<_Tp>&,
+		const std::remove_reference_t<_Up>&> &&
+	Predicate<_Rp, std::common_reference_t<
+		const std::remove_reference_t<_Tp>&,
+		const std::remove_reference_t<_Up>&>,
+		std::common_reference_t<const std::remove_reference_t<_Tp>&,
+		const std::remove_reference_t<_Up>&>> &&
+	Predicate<_Rp, _Tp, _Up> && Predicate<_Rp, _Up, _Tp>;
+
+template<typename _Rp, typename _Tp, typename _Up>
+concept StrictWeakOrder = Relation<_Rp, _Tp, _Up>;
 
 } // namespace concepts
 } // namespace polaris
 
-#endif /* __cpp_concepts */
-
-#ifndef __cpp_concepts
+#if __cpp_concepts && __cplusplus < 202000L
 #undef concept
-#endif /* !__cpp_concepts */
+#endif /* Concepts TS */
 
 #endif /* _POLLIB_CONCEPTS */
