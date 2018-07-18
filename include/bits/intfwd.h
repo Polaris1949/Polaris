@@ -14,6 +14,7 @@ namespace __int_detail
 typedef unsigned int data_type;
 //typedef unsigned char data_type;
 typedef unsigned long long exdata_type;
+//typedef unsigned short exdata_type;
 typedef unsigned int radix_type;
 
 template<typename, bool>
@@ -59,13 +60,7 @@ struct _Int_allocator;
 
 struct _Int_reference;
 
-#if _POL_NEWLIB
 struct _Int_base;
-#endif
-
-#if !_POL_DEPRECATED
-struct _Int_stdbase;
-#endif
 
 // @integer_allocator
 class integer_allocator;
