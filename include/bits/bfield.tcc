@@ -10,6 +10,13 @@ bitfield()
 {
 }
 
+template<typename _T>
+bitfield::
+bitfield(const _T& __x)
+	: _M_impl()
+{
+}
+
 bool
 bitfield::
 operator[] (size_type __pos) const

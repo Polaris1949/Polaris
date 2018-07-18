@@ -9,18 +9,21 @@ namespace polaris
 class bitfield
 {
 public:
-	typedef vector<bool> container_type;
+	typedef std::vector<bool> container_type;
 	typedef size_t size_type;
-	
+
 private:
-	vector<bool> _M_impl;
-	
+	std::vector<bool> _M_impl;
+
 public:
 	bitfield();
-	
+
+	template<typename _T>
+	bitfield(const _T& __x);
+
 	bool operator[] (size_type __pos) const;
 	size_type size() const;
-	
+
 	void resize(size_type __new_size, bool __x = bool());
 };
 
