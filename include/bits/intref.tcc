@@ -35,6 +35,7 @@ inline
 _Int_reference::
 operator _Int_data() const
 {
+	if (_M_p == nullptr) return 0;
 	return *_M_p;
 }
 
