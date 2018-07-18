@@ -221,6 +221,7 @@ union exbyte
 {
 public:
 	typedef _Tp                              sign_type;
+	typedef exbyte<_Tp>                      self_type;
 	typedef typename byte_helper<_Tp>::type  value_type;
 	typedef size_t                           size_type;
 
