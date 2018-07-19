@@ -54,10 +54,20 @@ namespace std
 
 // @FIXME
 // @{
+struct __common_ref_impl
+{
+	template<typename... _Tp, typename =
+		enable_if_t<!is_void_v<common_type_t<_Tp...>>>>
+	static common_type_t<_Tp...> __test(int);
+
+	template<typename...>
+	static void __test(...);
+};
+
 template<typename... _Tp>
 struct common_reference
 {
-	using type = common_type_t<_Tp...>;
+	using type = decltype(__common_ref_impl::__test<_Tp...>(0));
 };
 
 template<typename... _Tp>
