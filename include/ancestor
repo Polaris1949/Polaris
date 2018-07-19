@@ -22,11 +22,14 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file ancestor
+/**
+ *  @file    ancestor
+ *  @brief   Ancestor library
+ *  @author  Polaris Zhao
+ *  @todo    This library is incompelete.
+ *
  *  This is a Polaris C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _POLLIB_ANCESTOR
 #define _POLLIB_ANCESTOR 1
