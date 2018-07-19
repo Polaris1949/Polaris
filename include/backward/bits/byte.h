@@ -22,9 +22,9 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file bits/byte.h
+/** @file backward/bits/byte.h
  *  This is an internal header file, included by other library headers.
- *  Do not attempt to use it directly. @headername{byte}
+ *  Do not attempt to use it directly. @headername{backward/byte}
  */
 
 // Written by Jingyu Zhao.
@@ -71,31 +71,31 @@ class byte : public integer_type<typename byte_helper<_Sig>::type>
 public:
 	typedef _Sig                              sign_type;
 	typedef typename byte_helper<_Sig>::type  value_type;
-	
+
 public:
 	byte() noexcept;
-	
+
 	byte(const value_type& __x) noexcept;
-	
+
 	byte(value_type&& __x) noexcept;
-	
+
 	byte(const byte<sign_type>& __x) noexcept;
-	
+
 	byte(byte<sign_type>&& __x) noexcept;
-	
+
 	virtual
 	~byte() noexcept;
-	
+
 	byte<sign_type>&
 	operator = (const byte<sign_type>& __x) noexcept;
-	
+
 	byte<sign_type>&
 	operator = (byte<sign_type>&& __x) noexcept;
-	
+
 	template<typename _S>
 	friend std::istream&
 	operator >> (std::istream& __in, byte<_S>& __x);
-	
+
 	template<typename _S>
 	friend std::ostream&
 	operator << (std::ostream& __out, const byte<_S>& __x);

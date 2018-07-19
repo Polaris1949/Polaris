@@ -22,9 +22,9 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file bits/byte.h
+/** @file backward/bits/byte.tcc
  *  This is an internal header file, included by other library headers.
- *  Do not attempt to use it directly. @headername{byte}
+ *  Do not attempt to use it directly. @headername{backward/byte}
  */
 
 // Written by Jingyu Zhao.
@@ -108,24 +108,24 @@ operator >> (std::istream& __in, byte<_S>& __x)
 {
 	typename byte_helper<_S>::io_type temp;
 	__in >> temp;
-	
+
 	if (__in.fail())
 		return __in;
-	
+
 	if (temp > static_cast<typename byte_helper<_S>::io_type>
 		(std::numeric_limits<typename byte_helper<_S>::type>::max()))
 	{
 		__in.setstate(std::ios_base::failbit);
 		return __in;
 	}
-	
+
 	if (temp < static_cast<typename byte_helper<_S>::io_type>
 		(std::numeric_limits<typename byte_helper<_S>::type>::min()))
 	{
 		__in.setstate(std::ios_base::failbit);
 		return __in;
 	}
-	
+
 	__x._M_data = temp;
 	return __in;
 }
