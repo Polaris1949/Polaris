@@ -1,4 +1,4 @@
-// Byte -*- C++ -*-
+// Byte classes -*- C++ -*-
 
 // Copyright (C) 1997-2017 Free Software Foundation, Inc.
 //
@@ -22,12 +22,15 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file bits/byte.h
+/** @file     bits/byte.h
+ *  @headerfile  byte
+ *  @brief    Byte classes
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *
  *  This is an internal header file, included by other library headers.
- *  Do not attempt to use it directly. @headername{byte}
- */
-
-// Written by Jingyu Zhao.
+ *  Do not attempt to use it directly. Please #include @c <byte>.
+**/
 
 #ifndef _POL_BYTE_H
 #define _POL_BYTE_H 1

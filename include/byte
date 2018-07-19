@@ -22,11 +22,13 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file byte
+/** @file     byte
+ *  @brief    A fundamental type for holding a byte
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *
  *  This is a Polaris C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _POLLIB_BYTE
 #define _POLLIB_BYTE 1
