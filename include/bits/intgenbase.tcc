@@ -40,18 +40,18 @@ _M_set_element(size_t __pos, _Int_data __x)
 	if (__pos >= capacity() && __x)
 	{
 		this->_M_reallocate(__pos + 1);
-		_M_impl._M_start[__pos] = __x;
+		this->_M_impl._M_start[__pos] = __x;
 		return false;
 	}
 
 	if (__pos >= size() && __x)
 	{
 		this->_M_impl._M_finish = this->_M_impl._M_start + __pos + 1;
-		_M_impl._M_start[__pos] = __x;
+		this->_M_impl._M_start[__pos] = __x;
 		return false;
 	}
 
-	_M_impl._M_start[__pos] = __x;
+	this->_M_impl._M_start[__pos] = __x;
 	return true;
 }
 
