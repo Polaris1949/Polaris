@@ -22,17 +22,24 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file version
+/** @file     version
+ *  @brief    Library version and configurations
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *
  *  This is a Polaris C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _POLLIB_VERSION
 #define _POLLIB_VERSION 1
 
+/** @brief  Major version of the library **/
 #define __POLLIB__ 3
+
+/** @brief  Minor version of the library **/
 #define __POLLIB_MINOR__ 0
+
+/** @brief  Patch level of the library **/
 #define __POLLIB_PATCHLEVEL__ 0
 
 #if __cplusplus < 201103L
@@ -41,17 +48,39 @@
 
 #include <iosfwd>
 
+/** @namespace  polaris
+ *  @brief      Library namespace
+**/
 namespace polaris
 {
 
+/** @brief Bytes of @c char **/
 constexpr size_t char_byte = sizeof(char);
+
+/** @brief Bits of @c char **/
 constexpr size_t char_bit = __CHAR_BIT__ * char_byte;
+
+/** @brief @c size_t for the library **/
 typedef std::size_t size_t;
+
+/** @brief @c npos for the library **/
 constexpr size_t npos = static_cast<size_t>(-1);
+
+/** @brief A blank tag struct **/
+struct blank {};
+
+/** @brief Signed type tag struct **/
+struct signed_type : blank {};
+
+/** @brief Unsigned type tag struct **/
+struct unsigned_type : blank {};
 
 }
 
 #if !_POL_NO_SHORT_NAMESPACE
+/** @namespace pol
+ *  @brief     Short namespace alias for the library
+**/
 namespace pol = polaris;
 #endif
 
