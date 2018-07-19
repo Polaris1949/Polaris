@@ -44,14 +44,14 @@ class tag
 {
 public:
 	typedef _Tp value_tag;
-	
+
 private:
 	_Tp* _M_t;
-	
+
 public:
 	tag();
 	tag(value_tag* __tag);
-	
+
 	const value_tag& operator* () const;
 	value_tag* operator-> () const;
 };
@@ -92,41 +92,41 @@ class tvalue
 public:
 	typedef _Tp value_type;
 	typedef std::tuple<_Tags...> tags_type;
-	
+
 	constexpr static size_t tags_size = std::tuple_size<tags_type>::value;
-	
+
 	template<size_t __i>
 	using tag_type = typename std::tuple_element<__i, tags_type>::type;
-	
+
 private:
 	_Tp _M_data;
-	
+
 public:
 	tvalue() = default;
-	
+
 	tvalue(const value_type& __x)
 		: _M_data(__x)
 	{
 	}
-	
+
 	value_type&
 	data()
 	{
 		return _M_data;
 	}
-	
+
 	const value_type&
 	data() const
 	{
 		return _M_data;
 	}
-	
+
 	size_t
 	size() const
 	{
 		return tags_size;
 	}
-	
+
 	template<size_t __i>
 	tag_type<__i>
 	tag() const
@@ -154,36 +154,34 @@ make_tvalue(const auto& __x)
 template<typename _Tp, typename... _Args>
 class tpop_wrap
 {
-public:
-	typedef typename decltype(_M_obj)::value_type value_type;
-	
-private:
 	tvalue<_Tp, _Args...> _M_obj;
-	
+
 public:
+  typedef typename decltype(_M_obj)::value_type value_type;
+
 	tpop_wrap(const tvalue<_Tp, _Args...>& __arg)
 		: _M_obj(__arg)
 	{
 	}
-	
+
 	auto&
 	data()
 	{
 		return this->_M_obj.data();
 	}
-	
+
 	const auto&
 	data() const
 	{
 		return this->_M_obj.data();
 	}
-	
+
 	auto
 	operator! ()
 	{
 		return this->data().template operator!<_Args...>();
 	}
-	
+
 	template<typename... _A>
 	auto
 	operator += (const tpop_wrap<_Tp, _A...>& __x)
@@ -191,7 +189,7 @@ public:
 		return this->data().template operator+=<_Args...>
 			(__x.data());
 	}
-	
+
 	auto
 	operator += (const value_type& __x)
 	{
