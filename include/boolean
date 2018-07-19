@@ -22,11 +22,14 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file boolean
+/** @file        boolean
+ *  @brief       A fundamental type for holding a boolean value
+ *  @author      Polaris Zhao
+ *  @version     3.0
+ *  @deprecated  This library is thought removed in a future version.
+ *
  *  This is a Polaris C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _POLLIB_BOOLEAN
 #define _POLLIB_BOOLEAN 1
@@ -38,65 +41,127 @@
 namespace polaris
 {
 
+/** @class  boolean
+ *  @brief  A class for holding a byte
+ *  @deprecated  This class is thought removed in a future version.
+**/
 class boolean
 {
 	bool _M_data;
-	
+
 public:
-	boolean() = default;
-	
-	boolean(bool __arg);
-	
-	boolean(const boolean& __arg) = default;
-	
-	boolean(boolean&& __arg) = default;
-	
+	/** @brief  Construct a default @c boolean
+	 *  @attention  The value of the object is undefined.
+	**/
+	boolean() noexcept = default;
+
+	/** @brief  Construct a @c boolean from a @c bool
+	 *  @param  __arg  A @c bool value.
+	 *  @note  It is an implicit conversion constructor.
+	**/
+	boolean(bool __arg) noexcept;
+
+	/** @brief  Copy construct a @c boolean from another
+	 *  @param  __arg  Another @c boolean.
+	 *  @attention  The value is undefined if @c __arg is undefined.
+	**/
+	boolean(const boolean& __arg) noexcept = default;
+
+	/** @brief  Move construct a @c boolean from another
+	 *  @param  __arg  Another @c boolean.
+	 *  @attention  The value is undefined if @c __arg is undefined.
+	**/
+	boolean(boolean&& __arg) noexcept = default;
+
+	/** @brief  Destroy the @c boolean
+	**/
 	~boolean() noexcept = default;
-	
+
+	/** @brief  Copy assign another @c boolean
+	 *  @param  __arg  Another @c boolean.
+	 *  @return  The object itself.
+	 *  @attention  The value is undefined if @c __arg is undefined.
+	**/
 	boolean&
-	operator = (const boolean& __arg) = default;
-	
+	operator = (const boolean& __arg) noexcept = default;
+
+	/** @brief  Move assign another @c boolean
+	 *  @param  __arg  Another @c boolean.
+	 *  @return  The object itself.
+	 *  @attention  The value is undefined if @c __arg is undefined.
+	**/
 	boolean&
-	operator = (boolean&& __arg) = default;
-	
+	operator = (boolean&& __arg) noexcept = default;
+
+	/** @brief  Compare two @c boolean using @c ==
+	 *  @param  __arg  Another @c boolean.
+	 *  @return  A @c bool containing the result.
+	 *  @retval  true   Two @c boolean are equal.
+	 *  @retval  false  Otherwise.
+	 *  @attention  The comparsion is undefined if @c __arg is undefined.
+	**/
 	bool
-	operator == (const boolean& __arg) const;
-	
+	operator == (const boolean& __arg) const noexcept;
+
+	/** @brief  Compare two @c boolean using @c !=
+	 *  @param  __arg  Another @c boolean.
+	 *  @return  A @c bool containing the result.
+	 *  @retval  true   Two @c boolean are not equal.
+	 *  @retval  false  Otherwise.
+	 *  @attention  The comparsion is undefined if @c __arg is undefined.
+	**/
 	bool
-	operator != (const boolean& __arg) const;
-	
+	operator != (const boolean& __arg) const noexcept;
+
+	/** @brief  Covert the @c boolean to a @c bool
+	 *  @return  The value contained by the object.
+	 *  @note  It is an explicit conversion operator.
+	 *  @attention  The value is undefined if the object is undefined.
+	**/
 	explicit
-	operator bool() const;
-	
+	operator bool() const noexcept;
+
+	/** @brief  Input a @c boolean
+	 *  @param  __in  An input stream object.
+	 *  @param  __arg  A @c boolean.
+	 *  @return  The stream object.
+	 *  @exception  Depend on the input.
+	**/
 	friend std::istream&
 	operator >> (std::istream& __in, boolean& __arg);
-	
+
+	/** @brief  Output a @c boolean
+	 *  @param  __out  An output stream object.
+	 *  @param  __arg  A @c boolean.
+	 *  @return  The stream object.
+	 *  @attention  The output is undefined if the @c boolean is undefined.
+	**/
 	friend std::ostream&
 	operator << (std::ostream& __out, const boolean& __arg);
 };
 
 boolean::
-boolean(bool __arg)
+boolean(bool __arg) noexcept
 	: _M_data(__arg)
 {
 }
 
 bool
 boolean::
-operator == (const boolean& __arg) const
+operator == (const boolean& __arg) const noexcept
 {
 	return _M_data == __arg._M_data;
 }
 
 bool
 boolean::
-operator != (const boolean& __arg) const
+operator != (const boolean& __arg) const noexcept
 {
 	return _M_data != __arg._M_data;
 }
 
 boolean::
-operator bool() const
+operator bool() const noexcept
 {
 	return _M_data;
 }
