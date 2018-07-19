@@ -22,11 +22,13 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file byte_stream
+/** @file     byte_stream
+ *  @brief    Stream class for reading/writing bytes
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *
  *  This is a Polaris C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _POLLIB_BYTE_STREAM
 #define _POLLIB_BYTE_STREAM 1
