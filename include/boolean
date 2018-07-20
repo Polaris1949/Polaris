@@ -42,7 +42,7 @@ namespace polaris
 {
 
 /** @class  boolean
- *  @brief  A class for holding a byte
+ *  @brief  A class for holding a boolean value
  *  @deprecated  This class is thought removed in a future version.
 **/
 class boolean
