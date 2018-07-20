@@ -1,3 +1,35 @@
+// Timer utility -*- C++ -*-
+
+// Copyright (C) 1997-2017 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file     timer
+ *  @brief    Timer utility
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *
+ *  This is a Polaris C++ Library header.
+**/
+
 #ifndef _POLLIB_TIMER
 #define _POLLIB_TIMER 1
 
@@ -6,26 +38,29 @@
 namespace polaris
 {
 
+/** @class  timer
+ *  @brief  Timer class
+**/
 class timer
 {
 public:
 	typedef std::chrono::steady_clock  clock;
 	typedef clock::time_point          time_point;
 	typedef clock::duration            duration;
-	
+
 private:
 	time_point _M_start;
 	time_point _M_finish;
-	
+
 public:
 	timer();
-	
+
 	time_point& clock_begin();
 	time_point& clock_end();
-	
+
 	time_point begin() const;
 	time_point end() const;
-	
+
 	duration distance() const;
 	double second() const;
 };
