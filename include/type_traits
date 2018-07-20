@@ -183,7 +183,7 @@ struct __do_is_callable_impl
 {
 	template<typename _Tp, typename = decltype(std::declval<_Tp&>()())>
 	static true_type __test(int);
-	
+
 	template<typename>
 	static false_type __test(...);
 };
@@ -217,7 +217,7 @@ struct __do_is_eq_comp_with_impl
 	template<typename _Tp, typename _Up, typename = decltype(
 		std::declval<_Tp&>() == std::declval<_Up&>())>
 	static true_type __test(int);
-	
+
 	template<typename, typename>
 	static false_type __test(...);
 };
@@ -258,7 +258,7 @@ struct __do_is_lt_comp_with_impl
 	template<typename _Tp, typename _Up, typename = decltype(
 		std::declval<_Tp&>() < std::declval<_Up&>())>
 	static true_type __test(int);
-	
+
 	template<typename, typename>
 	static false_type __test(...);
 };
@@ -299,7 +299,7 @@ struct __do_is_swappable_with_impl
 	template<typename _Tp, typename _Up, typename =
 		decltype(std::swap(std::declval<_Tp>(), std::declval<_Up>()))>
 	static true_type __test(int);
-	
+
 	template<typename, typename>
 	static false_type __test(...);
 };
@@ -320,6 +320,10 @@ struct is_swappable_with
 };
 
 // TODO...
+/** @namespace  polaris::type_traits::concepts
+ *  @brief      Polaris type traits concepts support
+ *  @note       You should not use it.
+**/
 inline namespace concepts
 {
 
@@ -346,7 +350,7 @@ struct __c_is_convertible_to_impl
 		decltype(static_cast<_To>(std::declval<_From>())),
 		typename = require<std::is_convertible<_From, _To>>>
 	static true_type __test(int);
-	
+
 	template<typename, typename>
 	static false_type __test(...);
 };
@@ -386,7 +390,7 @@ struct __c_is_swappable_impl
 	template<typename _Tp, typename = decltype(std::swap(std::declval<_Tp&>(),
 		std::declval<_Tp&>()))>
 	static true_type __test(int);
-	
+
 	template<typename>
 	static false_type __test(...);
 };
