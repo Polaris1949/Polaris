@@ -22,18 +22,20 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file console
+/** @file        console
+ *  @brief       Console support for linux-like system
+ *  @author      Polaris Zhao
+ *  @version     3.0
+ *  @deprecated  This library is thought removed in a future version.
+ *  @warning     You should @b NOT use this on a non-linux-like system.
+ *
  *  This is a Polaris C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _POLLIB_CONSOLE
 #define _POLLIB_CONSOLE 1
 
 #include <polaris/version>
-
-#if __linux__ || __CYGWIN__
 
 #include <string>
 #include <iostream>
@@ -41,6 +43,11 @@
 namespace polaris
 {
 
+/** @class  console_t
+ *  @brief  A class for controlling console attributes
+ *  @deprecated  This class is thought removed in a future version.
+ *               You should use @c terminal instead.
+**/
 class console_t
 {
     std::string _M_data;
@@ -53,65 +60,90 @@ class console_t
     }
 
 public:
+    /** @brief  Construct a default @c console_t and purge any attribute
+     *  @warning  You should @b NOT use this anywhere by yourself.
+    **/
     console_t()
         : _M_data()
     {
         purge();
     }
 
+    /** @brief  Destroy a @c console_t and purge any attribute
+    **/
     ~console_t() noexcept
     {
         purge();
         clear();
     }
 
+    /** @brief  Clear contained attributes
+    **/
     void clear()
     {
         _M_data.clear();
     }
 
+    /** @brief  Purge any attribute at once
+    **/
     void purge()
     {
         _M_data = "0m";
         _M_do();
     }
 
+    /** @brief  Apply a highlight attribute
+    **/
     void highlight()
     {
         _M_data = "1m";
         _M_do();
     }
 
+    /** @brief  Apply an underline attribute
+    **/
     void underline()
     {
         _M_data = "4m";
         _M_do();
     }
 
+    /** @brief  Apply a coruscate attribute
+    **/
     void coruscate()
     {
         _M_data = "5m";
         _M_do();
     }
 
+    /** @brief  Apply a reverse display attribute
+    **/
     void reverse_display()
     {
         _M_data = "7m";
         _M_do();
     }
 
+    /** @brief  Apply a blank attribute
+    **/
     void blank()
     {
         _M_data = "8m";
         _M_do();
     }
 
+    /** @brief  Clear screen at once
+    **/
     void clear_screen()
     {
         _M_data = "2J";
         _M_do();
     }
 
+    /** @brief  Apply a foreground color attribute
+     *  @param  __x  Number of color from 0 to 7.
+     *  @note  It would return directly if @c __x was out of range.
+    **/
     void foreground_color(int __x)
     {
         _M_data = "3_m";
@@ -119,6 +151,10 @@ public:
         _M_do();
     }
 
+    /** @brief  Apply a background color attribute
+     *  @param  __x  Number of color from 0 to 7.
+     *  @note  It would return directly if @c __x was out of range.
+    **/
     void background_color(int __x)
     {
         _M_data = "4_m";
@@ -126,38 +162,52 @@ public:
         _M_do();
     }
 
+    /** @brief  Locate cursor
+     *  @param  __x  Line number.
+     *  @param  __y  Column number.
+    **/
     void locate(int __x, int __y)
     {
-        _M_data = "y;xH";
-        _M_data.replace(2, 1, std::to_string(++__x));
-        _M_data.replace(0, 1, std::to_string(++__y));
+        _M_data = "x;yH";
+        _M_data.replace(0, 1, std::to_string(++__x));
+        _M_data.replace(2, 1, std::to_string(++__y));
         _M_do();
     }
 
+    /** @brief  Clear line after cursor
+    **/
     void clear_line_after()
     {
         _M_data = "K";
         _M_do();
     }
 
+    /** @brief  Save cursor location
+    **/
     void save_cursor()
     {
         _M_data = "s";
         _M_do();
     }
 
+    /** @brief  Recover cursor location
+    **/
     void recover_cursor()
     {
         _M_data = "u";
         _M_do();
     }
 
+    /** @brief  Show cursor
+    **/
     void show_cursor()
     {
         _M_data = "?25h";
         _M_do();
     }
 
+    /** @brief  Hide cursor
+    **/
     void hide_cursor()
     {
         _M_data = "?25l";
@@ -165,12 +215,12 @@ public:
     }
 };
 
+/** @brief
+ *  @deprecated  This variable is thought removed in a future version.
+ *               You should use @c terminal instead.
+**/
 console_t console;
 
 }
-
-#else
-#error unsupported system
-#endif
 
 #endif /* _POLLIB_CONSOLE */
