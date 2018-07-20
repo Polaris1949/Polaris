@@ -22,11 +22,15 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file concepts
+/** @file     concepts
+ *  @brief    Concepts library
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *  @note     You compiler must support C++20 or Concepts TS.
+ *  @todo     This library is incompelete.
+ *
  *  This is a Polaris C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _POLLIB_CONCEPTS
 #define _POLLIB_CONCEPTS 1
@@ -49,11 +53,15 @@
 #error no available support for this library
 #endif /* !__cpp_concepts */
 
+/** @namespace  std
+ *  @brief      Polaris library @c std support
+ *  @bug        There may be any bug.
+ *  @todo       Make compiler support it.
+ *  @note       No compiler support it now.
+**/
 namespace std
 {
 
-// @FIXME
-// @{
 struct __common_ref_impl
 {
 	template<typename... _Tp, typename =
@@ -81,12 +89,17 @@ struct remove_cvref
 
 template<typename _Tp>
 using remove_cvref_t = typename remove_cvref<_Tp>::type;
-// @}
 
 }
 
 namespace polaris
 {
+
+/** @namespace  polaris::concepts
+ *  @brief      Polaris concepts support
+ *  @note       You should use <concepts> instead
+ *              if your compiler support C++20.
+**/
 inline namespace concepts
 {
 
