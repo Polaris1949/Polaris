@@ -81,7 +81,6 @@ operator >> (_Up& __x)
 	return *this;
 }
 
-
 template<typename _Tp>
 template<typename _Up>
 byte_stream<_Tp>&

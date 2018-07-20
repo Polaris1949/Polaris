@@ -35,6 +35,18 @@
 
 #include <polaris/version>
 #include <cstring> // for std::memcpy
+
+namespace polaris
+{
+
+template<typename>
+class byte_stream;
+
+template<size_t>
+struct ignore_byte;
+
+}
+
 #include <polaris/bits/bstream.h>
 #include <polaris/bits/bstream.tcc>
 

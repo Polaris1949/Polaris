@@ -37,26 +37,9 @@
 namespace polaris
 {
 
-// Forward declaration.
-template<typename>
-class byte_stream;
-
-template<size_t>
-struct ignore_byte;
-
-/** @class  ignore_byte
- *  @brief  Utility struct to ignore bytes in a @c byte_stream
- *  @tparam  _Num  Number of bytes to ignore.
-**/
-template<size_t _Num>
-struct ignore_byte
-{
-	typedef ignore_byte<_Num> type;
-	static constexpr size_t value = _Num;
-};
-
 /** @class  byte_stream
- *  @brief  A @c class for I/O stream byte operations.
+ *  @headerfile  byte_stream
+ *  @brief  A @c class for I/O stream byte operations
  *  @tparam  _Tp  Type of the contained stream object.
  *  @attention  You should @b NOT use this on standard streams, i.e.
                 @c std::cin, @c std::cout, @c std::cerr and @c std::clog.
@@ -69,6 +52,7 @@ public:
 	typedef _Tp stream_type;
 
 private:
+	/** @brief  Internal stream object **/
 	_Tp _M_stream;
 
 public:
@@ -155,6 +139,20 @@ public:
 	**/
 	template<size_t _BNum>
 	byte_stream& operator << (const ignore_byte<_BNum>& __x);
+};
+
+/** @class  ignore_byte
+ *  @brief  Utility struct to ignore bytes in a @c byte_stream
+ *  @tparam  _Num  Number of bytes to ignore.
+**/
+template<size_t _Num>
+struct ignore_byte
+{
+	/** @brief  Self type **/
+	typedef ignore_byte<_Num> type;
+
+	/** @brief  Value of ignored bytes **/
+	static constexpr size_t value = _Num;
 };
 
 }
