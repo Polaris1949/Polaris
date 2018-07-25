@@ -34,13 +34,13 @@ void print_bitfield(_Int_data* b, _Int_data* e)
 struct tc
 {
 	size_t _M_data;
-	
+
 	template<typename _Tp, typename... _Rest>
 	size_t operator!() // only t.operator!<...>();
 	{
 		return _M_data = !_M_data;
 	}
-	
+
 	template<typename _Tp, typename... _Rest>
 	size_t operator+=(const tc& __x) // only t.operator+<...>();
 	{
@@ -56,7 +56,7 @@ public:
 	constexpr static size_t type_pack_size = std::tuple_size<type_pack>::value;
 	template<size_t __i> using type = typename std::tuple_element<__i, \
 		type_pack>::type;
-	
+
 	constexpr size_t
 	size() const
 	{
@@ -77,6 +77,7 @@ int main()
 	cout<<(!tpx)<<endl;
 	cout<<(!tpx)<<endl;
 	cout<<(tpx+=tpy)<<endl;
+
 	//cout<<(tpa+=2)<<endl;
 	/*cout<<x.size()<<endl;
 	cout<<x.capacity()<<endl;
