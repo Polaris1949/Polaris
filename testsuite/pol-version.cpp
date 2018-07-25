@@ -8,5 +8,6 @@ int main()
 {
 	cout << __POLLIB__ << '.' << __POLLIB_MINOR__ \
 		<< '.' << __POLLIB_PATCHLEVEL__ << endl;
+	cout << __cplusplus << endl;
 	return 0;
 }
