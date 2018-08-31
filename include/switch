@@ -85,10 +85,10 @@ auto
 __switch_impl(_Tp&&, _Up&&, std::tuple<std::tuple<_Ap...>, _Bp, _Cp>&&,
 	_Vp&&...);
 
-// __one_of: check whether the value is in the tuple
+// one_of: check whether the value is in the tuple
 template<typename _Tp, typename... _Up>
 bool
-__one_of(_Tp&&, std::tuple<_Up...>&&);
+one_of(_Tp&&, std::tuple<_Up...>&&);
 
 // __one_of_impl: in range (0)
 template<std::size_t __i, typename _Tp, typename... _Up,
@@ -141,7 +141,7 @@ auto
 __switch_impl(_Tp&& __switch, _Up&& __default,
 	std::pair<std::tuple<_Ap...>, _Bp>&& __cur, _Vp&&... __case)
 {
-	if (__one_of(std::forward<_Tp&&>(__switch),
+	if (one_of(std::forward<_Tp&&>(__switch),
 			std::forward<std::tuple<_Ap...>&&>(__cur.first)))
 		return __cur.second();
 	else
@@ -170,7 +170,7 @@ auto
 __switch_impl(_Tp&& __switch, _Up&& __default,
 	std::tuple<std::tuple<_Ap...>, _Bp, _Cp>&& __cur, _Vp&&... __case)
 {
-	if (__one_of(std::forward<_Cp&&>(std::get<2>(__cur)(__switch)),
+	if (one_of(std::forward<_Cp&&>(std::get<2>(__cur)(__switch)),
 			std::forward<std::tuple<_Ap...>&&>(std::get<0>(__cur))))
 		return std::get<1>(__cur)();
 	else
@@ -178,10 +178,10 @@ __switch_impl(_Tp&& __switch, _Up&& __default,
 			std::forward<_Up&&>(__default), std::forward<_Vp&&>(__case)...);
 }
 
-// __one_of
+// one_of
 template<typename _Tp, typename... _Up>
 bool
-__one_of(_Tp&& __switch, std::tuple<_Up...>&& __cur)
+one_of(_Tp&& __switch, std::tuple<_Up...>&& __cur)
 {
 	return __one_of_impl<0>(std::forward<_Tp&&>(__switch),
 		std::forward<std::tuple<_Up...>&&>(__cur));
