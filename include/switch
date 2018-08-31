@@ -22,11 +22,13 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file switch
+/** @file     switch
+ *  @brief    Switch case components
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *
  *  This is a Polaris C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _POLLIB_SWITCH
 #define _POLLIB_SWITCH 1
@@ -34,175 +36,176 @@
 #pragma GCC system_header
 
 #include <polaris/version>
-#include <utility>
-#include <vector>
 #include <tuple>
-#include <polaris/type_traits>
+#include <utility>
 
 #if __cpp_return_type_deduction < 201304L
-#error this library need return type deduction for normal functions
+#error return type deduction required in this library
 #else
 
 namespace polaris
 {
 
-// switch_case
+// switch_case: primary template.
 template<typename _Tp, typename _Up, typename... _Vp>
 auto
 switch_case(_Tp&&, _Up&&, _Vp&&...);
 
-// switch_case_helper: use default do_func
+// __switch_impl: default case. (0)
 template<typename _Tp, typename _Up>
 auto
-switch_case_helper(_Tp&&, _Up&&);
+__switch_impl(_Tp&&, _Up&&);
 
-// switch_case_helper: use value-do_func pair
-template<typename _Tp, typename _Up, typename _Vp,
-	typename _Wp, typename... _Xp>
-auto
-switch_case_helper(_Tp&&, _Up&&, std::pair<_Vp, _Wp>&&, _Xp&&...);
-
-// switch_case_helper: use value_tuple-do_func pair
+// __switch_impl: specific case described below. (1)
+// if case value equals to switch value, invoke function.
 template<typename _Tp, typename _Up, typename... _Vp,
-	typename _Wp, typename... _Xp>
+	typename _Ap, typename _Bp>
 auto
-switch_case_helper(_Tp&&, _Up&&, std::pair<std::tuple<_Vp...>, _Wp>&&,
-	_Xp&&...);
+__switch_impl(_Tp&&, _Up&&, std::pair<_Ap, _Bp>&&, _Vp&&...);
 
-// switch_case_helper: use sw_func-value-do_func tuple
-template<typename _Tp, typename _Up, typename _Vp,
-	typename _Wp, typename _Xp, typename... _Yp>
+// __switch_impl: specific case described below. (2)
+// if one of case values equals to switch value, invoke function.
+template<typename _Tp, typename _Up, typename... _Vp,
+	typename... _Ap, typename _Bp>
 auto
-switch_case_helper(_Tp&&, _Up&&, std::tuple<_Vp, _Wp, _Xp>&&, _Yp&&...);
+__switch_impl(_Tp&&, _Up&&, std::pair<std::tuple<_Ap...>, _Bp>&&, _Vp&&...);
 
-// @switch_case_helper: use sw_func-value_tuple-do_func tuple
-template<typename _Tp, typename _Up, typename _Vp,
-	typename... _Wp, typename _Xp, typename... _Yp>
+// __switch_impl: specific case described below. (3)
+// if _Cp yielded switch value equals to case value, invoke function.
+template<typename _Tp, typename _Up, typename... _Vp,
+	typename _Ap, typename _Bp, typename _Cp>
 auto
-switch_case_helper(_Tp&&, _Up&&, std::tuple<_Vp, std::tuple<_Wp...>, _Xp>&&,
-	_Yp&&...);
+__switch_impl(_Tp&&, _Up&&, std::tuple<_Ap, _Bp, _Cp>&&, _Vp&&...);
 
-// @switch_case_tuple_compare: test if the value is in the tuple
+// __switch_impl: specific case described below. (4)
+// if _Cp yielded switch value equals to one of case values, invoke function.
+template<typename _Tp, typename _Up, typename... _Vp,
+	typename... _Ap, typename _Bp, typename _Cp>
+auto
+__switch_impl(_Tp&&, _Up&&, std::tuple<std::tuple<_Ap...>, _Bp, _Cp>&&,
+	_Vp&&...);
+
+// __one_of: check whether the value is in the tuple
 template<typename _Tp, typename... _Up>
 bool
-switch_case_tuple_compare(_Tp&&, std::tuple<_Up...>&&);
+__one_of(_Tp&&, std::tuple<_Up...>&&);
 
-// switch_case_tuple_compare_helper: __i < __n
-template<std::size_t __i, std::size_t __n, typename _Tp, typename... _Up,
-	typename = require_bool<(__i < __n)>>
+// __one_of_impl: in range (0)
+template<std::size_t __i, typename _Tp, typename... _Up,
+	typename = std::enable_if_t<(__i < sizeof...(_Up))>>
 bool
-switch_case_tuple_compare_helper(_Tp&&, std::tuple<_Up...>&&);
+__one_of_impl(_Tp&&, std::tuple<_Up...>&&);
 
-// switch_case_tuple_compare_helper: __i >= __n
-template<std::size_t __i, std::size_t __n, typename _Tp, typename... _Up,
-	typename = require_bool<(__i >= __n)>,
-	typename = template_placeholder>
+// __one_of_impl: out of range (1)
+template<std::size_t __i, typename _Tp, typename... _Up,
+	typename = std::enable_if_t<(__i >= sizeof...(_Up))>,
+	typename = void>
 bool
-switch_case_tuple_compare_helper(_Tp&&, std::tuple<_Up...>&&);
+__one_of_impl(_Tp&&, std::tuple<_Up...>&&);
 
-// @switch_case
+// switch_case
 template<typename _Tp, typename _Up, typename... _Vp>
 auto
 switch_case(_Tp&& __switch, _Up&& __default, _Vp&&... __case)
 {
-	return switch_case_helper(std::forward<_Tp&&>(__switch),
+	return __switch_impl(std::forward<_Tp&&>(__switch),
 		std::forward<_Up&&>(__default), std::forward<_Vp&&>(__case)...);
 }
 
-// @switch_case_helper: use default do_func
+// __switch_impl (0)
 template<typename _Tp, typename _Up>
 auto
-switch_case_helper(_Tp&& __switch, _Up&& __default)
+__switch_impl(_Tp&& __switch, _Up&& __default)
 {
 	return __default();
 }
 
-// @switch_case_helper: use value-do_func pair
-template<typename _Tp, typename _Up, typename _Vp,
-	typename _Wp, typename... _Xp>
-auto
-switch_case_helper(_Tp&& __switch, _Up&& __default,
-	std::pair<_Vp, _Wp>&& __now, _Xp&&... __case)
-{
-	if (__switch == __now.first)
-		return __now.second();
-	else
-		return switch_case_helper(std::forward<_Tp&&>(__switch),
-			std::forward<_Up&&>(__default), std::forward<_Xp&&>(__case)...);
-}
-
-// @switch_case_helper: use value_tuple-do_func pair
+// __switch_impl (1)
 template<typename _Tp, typename _Up, typename... _Vp,
-	typename _Wp, typename... _Xp>
+	typename _Ap, typename _Bp>
 auto
-switch_case_helper(_Tp&& __switch, _Up&& __default,
-	std::pair<std::tuple<_Vp...>, _Wp>&& __now, _Xp&&... __case)
+__switch_impl(_Tp&& __switch, _Up&& __default,
+	std::pair<_Ap, _Bp>&& __cur, _Vp&&... __case)
 {
-	if (switch_case_tuple_compare(std::forward<_Tp&&>(__switch),
-		std::forward<std::tuple<_Vp...>&&>(__now.first)))
-		return __now.second();
+	if (__switch == __cur.first)
+		return __cur.second();
 	else
-		return switch_case_helper(std::forward<_Tp&&>(__switch),
-			std::forward<_Up&&>(__default), std::forward<_Xp&&>(__case)...);
+		return __switch_impl(std::forward<_Tp&&>(__switch),
+			std::forward<_Up&&>(__default), std::forward<_Vp&&>(__case)...);
 }
 
-// @switch_case_helper: use sw_func-value-do_func tuple
-template<typename _Tp, typename _Up, typename _Vp,
-	typename _Wp, typename _Xp, typename... _Yp>
+// __switch_impl (2)
+template<typename _Tp, typename _Up, typename... _Vp,
+	typename... _Ap, typename _Bp>
 auto
-switch_case_helper(_Tp&& __switch, _Up&& __default,
-	std::tuple<_Vp, _Wp, _Xp>&& __now, _Yp&&... __case)
+__switch_impl(_Tp&& __switch, _Up&& __default,
+	std::pair<std::tuple<_Ap...>, _Bp>&& __cur, _Vp&&... __case)
 {
-	if (std::get<0>(__now)(__switch) == std::get<1>(__now))
-		return std::get<2>(__now)();
+	if (__one_of(std::forward<_Tp&&>(__switch),
+			std::forward<std::tuple<_Ap...>&&>(__cur.first)))
+		return __cur.second();
 	else
-		return switch_case_helper(std::forward<_Tp&&>(__switch),
-			std::forward<_Up&&>(__default), std::forward<_Yp&&>(__case)...);
+		return __switch_impl(std::forward<_Tp&&>(__switch),
+			std::forward<_Up&&>(__default), std::forward<_Vp&&>(__case)...);
 }
 
-// @switch_case_helper: use sw_func-value_tuple-do_func tuple
-template<typename _Tp, typename _Up, typename _Vp,
-	typename... _Wp, typename _Xp, typename... _Yp>
+// __switch_impl (3)
+template<typename _Tp, typename _Up, typename... _Vp,
+	typename _Ap, typename _Bp, typename _Cp>
 auto
-switch_case_helper(_Tp&& __switch, _Up&& __default,
-	std::tuple<_Vp, std::tuple<_Wp...>, _Xp>&& __now, _Yp&&... __case)
+__switch_impl(_Tp&& __switch, _Up&& __default,
+	std::tuple<_Ap, _Bp, _Cp>&& __cur, _Vp&&... __case)
 {
-	if (switch_case_tuple_compare(std::forward<_Vp&&>(std::get<0>(__now)
-		(__switch)), std::forward<std::tuple<_Wp...>&&>(std::get<1>(__now))))
-		return std::get<2>(__now)();
+	if (std::get<2>(__cur)(__switch) == std::get<0>(__cur))
+		return std::get<1>(__cur)();
 	else
-		return switch_case_helper(std::forward<_Tp&&>(__switch),
-			std::forward<_Up&&>(__default), std::forward<_Yp&&>(__case)...);
+		return __switch_impl(std::forward<_Tp&&>(__switch),
+			std::forward<_Up&&>(__default), std::forward<_Vp&&>(__case)...);
 }
 
-// @switch_case_tuple_compare: test if the value is in the tuple
+// __switch_impl (4)
+template<typename _Tp, typename _Up, typename... _Vp,
+	typename... _Ap, typename _Bp, typename _Cp>
+auto
+__switch_impl(_Tp&& __switch, _Up&& __default,
+	std::tuple<std::tuple<_Ap...>, _Bp, _Cp>&& __cur, _Vp&&... __case)
+{
+	if (__one_of(std::forward<_Cp&&>(std::get<2>(__cur)(__switch)),
+			std::forward<std::tuple<_Ap...>&&>(std::get<0>(__cur))))
+		return std::get<1>(__cur)();
+	else
+		return __switch_impl(std::forward<_Tp&&>(__switch),
+			std::forward<_Up&&>(__default), std::forward<_Vp&&>(__case)...);
+}
+
+// __one_of
 template<typename _Tp, typename... _Up>
 bool
-switch_case_tuple_compare(_Tp&& __switch, std::tuple<_Up...>&& __now)
+__one_of(_Tp&& __switch, std::tuple<_Up...>&& __cur)
 {
-	return switch_case_tuple_compare_helper<0, sizeof...(_Up)>(std::forward
-		<_Tp&&>(__switch), std::forward<std::tuple<_Up...>&&>(__now));
+	return __one_of_impl<0>(std::forward<_Tp&&>(__switch),
+		std::forward<std::tuple<_Up...>&&>(__cur));
 }
 
-// @switch_case_tuple_compare_helper: __i < __n
-template<std::size_t __i, std::size_t __n, typename _Tp, typename... _Up,
-	typename = require_bool<(__i < __n)>>
+// __one_of_impl (0)
+template<std::size_t __i, typename _Tp, typename... _Up,
+	typename = std::enable_if_t<(__i < sizeof...(_Up))>>
 bool
-switch_case_tuple_compare_helper(_Tp&& __switch, std::tuple<_Up...>&& __now)
+__one_of_impl(_Tp&& __switch, std::tuple<_Up...>&& __cur)
 {
-	if (__switch == std::get<__i>(__now))
+	if (__switch == std::get<__i>(__cur))
 		return true;
 	else
-		return switch_case_tuple_compare_helper<__i + 1, __n>(std::forward
-			<_Tp&&>(__switch), std::forward<std::tuple<_Up...>&&>(__now));
+		return __one_of_impl<__i + 1>(std::forward<_Tp&&>(__switch),
+			std::forward<std::tuple<_Up...>&&>(__cur));
 }
 
-// @switch_case_tuple_compare_helper: __i >= __n
-template<std::size_t __i, std::size_t __n, typename _Tp, typename... _Up,
-	typename = require_bool<(__i >= __n)>,
-	typename = template_placeholder>
+// __one_of_impl (1)
+template<std::size_t __i, typename _Tp, typename... _Up,
+	typename = std::enable_if_t<(__i >= sizeof...(_Up))>,
+	typename = void>
 bool
-switch_case_tuple_compare_helper(_Tp&& __switch, std::tuple<_Up...>&& __now)
+__one_of_impl(_Tp&& __switch, std::tuple<_Up...>&& __cur)
 {
 	return false;
 }
