@@ -42,8 +42,16 @@
 #error compiler template aliases feature required
 #endif
 
+#if __cpp_variable_templates < 201304L
+#error compiler variable templates feature required
+#endif
+
 #if __cpp_lib_logical_traits < 201510L
 #error library logical traits feature required
+#endif
+
+#if __cpp_inline_variables < 201606L
+#error compiler inline variables feature required
 #endif
 
 namespace polaris
@@ -57,15 +65,19 @@ struct is_functor
 {
 };
 
+// is_functor_v
+template<typename _Tp>
+inline constexpr bool is_functor_v = is_functor<_Tp>::value;
+
 // __do_is_eq_comp_with_impl
 struct __do_is_eq_comp_with_impl
 {
 	template<typename _Tp, typename _Up, typename = decltype(
 		std::declval<_Tp&>() == std::declval<_Up&>())>
-	static std::true_type __test(int);
+	static std::true_type _S_test(int);
 
 	template<typename, typename>
-	static std::false_type __test(...);
+	static std::false_type _S_test(...);
 };
 
 // __is_eq_comp_with_impl
@@ -73,7 +85,7 @@ template<typename _Tp, typename _Up>
 struct __is_eq_comp_with_impl
 	: public __do_is_eq_comp_with_impl
 {
-	using type = decltype(__test<_Tp, _Up>(0));
+	using type = decltype(_S_test<_Tp, _Up>(0));
 };
 
 // is_equality_comparable_with
@@ -83,6 +95,7 @@ struct is_equality_comparable_with
 {
 };
 
+// is_equality_comparable_with_v
 template<typename _Tp, typename _Up>
 inline constexpr bool is_equality_comparable_with_v =
 	is_equality_comparable_with<_Tp, _Up>::value;
@@ -92,7 +105,7 @@ template<typename _Tp>
 struct __is_eq_comp_impl
 	: public __do_is_eq_comp_with_impl
 {
-	using type = decltype(__test<_Tp, _Tp>(0));
+	using type = decltype(_S_test<_Tp, _Tp>(0));
 };
 
 // is_equality_comparable
@@ -102,15 +115,20 @@ struct is_equality_comparable
 {
 };
 
+// is_equality_comparable_v
+template<typename _Tp>
+inline constexpr bool is_equality_comparable_v =
+	is_equality_comparable<_Tp>::value;
+
 // __do_is_lt_comp_with_impl
 struct __do_is_lt_comp_with_impl
 {
 	template<typename _Tp, typename _Up, typename = decltype(
 		std::declval<_Tp&>() < std::declval<_Up&>())>
-	static std::true_type __test(int);
+	static std::true_type _S_test(int);
 
 	template<typename, typename>
-	static std::false_type __test(...);
+	static std::false_type _S_test(...);
 };
 
 // __is_lt_comp_with_impl
@@ -118,7 +136,7 @@ template<typename _Tp, typename _Up>
 struct __is_lt_comp_with_impl
 	: public __do_is_lt_comp_with_impl
 {
-	using type = decltype(__test<_Tp, _Up>(0));
+	using type = decltype(_S_test<_Tp, _Up>(0));
 };
 
 // is_less_than_comparable_with
@@ -128,12 +146,17 @@ struct is_less_than_comparable_with
 {
 };
 
+// is_less_than_comparable_with_v
+template<typename _Tp, typename _Up>
+inline constexpr bool is_less_than_comparable_with_v =
+	is_less_than_comparable_with<_Tp, _Up>::value;
+
 // __is_lt_comp_impl
 template<typename _Tp>
 struct __is_lt_comp_impl
 	: public __do_is_lt_comp_with_impl
 {
-	using type = decltype(__test<_Tp, _Tp>(0));
+	using type = decltype(_S_test<_Tp, _Tp>(0));
 };
 
 // is_less_than_comparable
@@ -143,10 +166,15 @@ struct is_less_than_comparable
 {
 };
 
+// is_less_than_comparable_v
+template<typename _Tp>
+inline constexpr bool is_less_than_comparable_v =
+	is_less_than_comparable<_Tp>::value;
+
 #define POL_MAKE_HO_CALL(NAME) \
 	template<typename _Tp> \
 	struct ho_##NAME \
-		: public decltype(__ho_##NAME##_impl::__test<_Tp>(0)) \
+		: public decltype(__ho_##NAME##_impl::_S_test<_Tp>(0)) \
 	{ \
 	};
 
@@ -155,10 +183,10 @@ struct is_less_than_comparable
 	{ \
 		template<typename _Tp, typename = \
 			decltype(OP std::declval<_Tp>())> \
-		static std::true_type __test(int); \
+		static std::true_type _S_test(int); \
 		\
 		template<typename> \
-		static std::false_type __test(...); \
+		static std::false_type _S_test(...); \
 	};
 
 #define POL_MAKE_HO1(OP, NAME) \
@@ -180,10 +208,10 @@ POL_MAKE_HO1(*, dereference)
 	{ \
 		template<typename _Tp, typename = \
 			decltype(std::declval<_Tp>() OP std::declval<_Tp>())> \
-		static std::true_type __test(int); \
+		static std::true_type _S_test(int); \
 		\
 		template<typename> \
-		static std::false_type __test(...); \
+		static std::false_type _S_test(...); \
 	};
 
 #define POL_MAKE_HO2(OP, NAME) \
