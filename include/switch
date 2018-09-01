@@ -38,10 +38,19 @@
 #include <polaris/version>
 #include <tuple>
 #include <utility>
+#include <polaris/type_traits>
+
+#if __cpp_variadic_templates < 200704L
+#error compiler variadic templates feature required
+#endif
 
 #if __cpp_return_type_deduction < 201304L
-#error return type deduction required in this library
-#else
+#error compiler return type deduction feature required
+#endif
+
+#if __cpp_if_constexpr < 201606L
+#error compiler constexpr if feature required
+#endif
 
 namespace polaris
 {
@@ -193,11 +202,13 @@ template<std::size_t __i, typename _Tp, typename... _Up,
 bool
 __one_of_impl(_Tp&& __value, std::tuple<_Up...>&& __tuple)
 {
-	if (__value == std::get<__i>(__tuple))
-		return true;
-	else
-		return __one_of_impl<__i + 1>(std::forward<_Tp&&>(__value),
-			std::forward<std::tuple<_Up...>&&>(__tuple));
+	if constexpr (is_equality_comparable_with_v<_Tp,
+			std::tuple_element_t<__i, std::tuple<_Up...>>>)
+		if (__value == std::get<__i>(__tuple))
+			return true;
+
+	return __one_of_impl<__i + 1>(std::forward<_Tp&&>(__value),
+		std::forward<std::tuple<_Up...>&&>(__tuple));
 }
 
 // __one_of_impl (1)
@@ -211,7 +222,5 @@ __one_of_impl(_Tp&& __value, std::tuple<_Up...>&& __tuple)
 }
 
 }
-
-#endif /* __cpp_return_type_deduction */
 
 #endif /* _POLLIB_SWITCH */
