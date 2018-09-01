@@ -22,11 +22,13 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file type_traits
+/** @file     type_traits
+ *  @brief    Type traits and metaprogramming utilities
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *
  *  This is a Polaris C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _POLLIB_TYPE_TRAITS
 #define _POLLIB_TYPE_TRAITS 1
@@ -34,180 +36,24 @@
 #pragma GCC system_header
 
 #include <polaris/version>
-#include <polaris/bits/type.h>
-#include <polaris/bits/type.tcc>
 #include <type_traits>
+
+#if __cpp_alias_templates < 200704L
+#error compiler template aliases feature required
+#endif
+
+#if __cpp_lib_logical_traits < 201510L
+#error library logical traits feature required
+#endif
 
 namespace polaris
 {
 
-inline namespace type_traits
-{
-
-// template_placeholder
-typedef void template_placeholder;
-
-#if _POL_NEWLIB
-
-template<typename _Cond, typename _Tp = void>
-struct require
-{
-	typedef typename std::enable_if<_Cond::value, _Tp>::type type;
-};
-
-template<typename _Cond, typename _Tp = void>
-using require_t = typename require<_Cond, _Tp>::type;
-
-template<bool _Cond, typename _Tp = void>
-struct brequire
-{
-	typedef typename std::enable_if<_Cond, _Tp>::type type;
-};
-
-template<bool _Cond, typename _Tp = void>
-using brequire_t = typename brequire<_Cond, _Tp>::type;
-
-#else
-
-// requirement
-template<typename _Cond, typename _Tp = void>
-struct requirement
-{
-	typedef typename std::enable_if<_Cond::value, _Tp>::type type;
-};
-
-// require
-template<typename _Cond, typename _Tp = void>
-using require = typename requirement<_Cond, _Tp>::type;
-
-// require_bool
-template<bool _Cond, typename _Tp = void>
-using require_bool = typename std::enable_if<_Cond, _Tp>::type;
-
-#endif
-
-// invoke_result
-template<typename _Sig>
-using invoke_result = std::result_of<_Sig>;
-
-// true_type, false_type
-typedef std::true_type true_type;
-typedef std::false_type false_type;
-
-// success_type
-template<typename _Tp>
-struct success_type
-{
-	typedef _Tp type;
-};
-
-// failure_type
-struct failure_type
-{
-};
-
-// bool_constant
-template<bool _Val>
-struct bool_constant
-	: public std::integral_constant<bool, _Val>
-{
-};
-
-// conjunction
-template<typename...>
-struct conjunction;
-
-template<>
-struct conjunction<>
-	: public true_type
-{
-};
-
-template<typename _Tp>
-struct conjunction<_Tp>
-	: public _Tp
-{
-};
-
-template<typename _Tp, typename _Up>
-struct conjunction<_Tp, _Up>
-	: public std::conditional<_Tp::value, _Up, _Tp>::type
-{
-};
-
-template<typename _Tp, typename _Up, typename _Vp, typename... _Args>
-struct conjunction<_Tp, _Up, _Vp, _Args...>
-	: public std::conditional<_Tp::value, conjunction<_Up, _Vp, _Args...>,
-		_Tp>::type
-{
-};
-
-// disjunction
-template<typename...>
-struct disjunction;
-
-template<>
-struct disjunction<>
-	: public false_type
-{
-};
-
-template<typename _Tp>
-struct disjunction<_Tp>
-	: public _Tp
-{
-};
-
-template<typename _Tp, typename _Up>
-struct disjunction<_Tp, _Up>
-	: public std::conditional<_Tp::value, _Tp, _Up>::type
-{
-};
-
-template<typename _Tp, typename _Up, typename _Vp, typename... _Args>
-struct disjunction<_Tp, _Up, _Vp, _Args...>
-	: public std::conditional<_Tp::value, _Tp, disjunction<_Up, _Vp,
-		_Args...>>::type
-{
-};
-
-// negation
-template<typename _Tp>
-struct negation
-	: public bool_constant<!_Tp::value>
-{
-};
-
-// __do_is_callable_impl
-struct __do_is_callable_impl
-{
-	template<typename _Tp, typename = decltype(std::declval<_Tp&>()())>
-	static true_type __test(int);
-
-	template<typename>
-	static false_type __test(...);
-};
-
-// __is_callable_impl
-template<typename _Tp>
-struct __is_callable_impl
-	: public __do_is_callable_impl
-{
-	typedef decltype(__test<_Tp>(0)) type;
-};
-
-// is_callable
-template<typename _Tp>
-struct is_callable
-	: public __is_callable_impl<_Tp>::type
-{
-};
-
 // is_functor
 template<typename _Tp>
 struct is_functor
-	: public bool_constant<conjunction<is_callable<_Tp>,
-		negation<std::is_function<_Tp>>>::value>
+	: public std::bool_constant<std::conjunction_v<std::is_invocable<_Tp>,
+		std::negation<std::is_function<_Tp>>>>
 {
 };
 
@@ -216,10 +62,10 @@ struct __do_is_eq_comp_with_impl
 {
 	template<typename _Tp, typename _Up, typename = decltype(
 		std::declval<_Tp&>() == std::declval<_Up&>())>
-	static true_type __test(int);
+	static std::true_type __test(int);
 
 	template<typename, typename>
-	static false_type __test(...);
+	static std::false_type __test(...);
 };
 
 // __is_eq_comp_with_impl
@@ -227,7 +73,7 @@ template<typename _Tp, typename _Up>
 struct __is_eq_comp_with_impl
 	: public __do_is_eq_comp_with_impl
 {
-	typedef decltype(__test<_Tp, _Up>(0)) type;
+	using type = decltype(__test<_Tp, _Up>(0));
 };
 
 // is_equality_comparable_with
@@ -237,12 +83,16 @@ struct is_equality_comparable_with
 {
 };
 
+template<typename _Tp, typename _Up>
+inline constexpr bool is_equality_comparable_with_v =
+	is_equality_comparable_with<_Tp, _Up>::value;
+
 // __is_eq_comp_impl
 template<typename _Tp>
 struct __is_eq_comp_impl
 	: public __do_is_eq_comp_with_impl
 {
-	typedef decltype(__test<_Tp, _Tp>(0)) type;
+	using type = decltype(__test<_Tp, _Tp>(0));
 };
 
 // is_equality_comparable
@@ -257,10 +107,10 @@ struct __do_is_lt_comp_with_impl
 {
 	template<typename _Tp, typename _Up, typename = decltype(
 		std::declval<_Tp&>() < std::declval<_Up&>())>
-	static true_type __test(int);
+	static std::true_type __test(int);
 
 	template<typename, typename>
-	static false_type __test(...);
+	static std::false_type __test(...);
 };
 
 // __is_lt_comp_with_impl
@@ -268,7 +118,7 @@ template<typename _Tp, typename _Up>
 struct __is_lt_comp_with_impl
 	: public __do_is_lt_comp_with_impl
 {
-	typedef decltype(__test<_Tp, _Up>(0)) type;
+	using type = decltype(__test<_Tp, _Up>(0));
 };
 
 // is_less_than_comparable_with
@@ -283,7 +133,7 @@ template<typename _Tp>
 struct __is_lt_comp_impl
 	: public __do_is_lt_comp_with_impl
 {
-	typedef decltype(__test<_Tp, _Tp>(0)) type;
+	using type = decltype(__test<_Tp, _Tp>(0));
 };
 
 // is_less_than_comparable
@@ -292,172 +142,6 @@ struct is_less_than_comparable
 	: public __is_lt_comp_impl<_Tp>::type
 {
 };
-
-// __do_is_swappable_with_impl
-struct __do_is_swappable_with_impl
-{
-	template<typename _Tp, typename _Up, typename =
-		decltype(std::swap(std::declval<_Tp>(), std::declval<_Up>()))>
-	static true_type __test(int);
-
-	template<typename, typename>
-	static false_type __test(...);
-};
-
-// __is_swappable_with_impl
-template<typename _Tp, typename _Up>
-struct __is_swappable_with_impl
-	: public __do_is_swappable_with_impl
-{
-	typedef decltype(__test<_Tp, _Up>(0)) type;
-};
-
-// is_swappable_with
-template<typename _Tp, typename _Up>
-struct is_swappable_with
-	: public __is_swappable_with_impl<_Tp, _Up>::type
-{
-};
-
-// TODO...
-/** @namespace  polaris::type_traits::concepts
- *  @brief      Polaris type traits concepts support
- *  @note       You should not use it.
-**/
-inline namespace concepts
-{
-
-// c_is_same
-template<typename _Tp, typename _Up>
-struct c_is_same
-	: public std::is_same<_Tp, _Up>
-{
-};
-
-// c_is_derived_from
-template<typename _Tp, typename _Up>
-struct c_is_derived_from
-	: public conjunction<std::is_base_of<_Up, _Tp>,
-		std::is_convertible<std::remove_cv_t<_Tp>*,
-		std::remove_cv_t<_Up>*>>
-{
-};
-
-// __c_is_convertible_to_impl
-struct __c_is_convertible_to_impl
-{
-	template<typename _From, typename _To, typename =
-		decltype(static_cast<_To>(std::declval<_From>())),
-		typename = require<std::is_convertible<_From, _To>>>
-	static true_type __test(int);
-
-	template<typename, typename>
-	static false_type __test(...);
-};
-
-// c_is_convertible_to
-template<typename _From, typename _To>
-struct c_is_convertible_to
-	: public decltype(__c_is_convertible_to_impl::__test<_From, _To>(0))
-{
-};
-
-// c_is_integral
-template<typename _Tp>
-struct c_is_integral
-	: public std::is_integral<_Tp>
-{
-};
-
-// c_is_signed_integral
-template<typename _Tp>
-struct c_is_signed_integral
-	: public conjunction<c_is_integral<_Tp>, std::is_signed<_Tp>>
-{
-};
-
-// c_is_unsigned_integral
-template<typename _Tp>
-struct c_is_unsigned_integral
-	: public conjunction<c_is_integral<_Tp>, negation<
-			c_is_signed_integral<_Tp>>>
-{
-};
-
-// __c_is_swappable_impl
-struct __c_is_swappable_impl
-{
-	template<typename _Tp, typename = decltype(std::swap(std::declval<_Tp&>(),
-		std::declval<_Tp&>()))>
-	static true_type __test(int);
-
-	template<typename>
-	static false_type __test(...);
-};
-
-// c_is_swappable
-template<typename _Tp>
-struct c_is_swappable
-	: public decltype(__c_is_swappable_impl::__test<_Tp>(0))
-{
-};
-/*
-template<typename _Tp, typename _Up>
-struct c_is_common_reference
-	: public conjunction<c_is_same<common_reference_t<_Tp, _Up>,
-		common_reference_t<_Up, _Tp>>,
-		c_is_convertible_to<_Tp, common_reference_t<_Tp, _Up>>,
-		c_is_convertible_to<_Up, common_reference_t<_Tp, _Up>>>
-{
-};
-*/
-// c_is_destructible
-template<typename _Tp>
-struct c_is_destructible
-	: public std::is_nothrow_destructible<_Tp>
-{
-};
-
-// c_is_constructible
-template<typename _Tp, typename... _Args>
-struct c_is_constructible
-	: public conjunction<c_is_destructible<_Tp>,
-		std::is_constructible<_Tp, _Args...>>
-{
-};
-
-// c_is_default_constructible
-template<typename _Tp>
-struct c_is_default_constructible
-	: public c_is_constructible<_Tp>
-{
-};
-
-// c_is_move_constructible
-template<typename _Tp>
-struct c_is_move_constructible
-	: public conjunction<c_is_constructible<_Tp, _Tp>,
-		c_is_convertible_to<_Tp, _Tp>>
-{
-};
-
-// c_is_copy_constructible
-template<typename _Tp>
-struct c_is_copy_constructible
-	: public conjunction<c_is_move_constructible<_Tp>,
-		c_is_constructible<_Tp, _Tp&>,
-		c_is_convertible_to<_Tp, _Tp&>,
-		c_is_constructible<_Tp, const _Tp&>,
-		c_is_convertible_to<const _Tp&, _Tp>,
-		c_is_constructible<_Tp, const _Tp>,
-		c_is_convertible_to<const _Tp, _Tp>>
-{
-};
-
-}
-
-inline namespace has_op
-{
 
 #define POL_MAKE_HO_CALL(NAME) \
 	template<typename _Tp> \
@@ -471,10 +155,10 @@ inline namespace has_op
 	{ \
 		template<typename _Tp, typename = \
 			decltype(OP std::declval<_Tp>())> \
-		static true_type __test(int); \
+		static std::true_type __test(int); \
 		\
 		template<typename> \
-		static false_type __test(...); \
+		static std::false_type __test(...); \
 	};
 
 #define POL_MAKE_HO1(OP, NAME) \
@@ -483,9 +167,9 @@ inline namespace has_op
 
 POL_MAKE_HO1(!, logical_not)
 POL_MAKE_HO1(~, bitwise_not)
-POL_MAKE_HO1(+, positive)
-POL_MAKE_HO1(-, negative)
-POL_MAKE_HO1(&, address)
+POL_MAKE_HO1(+, posate)
+POL_MAKE_HO1(-, negate)
+POL_MAKE_HO1(&, addressof)
 POL_MAKE_HO1(*, dereference)
 
 #undef POL_MAKE_HO1
@@ -496,10 +180,10 @@ POL_MAKE_HO1(*, dereference)
 	{ \
 		template<typename _Tp, typename = \
 			decltype(std::declval<_Tp>() OP std::declval<_Tp>())> \
-		static true_type __test(int); \
+		static std::true_type __test(int); \
 		\
 		template<typename> \
-		static false_type __test(...); \
+		static std::false_type __test(...); \
 	};
 
 #define POL_MAKE_HO2(OP, NAME) \
@@ -511,27 +195,26 @@ POL_MAKE_HO2(-, minus)
 POL_MAKE_HO2(*, multiplies)
 POL_MAKE_HO2(/, divides)
 POL_MAKE_HO2(%, modulus)
+POL_MAKE_HO2(<<, left_shift)
+POL_MAKE_HO2(>>, right_shift)
 POL_MAKE_HO2(=, assign)
+
+POL_MAKE_HO2(&, bitwise_and)
+POL_MAKE_HO2(|, bitwise_or)
+POL_MAKE_HO2(^, bitwise_xor)
+POL_MAKE_HO2(&&, logical_and)
+POL_MAKE_HO2(||, logical_or)
+
+POL_MAKE_HO2(==, equal_to)
+POL_MAKE_HO2(!=, not_equal_to)
+POL_MAKE_HO2(<, less)
+POL_MAKE_HO2(>, greater)
+POL_MAKE_HO2(<=, less_equal)
+POL_MAKE_HO2(>=, greater_equal)
 
 #undef POL_MAKE_HO2
 #undef POL_MAKE_HO_IMPL2
 #undef POL_MAKE_HO_CALL
-
-}
-
-}
-
-/* Deprecated & Removed
-namespace __tt
-{
-	using namespace type_traits;
-}
-
-namespace __ttc
-{
-	using namespace type_traits::concepts;
-}
-*/
 
 }
 
