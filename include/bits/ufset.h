@@ -1,95 +1,67 @@
 #ifndef _POL_UFSET_H
 #define _POL_UFSET_H 1
 
+#include <map>
+#include <vector>
+#include <type_traits> // FIXME
+
 namespace polaris
 {
 
-#if _POL_NEWLIB
 template<typename _Tp>
-class bhash
-{
-public:
-	typedef _Tp value_type;
-	typedef size_t size_type;
-	
-	size_type operator() (const value_type& __x) const;
-	value_type operator[] (const size_type& __x) const;
-};
-
-template<>
-class bhash<size_t>
-{
-public:
-	typedef size_t value_type;
-	typedef size_t size_type;
-	
-	size_type operator() (const value_type& __x) const;
-	value_type operator[] (const size_type& __x) const;
-};
-
-// TODO:......\
-template<typename _Tp>
-
-template<typename _Tp = size_t, typename _Seq = std::deque<_Tp>, \
-	typename _Hash = bhash<_Tp>>
 class ufset
 {
 public:
 	typedef _Tp value_type;
-	typedef _Hash hash_function;
-	
-	using rebind = _Seq::rebind<size_t>;
-	
-private:
-	sequence<size_t> _M_storage;
-};
+	typedef std::size_t size_type;
 
-#else
+	static_assert(!std::is_same_v<_Tp, std::size_t>,
+		"implementation incompleted");
 
-template<typename _Tp = size_t>
-class ufset
-{
-	typedef size_t(*_Hash)(const _Tp&);
-	typedef _Tp(*_Unhash)(const size_t&);
-	
-public:
-	typedef _Tp value_type;
-	typedef size_t size_type;
-	
 private:
-	sequence<size_t> _M_storage;
-	_Hash _M_hash_fun;
-	_Unhash _M_unhash_fun;
-	
+	std::map<_Tp, _Tp> _M_parent;
+	std::map<_Tp, std::size_t> _M_rank;
+
 public:
 	ufset();
 	explicit ufset(size_type __n);
-	
-	_Hash& hash_func();
-	_Unhash& unhash_func();
+
+	value_type parent(value_type __x);
+	size_type rank(value_type __x);
+
+	value_type find(value_type __x);
+	bool merge(value_type __x, value_type __y);
+	bool is_brother(value_type __x, value_type __y);
 };
 
 template<>
-class ufset<size_t>
+class ufset<std::size_t>
 {
 public:
-	typedef size_t value_type;
-	typedef size_t size_type;
-	
+	using value_type = std::size_t;
+	using size_type = std::size_t;
+
 private:
-	sequence<size_t> _M_storage;
-	
+	std::vector<std::size_t> _M_parent;
+	std::vector<std::size_t> _M_rank;
+
 public:
 	ufset();
 	explicit ufset(size_type __n);
-	
-	void resize(size_type __new_size);
-	
+
+	void init(size_type __n);
+
+	value_type& parent(const value_type& __x);
+	const value_type& parent(const value_type& __x) const;
+	size_type& rank(const value_type& __x);
+	const value_type& rank(const value_type& __x) const;
+
+	value_type& find(const value_type& __x);
+	bool merge(const value_type& __x, const value_type& __y);
+	bool is_brother(const value_type& __x, const value_type& __y);
+
 	value_type& operator[] (const value_type& __x);
-	const value_type& operator[] (const value_type& __x) const;
 };
-
-#endif
 
 }
 
