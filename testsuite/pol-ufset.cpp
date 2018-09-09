@@ -1,23 +1,21 @@
 #include <iostream>
 #include <polaris/ufset>
-using namespace std;
-using namespace polaris;
 
-ufset<int> u;
-
-size_t hf(const int& x)
-{
-	return (size_t)x;
-}
-
-int uhf(const size_t& x)
-{
-	return (int)x;
-}
+pol::ufset<> u;
 
 int main()
 {
-	u.hash_func()=&hf;
-	u.unhash_func()=&uhf;
+	std::size_t n, m, o, x, y;
+	std::cin >> n >> m;
+	u.init(n);
+
+	for (std::size_t i{}; i < m; ++i)
+	{
+		std::cin >> o >> x >> y;
+		--x; --y;
+		if (o == 1) u.merge(x, y);
+		else std::cout << (u.is_brother(x, y) ? 'Y' : 'N') << '\n';
+	}
+
 	return 0;
 }
