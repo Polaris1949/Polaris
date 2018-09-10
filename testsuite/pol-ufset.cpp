@@ -1,7 +1,7 @@
 #include <iostream>
 #include <polaris/ufset>
 
-pol::ufset<> u;
+pol::ufset u;
 
 int main()
 {
