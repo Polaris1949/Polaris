@@ -2,12 +2,35 @@
 
 header_dir=`echo $1`
 
+if test "x${header_dir}" = "x--help"; then
+    echo "Usage: insheader [DIRECTORY]
+  or:  insheader OPTION
+Install headers in Polaris Library to DIRECTORY, or /usr/local.
+
+      --help     display this help and exit
+      --version  output version information and exit"
+    exit 0
+fi
+
+if test "x${header_dir}" = "x--version"; then
+    echo "insheader (Polaris utils) 1.0
+Copyright (C) 2016 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Polaris Zhao."
+    exit 0
+fi
+
 if test "x${header_dir}" = "x"; then
-    echo no destination directory specified
-    exit 1
+    echo "warning: no destination directory specified; /usr/local by default"
+    header_dir="/usr/local"
 fi
 
 echo "install headers to ${header_dir}"
 
-mkdir -p "${header_dir}/polaris"
-cp -fr ./include "${header_dir}/polaris"
+dest_dir="${header_dir}/include/polaris"
+mkdir -p "${dest_dir}"
+cd ./include
+cp -r . "${dest_dir}"
