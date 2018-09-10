@@ -9,7 +9,7 @@ namespace polaris
 {
 
 template<typename _Tp>
-class ufset
+class basic_ufset
 {
 public:
 	typedef _Tp value_type;
@@ -23,8 +23,8 @@ private:
 	std::map<_Tp, std::size_t> _M_rank;
 
 public:
-	ufset();
-	explicit ufset(size_type __n);
+	basic_ufset();
+	explicit basic_ufset(size_type __n);
 
 	value_type parent(value_type __x);
 	size_type rank(value_type __x);
@@ -35,7 +35,7 @@ public:
 };
 
 template<>
-class ufset<std::size_t>
+class basic_ufset<std::size_t>
 {
 public:
 	using value_type = std::size_t;
@@ -46,8 +46,8 @@ private:
 	std::vector<std::size_t> _M_rank;
 
 public:
-	ufset();
-	explicit ufset(size_type __n);
+	basic_ufset();
+	explicit basic_ufset(size_type __n);
 
 	void init(size_type __n);
 

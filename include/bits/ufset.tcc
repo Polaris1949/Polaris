@@ -5,23 +5,23 @@ namespace polaris
 {
 
 template<typename _Tp>
-ufset<_Tp>::
-ufset()
+basic_ufset<_Tp>::
+basic_ufset()
 	: _M_parent{}, _M_rank{}
 {}
 
-ufset<std::size_t>::
-ufset()
+basic_ufset<std::size_t>::
+basic_ufset()
 	: _M_parent{}, _M_rank{}
 {}
 
-ufset<std::size_t>::
-ufset(size_type __n)
+basic_ufset<std::size_t>::
+basic_ufset(size_type __n)
 	: _M_parent{}, _M_rank{}
 { this->init(__n); }
 
 void
-ufset<std::size_t>::
+basic_ufset<std::size_t>::
 init(size_type __n)
 {
 	this->_M_parent.resize(__n);
@@ -32,27 +32,27 @@ init(size_type __n)
 }
 
 std::size_t&
-ufset<std::size_t>::
+basic_ufset<std::size_t>::
 parent(const value_type& __x)
 { return this->_M_parent[__x]; }
 
 const std::size_t&
-ufset<std::size_t>::
+basic_ufset<std::size_t>::
 parent(const value_type& __x) const
 { return this->_M_parent[__x]; }
 
 std::size_t&
-ufset<std::size_t>::
+basic_ufset<std::size_t>::
 rank(const value_type& __x)
 { return this->_M_rank[__x]; }
 
 const std::size_t&
-ufset<std::size_t>::
+basic_ufset<std::size_t>::
 rank(const value_type& __x) const
 { return this->_M_rank[__x]; }
 
 std::size_t&
-ufset<std::size_t>::
+basic_ufset<std::size_t>::
 find(const value_type& __x)
 {
 	return this->_M_parent[__x] == __x ? this->_M_parent[__x]
@@ -60,7 +60,7 @@ find(const value_type& __x)
 }
 
 bool
-ufset<std::size_t>::
+basic_ufset<std::size_t>::
 merge(const value_type& __x, const value_type& __y)
 {
 	value_type __rx{this->find(__x)};
@@ -82,12 +82,12 @@ merge(const value_type& __x, const value_type& __y)
 }
 
 bool
-ufset<std::size_t>::
+basic_ufset<std::size_t>::
 is_brother(const value_type& __x, const value_type& __y)
 { return this->find(__x) == this->find(__y); }
 
 std::size_t&
-ufset<std::size_t>::
+basic_ufset<std::size_t>::
 operator[] (const value_type& __x)
 { return this->find(__x); }
 

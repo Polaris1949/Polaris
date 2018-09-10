@@ -41,8 +41,10 @@
 namespace polaris
 {
 
-template<typename _Tp = std::size_t>
-class ufset;
+template<typename _Tp>
+class basic_ufset;
+
+using ufset = basic_ufset<std::size_t>;
 
 }
 
