@@ -1,0 +1,13 @@
+#!/bin/bash
+
+header_dir=`echo $1`
+
+if test "x${header_dir}" = "x"; then
+    echo no destination directory specified
+    exit 1
+fi
+
+echo "install headers to ${header_dir}"
+
+mkdir -p "${header_dir}/polaris"
+cp -fr ./include "${header_dir}/polaris"
