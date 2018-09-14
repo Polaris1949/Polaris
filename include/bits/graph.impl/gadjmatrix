@@ -1,0 +1,11 @@
+#ifndef _POLLIB_GADJMATRIX
+#define _POLLIB_GADJMATRIX 1
+
+#include <polaris/version>
+#include <polaris/matrix>
+#include <polaris/type_traits>
+#include <functional>
+#include "gadjmatrix.h"
+#include "gadjmatrix.tcc"
+
+#endif

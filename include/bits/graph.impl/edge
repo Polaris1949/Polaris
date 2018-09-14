@@ -1,0 +1,13 @@
+// <graph/edge> -*- C++ -*-
+
+#ifndef _STDEXT_GRAPH_EDGE
+#define _STDEXT_GRAPH_EDGE
+
+#pragma GCC system_header
+
+#include "../config"
+#include "edge_fwd.h"
+#include "edge.h"
+#include "edge.tcc"
+
+#endif
