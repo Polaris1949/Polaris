@@ -40,7 +40,7 @@
 #define __POLLIB_MINOR__ 0
 
 /** @brief  Patch level of the library **/
-#define __POLLIB_PATCHLEVEL__ 0
+#define __POLLIB_PATCHLEVEL__ 1
 
 #if __cplusplus < 201103L
 #error polaris library generally need c++11 or later versions
