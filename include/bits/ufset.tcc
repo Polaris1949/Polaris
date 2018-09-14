@@ -39,12 +39,6 @@ namespace polaris
 {
 
 template<typename _Tp>
-basic_ufset<_Tp>::
-basic_ufset()
-	: _M_parent{}, _M_rank{}
-{}
-
-template<typename _Tp>
 _Tp&
 basic_ufset<_Tp>::
 parent(const value_type& __x)
@@ -103,11 +97,6 @@ _Tp&
 basic_ufset<_Tp>::
 operator[] (const value_type& __x)
 { return this->find(__x); }
-
-seq_ufset::
-seq_ufset()
-	: _M_parent{}, _M_rank{}
-{}
 
 seq_ufset::
 seq_ufset(size_type __n)

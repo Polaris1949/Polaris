@@ -53,7 +53,9 @@ private:
 	std::map<_Tp, std::size_t> _M_rank;
 
 public:
-	basic_ufset();
+	basic_ufset() = default;
+
+	~basic_ufset() noexcept = default;
 
 	value_type& parent(const value_type& __x);
 	size_type& rank(const value_type& __x);
@@ -76,8 +78,10 @@ private:
 	std::vector<std::size_t> _M_rank;
 
 public:
-	seq_ufset();
+	seq_ufset() = default;
 	explicit seq_ufset(size_type __n);
+
+	~seq_ufset() noexcept = default;
 
 	void init(size_type __n);
 
