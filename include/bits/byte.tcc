@@ -22,17 +22,15 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file     bits/byte.tcc
+/** @file        bits/byte.tcc
  *  @headerfile  byte
- *  @brief    Byte classes implementation
- *  @author   Polaris Zhao
- *  @version  3.0
+ *  @brief       Byte classes implementation
+ *  @author      Polaris Zhao
+ *  @version     3.0
  *
  *  This is an internal header file, included by other library headers.
- *  Do not attempt to use it directly. Please #include @c <byte>.
- */
-
-// Written by Jingyu Zhao.
+ *  Do not attempt to use it directly.
+**/
 
 #ifndef _POL_BYTE_TCC
 #define _POL_BYTE_TCC 1

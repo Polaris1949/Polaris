@@ -22,14 +22,14 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file     bits/byte.h
+/** @file        bits/byte.h
  *  @headerfile  byte
- *  @brief    Byte classes
- *  @author   Polaris Zhao
- *  @version  3.0
+ *  @brief       Byte classes
+ *  @author      Polaris Zhao
+ *  @version     3.0
  *
  *  This is an internal header file, included by other library headers.
- *  Do not attempt to use it directly. Please #include @c <byte>.
+ *  Do not attempt to use it directly.
 **/
 
 #ifndef _POL_BYTE_H
