@@ -494,7 +494,7 @@ push_up(node_type* __pos)
 		__pos->data() = _M_func(__pos->left()->data(), \
 			__pos->right()->data());
 	}
-	
+
 	return *this;
 }
 
@@ -507,7 +507,7 @@ push_down(node_type* __pos, const _MarkFunc& __mark)
 	if (__pos)
 	{
 		using namespace std::rel_ops;
-		
+
 		if (__pos->mark() != mark_type())
 		{
 			__mark(__pos->left(), __pos->mark());
@@ -515,7 +515,7 @@ push_down(node_type* __pos, const _MarkFunc& __mark)
 			__pos->mark() = mark_type();
 		}
 	}
-	
+
 	return *this;
 }
 
@@ -537,7 +537,7 @@ modify(size_type __pos, const value_type& __x, const _ModifyFunc& __func,
 {
 	if (_M_root)
 		_M_modify(_M_root, __pos, __x, __func, __mark);
-	
+
 	return *this;
 }
 
@@ -550,7 +550,7 @@ modify(size_type __begin, size_type __end, const value_type& __x,
 {
 	if (_M_root)
 		_M_modify(_M_root, __begin, __end, __x, __func, __mark);
-	
+
 	return *this;
 }
 
@@ -566,10 +566,10 @@ _M_construct(node_type* __root, const _Sequence& __data)
 	{
 		__root->left() = new node_type(__root->begin(), __root->middle());
 		__root->right() = new node_type(__root->middle(), __root->end());
-		
+
 		_M_construct(__root->left(), __data);
 		_M_construct(__root->right(), __data);
-		
+
 		push_up(__root);
 	}
 }
@@ -591,12 +591,12 @@ _M_search(node_type* __root, size_type __begin, size_type __end,
 {
 	if (__begin >= __root->end() || __end <= __root->begin())
 		return _M_inf;
-	
+
 	if (__begin <= __root->begin() && __end >= __root->end())
 		return __root->data();
-	
+
 	push_down(__root, __mark);
-	
+
 	return _M_func(_M_search(__root->left(), __begin, __end, __mark),
 		_M_search(__root->right(), __begin, __end, __mark));
 }
@@ -612,17 +612,17 @@ _M_modify(node_type* __root, size_type __pos, const _Tp& __x,
 	{
 		if (__pos == __root->begin())
 			__func(__root, __x);
-		
+
 		return;
 	}
-	
+
 	push_down(__root, __mark);
-	
+
 	if (__pos < __root->middle())
 		_M_modify(__root->left(), __pos, __x, __func, __mark);
 	else
 		_M_modify(__root->right(), __pos, __x, __func, __mark);
-	
+
 	push_up(__root);
 }
 
@@ -636,18 +636,18 @@ _M_modify(node_type* __root, size_type __begin, size_type __end,
 {
 	if (__begin >= __root->end() || __end <= __root->begin())
 		return;
-	
+
 	if (__begin <= __root->begin() && __end >= __root->end())
 	{
 		__func(__root, __x);
 		return;
 	}
-	
+
 	push_down(__root, __mark);
-	
+
 	_M_modify(__root->left(), __begin, __end, __x, __func, __mark);
 	_M_modify(__root->right(), __begin, __end, __x, __func, __mark);
-	
+
 	push_up(__root);
 }
 
@@ -771,7 +771,7 @@ push_up(node_type* __pos)
 		__pos->data() = _M_func(__pos->left()->data(), \
 			__pos->right()->data());
 	}
-	
+
 	return *this;
 }
 
@@ -791,7 +791,7 @@ modify(size_type __pos, const value_type& __x, const _ModifyFunc& __func)
 {
 	if (_M_root)
 		_M_modify(_M_root, __pos, __x, __func);
-	
+
 	return *this;
 }
 
@@ -804,7 +804,7 @@ modify(size_type __begin, size_type __end, const value_type& __x,
 {
 	if (_M_root)
 		_M_modify(_M_root, __begin, __end, __x, __func);
-	
+
 	return *this;
 }
 
@@ -820,10 +820,10 @@ _M_construct(node_type* __root, const _Sequence& __data)
 	{
 		__root->left() = new node_type(__root->begin(), __root->middle());
 		__root->right() = new node_type(__root->middle(), __root->end());
-		
+
 		_M_construct(__root->left(), __data);
 		_M_construct(__root->right(), __data);
-		
+
 		push_up(__root);
 	}
 }
@@ -843,10 +843,10 @@ _M_search(node_type* __root, size_type __begin, size_type __end)
 {
 	if (__begin >= __root->end() || __end <= __root->begin())
 		return _M_inf;
-	
+
 	if (__begin <= __root->begin() && __end >= __root->end())
 		return __root->data();
-	
+
 	return _M_func(_M_search(__root->left(), __begin, __end),
 		_M_search(__root->right(), __begin, __end));
 }
@@ -862,15 +862,15 @@ _M_modify(node_type* __root, size_type __pos, const _Tp& __x,
 	{
 		if (__pos == __root->begin())
 			__func(__root, __x);
-		
+
 		return;
 	}
-	
+
 	if (__pos < __root->middle())
 		_M_modify(__root->left(), __pos, __x, __func);
 	else
 		_M_modify(__root->right(), __pos, __x, __func);
-	
+
 	push_up(__root);
 }
 
@@ -883,16 +883,16 @@ _M_modify(node_type* __root, size_type __begin, size_type __end,
 {
 	if (__begin >= __root->end() || __end <= __root->begin())
 		return;
-	
+
 	if (__begin <= __root->begin() && __end >= __root->end())
 	{
 		__func(__root, __x);
 		return;
 	}
-	
+
 	_M_modify(__root->left(), __begin, __end, __x, __func);
 	_M_modify(__root->right(), __begin, __end, __x, __func);
-	
+
 	push_up(__root);
 }
 
@@ -998,7 +998,7 @@ push_down(node_type* __pos)
 			_M_mod(__pos->right(), __pos->mark());
 			__pos->mark() = mark_type();
 		}
-	
+
 	return *this;
 }
 
@@ -1009,7 +1009,7 @@ modify(size_type __pos, const value_type& __x)
 {
 	if (_M_root)
 		_M_modify(_M_root, _M_begin, _M_end, __pos, __x);
-	
+
 	return *this;
 }
 
@@ -1020,7 +1020,7 @@ modify(size_type __begin, size_type __end, const value_type& __x)
 {
 	if (_M_root)
 		_M_modify(_M_root, _M_begin, _M_end, __begin, __end, __x);
-	
+
 	return *this;
 }
 
@@ -1036,13 +1036,13 @@ _M_construct(node_type* __root, const _Sequence& __data,
 	else
 	{
 		size_type __mid = (__begin + __end) >> size_type(1);
-		
+
 		__root->left() = new segment_tree_node<_Tp, _MarkT>(__begin, __mid);
 		__root->right() = new segment_tree_node<_Tp, _MarkT>(__mid, __end);
-		
+
 		_M_construct(__root->left(), __data, __begin, __mid);
 		_M_construct(__root->right(), __data, __mid, __end);
-		
+
 		__root->data() = _M_func(__root->left()->data(),
 			__root->right()->data());
 	}
@@ -1065,14 +1065,14 @@ _M_search(node_type* __root, size_type __begin, size_type __end,
 {
 	if (__first >= __end || __last <= __begin)
 		return _M_inf;
-	
+
 	if (__first <= __begin && __last >= __end)
 		return __root->data();
-	
+
 	push_down(__root);
-	
+
 	size_type __mid = (__begin + __end) >> size_type(1);
-	
+
 	return _M_func(_M_search(__root->left(), __begin, __mid, __first,
 		__last), _M_search(__root->right(), __mid, __end, __first, __last));
 }
@@ -1087,19 +1087,19 @@ _M_modify(node_type* __root, size_type __begin, size_type __end,
 	{
 		if (__pos == __begin)
 			_M_mod(__root, __x);
-		
+
 		return;
 	}
-	
+
 	push_down(__root);
-	
+
 	size_type __mid = (__begin + __end) >> size_type(1);
-	
+
 	if (__pos < __mid)
 		_M_modify(__root->left(), __begin, __mid, __pos, __x);
 	else
 		_M_modify(__root->right(), __mid, __end, __pos, __x);
-	
+
 	__root->data() = _M_func(__root->left()->data(),
 		__root->right()->data());
 }
@@ -1112,20 +1112,20 @@ _M_modify(node_type* __root, size_type __begin, size_type __end,
 {
 	if (__first >= __end || __last <= __begin)
 		return;
-	
+
 	if (__first <= __begin && __last >= __end)
 	{
 		_M_mod(__root, __x);
 		return;
 	}
-	
+
 	push_down(__root);
-	
+
 	size_type __mid = (__begin + __end) >> size_type(1);
-	
+
 	_M_modify(__root->left(), __begin, __mid, __first, __last, __x);
 	_M_modify(__root->right(), __mid, __end, __first, __last, __x);
-	
+
 	__root->data() = _M_func(__root->left()->data(),
 		__root->right()->data());
 }

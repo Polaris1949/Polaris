@@ -38,8 +38,28 @@
 
 #include <polaris/version>
 #include <polaris/utility>
+
+namespace polaris
+{
+
+template<typename _STp>
+class basic_bit;
+
+template<typename _STp>
+class basic_bit_storage;
+
+template<typename _STp>
+class bit_resource;
+
+template<typename _STp = unsigned int>
+bit_resource<_STp>* global_bit_resource();
+
+}
+
 #include <polaris/bits/bitsto.h>
 #include <polaris/bits/bitsto.tcc>
+#include <polaris/bits/bitres.h>
+#include <polaris/bits/bitres.tcc>
 #include <polaris/bits/bit.h>
 #include <polaris/bits/bit.tcc>
 

@@ -38,4 +38,22 @@
 #include <polaris/bits/utility.h>
 #include <polaris/bits/utility.tcc>
 
+namespace polaris
+{
+
+template<typename _Tp, typename =
+	decltype(std::declval<_Tp>() == std::declval<_Tp>())>
+bool fully_equal_to(_Tp&& __x, _Tp&& __y)
+{
+	return __x == __y;
+}
+
+template<typename _Tp, typename _Up>
+bool fully_equal_to(_Tp&& __x, _Up&& __y)
+{
+	return false;
+}
+
+}
+
 #endif /* _POLLIB_UTILITY */

@@ -44,7 +44,9 @@ namespace polaris
 template<typename _Tp>
 class basic_ufset;
 
-using ufset = basic_ufset<std::size_t>;
+class seq_ufset;
+
+using ufset = seq_ufset;
 
 }
 

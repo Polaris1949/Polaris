@@ -48,6 +48,7 @@ namespace polaris
  *  @deprecated  This class is thought removed in a future version.
  *               You should use @c terminal instead.
 **/
+[[deprecated]]
 class console_t
 {
     std::string _M_data;
@@ -219,6 +220,7 @@ public:
  *  @deprecated  This variable is thought removed in a future version.
  *               You should use @c terminal instead.
 **/
+[[deprecated]]
 console_t console;
 
 }

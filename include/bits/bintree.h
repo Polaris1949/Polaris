@@ -44,50 +44,50 @@ public:
 	typedef _Tp                    value_type;
 	typedef binary_tree_node<_Tp>  node_type;
 	typedef std::size_t            size_type;
-	
+
 private:
 	node_type* _M_parent;
 	node_type* _M_left;
 	node_type* _M_right;
 	value_type _M_data;
-	
+
 public:
 	binary_tree_node();
-	
+
 	binary_tree_node(const value_type& __x);
-	
+
 	~binary_tree_node() noexcept;
-	
+
 	node_type&
 	construct(const value_type& __x);
-	
+
 	node_type&
 	destroy();
-	
+
 	node_type*&
 	parent();
-	
+
 	const node_type*&
 	parent() const;
-	
+
 	node_type*&
 	left();
-	
+
 	const node_type*&
 	left() const;
-	
+
 	node_type*&
 	right();
-	
+
 	const node_type*&
 	right() const;
-	
+
 	value_type&
 	data();
-	
+
 	const value_type&
 	data() const;
-	
+
 	bool
 	is_leaf() const;
 };
@@ -100,16 +100,16 @@ public:
 	typedef binary_tree_node<_Tp> node_type;
 	typedef binary_tree<_Tp> tree_type;
 	typedef std::size_t size_type;
-	
+
 private:
 	node_type* _M_root;
-	
+
 public:
 	binary_tree();
-	
+
 	template<typename _Seq>
 	binary_tree(const _Seq& __data);
-	
+
 private:
 	template<typename _Seq>
 	void

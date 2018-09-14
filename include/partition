@@ -1,0 +1,18 @@
+#ifndef _POLLIB_PARTITION
+#define _POLLIB_PARTITION 1
+
+#include <polaris/version>
+
+namespace polaris
+{
+
+template<typename _Tp, typename _Func>
+class partition;
+
+}
+
+#include <vector>
+#include <polaris/bits/partition.h>
+#include <polaris/bits/partition.tcc>
+
+#endif

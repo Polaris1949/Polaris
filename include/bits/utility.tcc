@@ -4,6 +4,7 @@
 #pragma GCC system_header
 
 #include <cassert>
+#include <climits>
 #include "utility.h"
 #include "exception.tcc"
 
@@ -78,20 +79,44 @@ prob_choice(unsigned __x)
 	struct _Helper
 	{
 		typedef unsigned value_type;
-		
+
 		size_t size() const
 		{
 			return 100;
 		}
-		
+
 		size_t operator[] (unsigned __n) const
 		{
 			return __n;
 		}
 	};
-	
+
 	_Helper __gen;
 	return random_choice(__gen) < __x;
+}
+
+template<typename _Tp>
+constexpr size_t byteof()
+{
+	return sizeof(_Tp);
+}
+
+template<typename _Tp>
+constexpr size_t byteof(const _Tp& __x)
+{
+	return sizeof(__x);
+}
+
+template<typename _Tp>
+constexpr size_t bitof()
+{
+	return sizeof(_Tp) * CHAR_BIT;
+}
+
+template<typename _Tp>
+constexpr size_t bitof(const _Tp& __x)
+{
+	return sizeof(__x) * CHAR_BIT;
 }
 
 }

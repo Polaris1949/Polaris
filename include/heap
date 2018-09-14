@@ -1,0 +1,28 @@
+#ifndef _POLLIB_HEAP
+#define _POLLIB_HEAP 1
+
+#pragma GCC system_header
+
+#include <polaris/version>
+#include <vector>
+#include <queue>
+
+namespace polaris
+{
+
+template<typename _Tp>
+using heap = std::priority_queue<_Tp>;
+
+template<typename>
+class fib_heap;
+
+template<typename>
+class fib_heap_node;
+
+}
+
+#include <list>
+#include <polaris/bits/fibheap.h>
+#include <polaris/bits/fibheap.tcc>
+
+#endif

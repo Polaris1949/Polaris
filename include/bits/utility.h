@@ -45,6 +45,18 @@ random_choice(const _Seq& __s);
 inline bool
 prob_choice(unsigned __x);
 
+template<typename _Tp>
+inline constexpr size_t byteof();
+
+template<typename _Tp>
+inline constexpr size_t byteof(const _Tp& __x);
+
+template<typename _Tp>
+inline constexpr size_t bitof();
+
+template<typename _Tp>
+inline constexpr size_t bitof(const _Tp& __x);
+
 }
 
 #endif

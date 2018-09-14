@@ -60,9 +60,6 @@ constexpr size_t char_byte = sizeof(char);
 /** @brief Bits of @c char **/
 constexpr size_t char_bit = __CHAR_BIT__ * char_byte;
 
-/** @brief @c size_t for the library **/
-typedef std::size_t size_t;
-
 /** @brief @c npos for the library **/
 constexpr size_t npos = static_cast<size_t>(-1);
 

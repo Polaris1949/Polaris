@@ -22,11 +22,14 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file binary_tree
+/** @file     binary_tree
+ *  @brief    Binary Tree library
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *  @todo     This library is partially supported.
+ *
  *  This is a Polaris C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _POLLIB_BINARY_TREE
 #define _POLLIB_BINARY_TREE 1

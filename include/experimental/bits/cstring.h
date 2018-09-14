@@ -7,7 +7,10 @@ namespace polaris
 {
 
 class cstring;
-
+/*
+std::istream&
+operator >> (std::istream& __in, const cstring& __s);
+*/
 std::ostream&
 operator << (std::ostream& __out, const cstring& __s);
 
@@ -15,23 +18,23 @@ class cstring
 {
 public:
 	typedef const char* value_type;
-	
+
 private:
 	const char* _M_data;
-	
+
 public:
 	constexpr
 	cstring();
-	
+
 	constexpr
 	cstring(value_type __s);
-	
+
 	constexpr bool
 	operator == (const cstring& __s) const;
-	
+
 	constexpr explicit
 	operator value_type() const;
-	
+
 	friend std::ostream&
 	operator << (std::ostream& __out, const cstring& __s);
 };

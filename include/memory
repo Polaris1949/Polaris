@@ -1,0 +1,24 @@
+#ifndef _POLLIB_MEMORY
+#define _POLLIB_MEMORY 1
+
+#include <memory>
+#include <experimental/memory>
+
+namespace polaris
+{
+
+template<typename _Tp, typename _Del = std::default_delete<_Tp>>
+using unique_ptr = std::unique_ptr<_Tp, _Del>;
+
+template<typename _Tp>
+using shared_ptr = std::shared_ptr<_Tp>;
+
+template<typename _Tp>
+using weak_ptr = std::weak_ptr<_Tp>;
+
+template<typename _Tp>
+using observer_ptr = std::experimental::observer_ptr<_Tp>;
+
+}
+
+#endif

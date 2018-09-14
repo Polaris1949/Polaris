@@ -3,7 +3,6 @@
 
 #include <map>
 #include <vector>
-#include <type_traits> // FIXME
 
 namespace polaris
 {
@@ -15,27 +14,24 @@ public:
 	typedef _Tp value_type;
 	typedef std::size_t size_type;
 
-	static_assert(!std::is_same_v<_Tp, std::size_t>,
-		"implementation incompleted");
-
 private:
 	std::map<_Tp, _Tp> _M_parent;
 	std::map<_Tp, std::size_t> _M_rank;
 
 public:
 	basic_ufset();
-	explicit basic_ufset(size_type __n);
 
-	value_type parent(value_type __x);
-	size_type rank(value_type __x);
+	value_type& parent(const value_type& __x);
+	size_type& rank(const value_type& __x);
 
-	value_type find(value_type __x);
-	bool merge(value_type __x, value_type __y);
-	bool is_brother(value_type __x, value_type __y);
+	value_type& find(const value_type& __x);
+	bool merge(const value_type& __x, const value_type& __y);
+	bool is_brother(const value_type& __x, const value_type& __y);
+
+	value_type& operator[] (const value_type& __x);
 };
 
-template<>
-class basic_ufset<std::size_t>
+class seq_ufset
 {
 public:
 	using value_type = std::size_t;
@@ -46,8 +42,8 @@ private:
 	std::vector<std::size_t> _M_rank;
 
 public:
-	basic_ufset();
-	explicit basic_ufset(size_type __n);
+	seq_ufset();
+	explicit seq_ufset(size_type __n);
 
 	void init(size_type __n);
 
