@@ -42,17 +42,30 @@
 namespace polaris
 {
 
-template<typename _STp>
+inline namespace __bit_detail
+{
+
+using _Bitres_deful_t = unsigned int;
+
+}
+
+template<typename _Tp>
 class basic_bit;
 
-template<typename _STp>
+template<typename _Tp>
 class basic_bit_storage;
 
-template<typename _STp>
+template<typename _Tp>
+class bit_allocator;
+
+template<typename _Tp>
 class bit_resource;
 
-template<typename _STp = unsigned int>
-bit_resource<_STp>* global_bit_resource();
+template<typename _Tp>
+class basic_bit_view;
+
+template<typename _Tp = _Bitres_deful_t>
+bit_resource<_Tp>* global_bit_resource();
 
 }
 
