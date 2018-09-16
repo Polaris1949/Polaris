@@ -81,4 +81,6 @@ struct unsigned_type : blank {};
 namespace pol = polaris;
 #endif
 
+#include <polaris/debug>
+
 #endif /* _POLLIB_VERSION */
