@@ -38,6 +38,7 @@
 
 #include <polaris/version>
 #include <polaris/extractor>
+#include <functional>
 #include <polaris/bits/bintree.h>
 #include <polaris/bits/bintree.tcc>
 

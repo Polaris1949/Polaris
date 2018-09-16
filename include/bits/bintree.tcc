@@ -32,24 +32,20 @@
 #ifndef _POL_BINTREE_TCC
 #define _POL_BINTREE_TCC 1
 
-#include <polaris/bits/bintree.h>
-
 namespace polaris
 {
 
 template<typename _Tp>
 binary_tree_node<_Tp>::
 binary_tree_node()
-	: _M_left(), _M_right(), _M_data()
-{
-}
+	: _M_left{}, _M_right{}, _M_data{}
+{}
 
 template<typename _Tp>
 binary_tree_node<_Tp>::
 binary_tree_node(const value_type& __x)
-	: _M_left(), _M_right(), _M_data(__x)
-{
-}
+	: _M_left{}, _M_right{}, _M_data{__x}
+{}
 
 template<typename _Tp>
 binary_tree_node<_Tp>::
@@ -89,17 +85,13 @@ template<typename _Tp>
 binary_tree_node<_Tp>*&
 binary_tree_node<_Tp>::
 parent()
-{
-	return _M_parent;
-}
+{ return this->_M_parent; }
 
 template<typename _Tp>
 const binary_tree_node<_Tp>*&
 binary_tree_node<_Tp>::
 parent() const
-{
-	return _M_parent;
-}
+{ return this->_M_parent; }
 
 template<typename _Tp>
 binary_tree_node<_Tp>*&
@@ -152,9 +144,22 @@ data() const
 template<typename _Tp>
 bool
 binary_tree_node<_Tp>::
+is_branch() const
+{ return this->degree() > 0; }
+
+template<typename _Tp>
+bool
+binary_tree_node<_Tp>::
 is_leaf() const
+{ return this->degree() == 0; }
+
+template<typename _Tp>
+std::size_t
+binary_tree_node<_Tp>::
+degree() const
 {
-	return _M_left == nullptr && _M_right == nullptr;
+	return size_type{this->_M_left != nullptr}
+		+ size_type{this->_M_right != nullptr};
 }
 
 // TODO: Replace and complete it
@@ -180,7 +185,7 @@ binary_tree<_Tp>::
 _M_construct(node_type* __root, const data_extractor<_Seq>& __data)
 {
 	__root->data() = __data.extract();
-	
+
 	// ...
 }
 

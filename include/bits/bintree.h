@@ -32,8 +32,6 @@
 #ifndef _POL_BINTREE_H
 #define _POL_BINTREE_H 1
 
-#include <functional>
-
 namespace polaris
 {
 
@@ -89,7 +87,23 @@ public:
 	data() const;
 
 	bool
+	is_branch() const;
+
+	bool
 	is_leaf() const;
+
+	size_type
+	degree() const;
+
+	size_type
+	depth() const;
+
+	std::vector<size_type>
+	preorder() const;
+
+private:
+	void
+	_M_preorder(std::vector<size_type>& __v) const;
 };
 
 template<typename _Tp>
@@ -109,6 +123,18 @@ public:
 
 	template<typename _Seq>
 	binary_tree(const _Seq& __data);
+
+	size_type
+	degree() const;
+
+	std::vector<size_type>
+	preorder() const;
+
+	template<typename _Func>
+	void
+	preorder(_Func&& __func);
+
+	std::vector<size_type> postorder() const;
 
 private:
 	template<typename _Seq>

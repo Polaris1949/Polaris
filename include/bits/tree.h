@@ -397,7 +397,7 @@ public:
 };
 
 class tree_layer
-#ifdef POL_DEBUG
+#if POL_DEBUG
 	: public debug_helper
 #endif
 {
