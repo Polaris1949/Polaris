@@ -22,11 +22,14 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file exception
+/** @file     exception
+ *  @brief    Exception library
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *  @todo     Revision.
+ *
  *  This is a Polaris C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _POLLIB_EXCEPTION
 #define _POLLIB_EXCEPTION 1
@@ -38,4 +41,4 @@
 #include <polaris/bits/exception.h>
 #include <polaris/bits/exception.tcc>
 
-#endif
+#endif /* _POLLIB_EXCEPTION */

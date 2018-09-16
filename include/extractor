@@ -22,14 +22,20 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file extractor
+/** @file        extractor
+ *  @brief       Extractor library
+ *  @author      Polaris Zhao
+ *  @version     3.0
+ *  @todo        Revision.
+ *  @deprecated  This library is thought removed in a future version.
+ *
  *  This is a Polaris C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _POLLIB_EXTRACTOR
 #define _POLLIB_EXTRACTOR 1
+
+#pragma GCC system_header
 
 #include <polaris/version>
 
@@ -43,17 +49,16 @@ public:
 	typedef _Seq sequence_type;
 	typedef typename _Seq::value_type value_type;
 	typedef typename _Seq::iterator iterator;
-	
+
 private:
 	const _Seq* _M_data;
 	typename _Seq::iterator _M_iter;
-	
+
 public:
 	data_extractor(const _Seq& __data)
 		: _M_data(&__data), _M_iter(__data.begin())
-	{
-	}
-	
+	{}
+
 	const value_type&
 	extract()
 	{

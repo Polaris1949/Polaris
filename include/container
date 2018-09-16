@@ -22,14 +22,19 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file container
+/** @file     container
+ *  @brief    Container library
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *  @todo     Revision.
+ *
  *  This is a Polaris C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _POLLIB_CONTAINER
 #define _POLLIB_CONTAINER 1
+
+#pragma GCC system_header
 
 // Support headers
 #include <polaris/version>

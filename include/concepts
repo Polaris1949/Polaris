@@ -26,7 +26,7 @@
  *  @brief    Concepts library
  *  @author   Polaris Zhao
  *  @version  3.0
- *  @note     You compiler must support C++20 or Concepts TS.
+ *  @note     Your compiler must support C++20 or Concepts TS.
  *  @todo     This library is incompelete.
  *
  *  This is a Polaris C++ Library header.

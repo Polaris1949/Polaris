@@ -300,57 +300,57 @@ public:
 	typedef size_t size_type;
 	typedef _Tp& reference;
 	typedef const _Tp& const_reference;
-	
+
 private:
 	_Seq _M_storage;
-	
+
 public:
 	sequence();
 	sequence(const container_type& __c);
-	
+
 //	POL_ENABLE_CONCEPT_IF_T((__has_size<_Seq, _Tp>), size_t)
 //	std::enable_if_t<__has_size<container_type>>
 	size_type
 	size() const;
-	
+
 //	POL_ENABLE_CONCEPT_IF_T(__has_push_front<_Seq, _Tp>, void)
 //	std::enable_if_t<__has_push_front<container_type, value_type>>
 	void
 	push_front(const value_type& __x);
-	
+
 //	POL_ENABLE_CONCEPT_IF_T(__has_push_back<_Seq, _Tp>, void)
 //	std::enable_if_t<__has_push_back<container_type, value_type>>
 	void
 	push_back(const value_type& __x);
-	
+
 	reference
 	front();
-		
+
 //	POL_ENABLE_CONCEPT_IF_T(__has_front<_Seq, _Tp>, const _Tp&)
 //	std::enable_if_t<__has_front<container_type, value_type>, \
 		const value_type&>
 	const_reference
 	front() const;
-	
+
 	reference
 	back();
-	
+
 //	POL_ENABLE_CONCEPT_IF_T(__has_back<_Seq, _Tp>, const _Tp&)
 //	std::enable_if_t<__has_back<container_type, value_type>, \
 		const value_type&>
 	const_reference
 	back() const;
-	
+
 //	POL_ENABLE_CONCEPT_IF_T(__has_resize<_Seq, _Tp>, void)
 //	std::enable_if_t<__has_resize<container_type, value_type>>
 	void
 	resize(size_type __new_size);
-	
+
 //	POL_ENABLE_CONCEPT_IF_T(__has_ops<_Seq, _Tp>, _Tp&)
 //	std::enable_if_t<__has_ops<container_type, value_type>, value_type&>
 	reference
 	operator[] (size_type __pos);
-	
+
 //	POL_ENABLE_CONCEPT_IF_T(__has_ops<_Seq, _Tp>, const _Tp&)
 //	std::enable_if_t<__has_ops<container_type, value_type>, const value_type&>
 	const_reference

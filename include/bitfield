@@ -22,9 +22,14 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file bitfield
+/** @file     bitfield
+ *  @brief    Bitfield library
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *  @todo     This library is partially supported.
+ *
  *  This is a Polaris C++ Library header.
- */
+**/
 
 #ifndef _POLLIB_BITFIELD
 #define _POLLIB_BITFIELD 1

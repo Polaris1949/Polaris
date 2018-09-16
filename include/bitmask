@@ -22,14 +22,19 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file bitmask
+/** @file     bitmask
+ *  @brief    Bitmask library
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *  @todo     This library is incompelete.
+ *
  *  This is a Polaris C++ Library header.
- */
-
-// Written by Polaris Zhao.
+**/
 
 #ifndef _POLLIB_BITMASK
 #define _POLLIB_BITMASK 1
+
+#pragma GCC system_header
 
 #include <vector>
 #include <string>

@@ -26,7 +26,7 @@
  *  @brief       A fundamental type for holding a boolean value
  *  @author      Polaris Zhao
  *  @version     3.0
- *  @deprecated  This library is thought removed in a future version.
+ *  @deprecated  This library is possibly thought removed in a future version.
  *
  *  This is a Polaris C++ Library header.
 **/
@@ -182,4 +182,4 @@ operator << (std::ostream& __out, const boolean& __arg)
 
 }
 
-#endif
+#endif /* _POLLIB_BOOLEAN */
