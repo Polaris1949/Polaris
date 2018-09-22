@@ -1,4 +1,4 @@
-// Library version and configurations -*- C++ -*-
+// Physics library version and configurations -*- C++ -*-
 
 // Copyright (C) 1997-2017 Free Software Foundation, Inc.
 //
@@ -22,11 +22,13 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file version
+/** @file     ext/phy/version
+ *  @brief    Physics library version and configurations
+ *  @author   Polaris Zhao
+ *  @version  1.2
+ *
  *  This is a Physics C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _PHYLIB_VERSION
 #define _PHYLIB_VERSION 1

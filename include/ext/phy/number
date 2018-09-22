@@ -22,16 +22,18 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file number
+/** @file     ext/phy/number
+ *  @brief    Physics scientific number library
+ *  @author   Polaris Zhao
+ *  @version  1.2
+ *
  *  This is a Physics C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _PHYLIB_NUMBER
 #define _PHYLIB_NUMBER 1
 
-#include <physics/version>
+#include <polaris/ext/phy/version>
 
 namespace physics
 {
@@ -41,64 +43,52 @@ class sc_number
 public:
 	typedef double base_type;
 	typedef int exp_type;
-	
+
 private:
 	double _M_a;
 	int _M_n;
-	
+
 public:
 	sc_number()
 		: _M_a(), _M_n()
-	{
-	}
-	
+	{}
+
 	sc_number(double __base, int __exp)
 		: _M_a(__base), _M_n(__exp)
-	{
-	}
-	
+	{}
+
 	explicit
 	sc_number(double __n)
-	{
-		assign(__n);
-	}
-	
+	{ assign(__n); }
+
 	base_type&
 	base()
-	{
-		return _M_a;
-	}
-	
+	{ return _M_a; }
+
 	const base_type&
 	base() const
-	{
-		return _M_a;
-	}
-	
+	{ return _M_a; }
+
 	exp_type&
 	exp()
-	{
-		return _M_n;
-	}
-	
+	{ return _M_n; }
+
 	const exp_type&
 	exp() const
-	{
-		return _M_n;
-	}
-	
+	{ return _M_n; }
+
 	void
 	assign(double __n)
 	{
 		int __exp = 0;
-		
+
 		if (__n >= 1)
 		{
 			while (__n)
 			{
 				if (__n >= 1 && __n < 10)
 					break;
-				
+
 				__n /= 10;
 				++__exp;
 			}
@@ -109,26 +99,26 @@ public:
 			{
 				if (__n >= 1 && __n < 10)
 					break;
-				
+
 				__n *= 10;
 				--__exp;
 			}
 		}
-		
+
 		_M_a = __n;
 		_M_n = __exp;
 	}
-	
+
 	sc_number&
 	operator = (const sc_number& __o) = default;
-	
+
 	sc_number&
 	operator = (double __n)
 	{
 		assign(__n);
 		return *this;
 	}
-	
+
 	friend std::ostream&
 	operator << (std::ostream& __out, const sc_number& __x)
 	{
@@ -157,7 +147,7 @@ public:
 			__out << __x._M_n;
 			if (__x._M_n < 0) __out << ')';
 		}
-		
+
 		return __out;
 	}
 };
