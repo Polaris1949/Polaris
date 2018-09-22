@@ -1,0 +1,184 @@
+// Physics variable library -*- C++ -*-
+
+// Copyright (C) 1997-2018 Free Software Foundation, Inc.
+//
+// This file is part of the Physics C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file variable
+ *  This is a Physics C++ Library header.
+ */
+
+// Written by Jingyu Zhao.
+
+#ifndef _PHYLIB_VARIABLE
+#define _PHYLIB_VARIABLE 1
+
+#include <string>
+#include <physics/version>
+#include <physics/number>
+
+namespace physics
+{
+
+class basic_variable
+{
+public:
+	typedef std::string unit_type;
+	typedef double number_type;
+	
+protected:
+	std::string _M_u;
+	double _M_n;
+	
+public:
+	basic_variable()
+		: _M_u(), _M_n()
+	{
+	}
+	
+	basic_variable(const number_type& __number, const unit_type& __unit)
+		: _M_u(__unit), _M_n(__number)
+	{
+	}
+	
+	unit_type&
+	unit()
+	{
+		return this->_M_u;
+	}
+	
+	number_type&
+	number()
+	{
+		return this->_M_n;
+	}
+	
+	basic_variable
+	operator + (const basic_variable& __x)
+	{
+		basic_variable __ret;
+		__ret._M_n = this->_M_n + __x._M_n;
+		__ret._M_u = this->_M_u;
+		return __ret;
+	}
+	
+	basic_variable
+	operator - (const basic_variable& __x)
+	{
+		basic_variable __ret;
+		__ret._M_n = this->_M_n - __x._M_n;
+		__ret._M_u = this->_M_u;
+		return __ret;
+	}
+	
+	basic_variable
+	operator * (const basic_variable& __x)
+	{
+		basic_variable __ret;
+		__ret._M_n = this->_M_n * __x._M_n;
+		std::size_t __f = this->_M_u.find('/');
+		
+		if (__f != std::string::npos)
+		{
+			__ret._M_u = this->_M_u.substr(0, __f);
+		}
+		else
+		{
+			__f = __x._M_u.find('/');
+			__ret._M_u = this->_M_u.substr(0, __f);
+		}
+		
+		return __ret;
+	}
+	
+	basic_variable
+	operator / (const basic_variable& __x)
+	{
+		basic_variable __ret;
+		__ret._M_n = this->_M_n / __x._M_n;
+		__ret._M_u = this->_M_u + '/' + __x._M_u;
+		return __ret;
+	}
+	
+	friend std::ostream&
+	operator << (std::ostream& __out, const basic_variable& __x)
+	{
+		__out << sc_number(__x._M_n) << __x._M_u;
+		return __out;
+	}
+};
+
+class variable : public basic_variable
+{
+public:
+	typedef std::string name_type;
+	typedef std::string unit_type;
+	typedef double number_type;
+	
+protected:
+	std::string _M_i;
+	
+public:
+	variable()
+		: basic_variable(), _M_i()
+	{
+	}
+	
+	variable(const name_type& __name, const number_type& __number,
+		const unit_type& __unit)
+		: basic_variable(__number, __unit), _M_i(__name)
+	{
+	}
+	
+	explicit
+	variable(const basic_variable& __x)
+		: basic_variable(__x), _M_i()
+	{
+	}
+	
+	name_type&
+	name()
+	{
+		return this->_M_i;
+	}
+	
+	variable&
+	operator = (const variable& __x) = default;
+	
+	variable&
+	operator = (const basic_variable& __x)
+	{
+		this->_M_n = variable(__x)._M_n;
+		this->_M_u = variable(__x)._M_u;
+		return *this;
+	}
+	
+	friend std::ostream&
+	operator << (std::ostream& __out, const variable& __x)
+	{
+		__out << __x._M_i << '=' << basic_variable(__x);
+		return __out;
+	}
+};
+
+}
+
+#endif /* _PHYLIB_VARIABLE */
