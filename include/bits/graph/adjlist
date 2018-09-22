@@ -1,8 +1,0 @@
-#ifndef _POLLIB_GADJLIST
-#define _POLLIB_GADJLIST 1
-
-#pragma GCC system_header
-#include "adjlist.h"
-#include "adjlist.tcc"
-
-#endif
