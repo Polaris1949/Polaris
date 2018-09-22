@@ -1,13 +1,7 @@
-#ifndef _STDEXT_GRAPH_SCC_V_TCC_
-#define _STDEXT_GRAPH_SCC_V_TCC_
+#ifndef _POL_GRAPH_SCC_V_TCC
+#define _POL_GRAPH_SCC_V_TCC 1
 
-#include "../config"
-#include "scc_v.h"
-
-namespace stdext
-{
-
-namespace graph_type
+namespace polaris
 {
 
 scc_v::
@@ -63,8 +57,6 @@ operator << (std::ostream& __out, const scc_v& __scc)
 	return __out;
 }
 
-} // namespace stdext::graph_type
+}
 
-} // namespace stdext
-
-#endif
+#endif /* _POL_GRAPH_SCC_V_TCC */
