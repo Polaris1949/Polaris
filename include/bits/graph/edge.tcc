@@ -1,212 +1,180 @@
-#ifndef _STDEXT_GRAPH_EDGE_TCC_
-#define _STDEXT_GRAPH_EDGE_TCC_
-
-#pragma GCC system_header
+#ifndef _POL_GRAPH_EDGE_TCC
+#define _POL_GRAPH_EDGE_TCC 1
 
 #include <iostream>
 
-#include "../config"
-#include "edge.h"
-
-namespace stdext
+namespace polaris
 {
 
-namespace graph_type
-{
+edge<void>::
+edge(size_type __x, size_type __y)
+	: _M_begin{__x}, _M_end{__y}
+{}
 
-edge::edge(size_type __x, size_type __y)
-	: _M_begin(__x), _M_end(__y)
+inline std::size_t&
+edge<void>::
+begin()
+{ return this->_M_begin; }
+
+inline const std::size_t&
+edge<void>::
+begin() const
+{ return this->_M_begin; }
+
+inline std::size_t&
+edge<void>::
+end()
+{ return this->_M_end; }
+
+inline const std::size_t&
+edge<void>::
+end() const
+{ return this->_M_end; }
+
+inline bool
+edge<void>::
+operator == (const edge<void>& __e) const
 {
+	return (this->begin() == __e.begin())
+		&& (this->end() == __e.end());
 }
 
-edge::edge(const edge& __e)
-	: _M_begin(__e._M_begin), _M_end(__e._M_end)
+inline bool
+edge<void>::
+operator != (const edge<void>& __e) const
+{ return !(*this == __e); }
+
+inline bool
+edge<void>::
+operator < (const edge<void>& __e) const
 {
+	return (this->begin() == __e.begin() ?
+		this->end() < __e.end() : this->begin() < __e.begin());
 }
 
-edge::~edge() __noexcept
-{
-}
+inline bool
+edge<void>::
+operator > (const edge<void>& __e) const
+{ return __e < *this; }
 
-edge::size_type&
-edge::begin()
-{
-	return (this->_M_begin);
-}
+inline bool
+edge<void>::
+operator <= (const edge<void>& __e) const
+{ return !(__e < *this); }
 
-const edge::size_type&
-edge::begin() const
-{
-	return (this->_M_begin);
-}
-
-edge::size_type&
-edge::end()
-{
-	return (this->_M_end);
-}
-
-const edge::size_type&
-edge::end() const
-{
-	return (this->_M_end);
-}
-
-bool
-edge::operator == (const edge& __e) const
-{
-	return (this->_M_begin == __e._M_begin)
-		&& (this->_M_end == __e._M_end);
-}
-
-bool
-edge::operator != (const edge& __e) const
-{
-	return (this->_M_begin != __e._M_begin)
-		|| (this->_M_end != __e._M_end);
-}
+inline bool
+edge<void>::
+operator >= (const edge<void>& __e) const
+{ return !(*this < __e); }
 
 std::istream&
-operator >> (std::istream& __in, edge& __e)
+operator >> (std::istream& __in, edge<void>& __e)
 {
-	__in >> __e._M_begin >> __e._M_end;
+	__in >> __e.begin() >> __e.end();
 	return __in;
 }
 
 std::ostream&
-operator << (std::ostream& __out, const edge& __e)
+operator << (std::ostream& __out, const edge<void>& __e)
 {
-	__out << __e._M_begin << ' ' << __e._M_end;
+	__out << __e.begin() << ' ' << __e.end();
 	return __out;
 }
 
 template<typename _Tp>
-edge_w<_Tp>::edge_w(size_type __x, size_type __y, value_type __w)
-	: edge(__x, __y), _M_weight(__w)
+edge<_Tp>::
+edge(size_type __x, size_type __y)
+	: _Base{__x, __y}, _M_weight{}
+{}
+
+template<typename _Tp>
+edge<_Tp>::
+edge(size_type __x, size_type __y, const value_type& __w)
+	: _Base{__x, __y}, _M_weight{__w}
+{}
+
+template<typename _Tp>
+edge<_Tp>::
+edge(const edge<void>& __e)
+	: _Base{__e}, _M_weight{}
+{}
+
+template<typename _Tp>
+edge<_Tp>::
+edge(const edge<void>& __e, const value_type& __w)
+	: _Base{__e}, _M_weight{__w}
+{}
+
+template<typename _Tp>
+inline _Tp&
+edge<_Tp>::
+weight()
+{ return this->_M_weight; }
+
+template<typename _Tp>
+inline const _Tp&
+edge<_Tp>::
+weight() const
+{ return this->_M_weight; }
+
+template<typename _Tp>
+inline bool
+edge<_Tp>::
+operator == (const edge<value_type>& __e) const
 {
+	return (this->weight() == __e.weight())
+		&& (_Base{*this} == _Base{__e});
 }
 
 template<typename _Tp>
-edge_w<_Tp>::edge_w(edge __e, value_type __w)
-	: edge(__e), _M_weight(__w)
+inline bool
+edge<_Tp>::
+operator != (const edge<value_type>& __e) const
+{ return !(*this == __e); }
+
+template<typename _Tp>
+inline bool
+edge<_Tp>::
+operator < (const edge<value_type>& __e) const
 {
+	return (this->weight() == __e.weight() ?
+		_Base{*this} < _Base{__e} : this->weight() < __e.weight());
 }
 
 template<typename _Tp>
-edge_w<_Tp>::edge_w(const edge_w<value_type>& __e)
-	: edge(__e._M_begin, __e._M_end), _M_weight(__e._M_weight)
-{
-}
+inline bool
+edge<_Tp>::
+operator > (const edge<value_type>& __e) const
+{ return __e < *this; }
 
 template<typename _Tp>
-edge_w<_Tp>::~edge_w() __noexcept
-{
-}
+inline bool
+edge<_Tp>::
+operator <= (const edge<value_type>& __e) const
+{ return !(__e < *this); }
 
 template<typename _Tp>
-typename edge_w<_Tp>::value_type&
-edge_w<_Tp>::weight()
-{
-	return (this->_M_weight);
-}
+inline bool
+edge<_Tp>::
+operator >= (const edge<value_type>& __e) const
+{ return !(*this < __e); }
 
 template<typename _Tp>
-const typename edge_w<_Tp>::value_type&
-edge_w<_Tp>::weight() const
-{
-	return (this->_M_weight);
-}
-
-template<typename _Tp>
-edge_w<_Tp>::operator edge() const
-{
-	return edge(this->_M_begin, this->_M_end);
-}
-
-template<typename _Tp>
-bool
-edge_w<_Tp>::operator == (const edge_w<value_type>& __e) const
-{
-	return (this->_M_begin == __e._M_begin)
-		&& (this->_M_end == __e._M_end)
-		&& (this->_M_weight == __e._M_weight);
-}
-
-template<typename _Tp>
-bool
-edge_w<_Tp>::operator != (const edge_w<value_type>& __e) const
-{
-	return (this->_M_begin != __e._M_begin)
-		|| (this->_M_end != __e._M_end)
-		|| (this->_M_weight != __e._M_weight);
-}
-
-template<typename _Tp>
-bool
-edge_w<_Tp>::operator < (const edge_w<value_type>& __e) const
-{
-	if (this->_M_weight != __e._M_weight)
-		return (this->_M_weight < __e._M_weight);
-	else if (this->_M_begin != __e._M_begin)
-		return (this->_M_begin < __e._M_begin);
-	else
-		return (this->_M_end < __e._M_end);
-}
-
-template<typename _Tp>
-bool
-edge_w<_Tp>::operator > (const edge_w<value_type>& __e) const
-{
-	if (this->_M_weight != __e._M_weight)
-		return (this->_M_weight > __e._M_weight);
-	else if (this->_M_begin != __e._M_begin)
-		return (this->_M_begin > __e._M_begin);
-	else
-		return (this->_M_end > __e._M_end);
-}
-
-template<typename _Tp>
-bool
-edge_w<_Tp>::operator <= (const edge_w<value_type>& __e) const
-{
-	if (this->_M_weight != __e._M_weight)
-		return (this->_M_weight <= __e._M_weight);
-	else if (this->_M_begin != __e._M_begin)
-		return (this->_M_begin <= __e._M_begin);
-	else
-		return (this->_M_end <= __e._M_end);
-}
-
-template<typename _Tp>
-bool
-edge_w<_Tp>::operator >= (const edge_w<value_type>& __e) const
-{
-	if (this->_M_weight != __e._M_weight)
-		return (this->_M_weight >= __e._M_weight);
-	else if (this->_M_begin != __e._M_begin)
-		return (this->_M_begin >= __e._M_begin);
-	else
-		return (this->_M_end >= __e._M_end);
-}
-
-template<typename _T>
 std::istream&
-operator >> (std::istream& __in, edge_w<_T>& __e)
+operator >> (std::istream& __in, edge<_Tp>& __e)
 {
-	__in >> __e._M_begin >> __e._M_end >> __e._M_weight;
+	__in >> __e.begin() >> __e.end() >> __e.weight();
 	return __in;
 }
 
 template<typename _T>
 std::ostream&
-operator << (std::ostream& __out, const edge_w<_T>& __e)
+operator << (std::ostream& __out, const edge<_T>& __e)
 {
-	__out << __e._M_begin << ' ' << __e._M_end << ' ' << __e._M_weight;
+	__out << __e.begin() << ' ' << __e.end() << ' ' << __e.weight();
 	return __out;
 }
 
-} // namespace stdext::graph_type
+}
 
-} // namespace stdext
-
-#endif
+#endif /* _POL_GRAPH_EDGE_TCC */
