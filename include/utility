@@ -54,6 +54,22 @@ bool fully_equal_to(_Tp&& __x, _Up&& __y)
 	return false;
 }
 
+template<typename _Tp>
+_Tp qpow(_Tp __x, _Tp __y, _Tp __mod)
+{
+	_Tp __res{1};
+	_Tp __tmp{__x % __mod};
+
+	while (__y)
+	{
+		if (__y & 1) __res = __res * __tmp % __mod;
+		__tmp = __tmp * __tmp % __mod;
+		__y >>= 1;
+	}
+
+	return __res;
+}
+
 }
 
 #endif /* _POLLIB_UTILITY */
