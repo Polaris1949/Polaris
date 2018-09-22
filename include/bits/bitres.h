@@ -18,7 +18,7 @@ public:
     using size_type = std::size_t;
 
 private:
-    std::shared_ptr<storage_type> _M_data;
+    storage_type* _M_data;
     unsigned char _M_count;
 
 public:
