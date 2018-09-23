@@ -1,4 +1,4 @@
-// Segment tree -*- C++ -*-
+// Segment tree classes -*- C++ -*-
 
 // Copyright (C) 1997-2017 Free Software Foundation, Inc.
 //
@@ -22,17 +22,19 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file bits/segtree.h
+/** @file        bits/segtree.h
+ *  @headerfile  segment_tree
+ *  @brief       Segment tree classes
+ *  @author      Polaris Zhao
+ *  @version     3.0
+ *  @todo        Revision.
+ *
  *  This is an internal header file, included by other library headers.
- *  Do not attempt to use it directly. @headername{segment_tree}
- */
-
-// Written by Jingyu Zhao.
+ *  Do not attempt to use it directly.
+**/
 
 #ifndef _POL_SEGTREE_H
 #define _POL_SEGTREE_H 1
-
-#pragma GCC system_header
 
 namespace polaris
 {
