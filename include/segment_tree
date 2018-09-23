@@ -22,11 +22,14 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file segment_tree
+/** @file     segment_tree
+ *  @brief    Segment tree library
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *  @todo     Revision.
+ *
  *  This is a Polaris C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _POLLIB_SEGMENT_TREE
 #define _POLLIB_SEGMENT_TREE 1
