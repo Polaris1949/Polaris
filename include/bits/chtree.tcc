@@ -147,7 +147,9 @@ rank(size_type __l, size_type __r, size_type __k)
         if (__k < __cnt) return __it->first;
     }
 
-    throw std::logic_error{"never reached here"};
+    throw std::out_of_range{std::string{"chtholly_tree::rank(): __k "
+        "(which is "} + std::to_string(__k) + ") >= range [__l, __r) length "
+        "(which is " + std::to_string(__r - __l) + ")"};
 }
 
 template<typename _Tp>
