@@ -17,6 +17,19 @@ void
 __dfs_impl(const _Graph& __g, std::size_t __pos,
 	std::vector<bool>& __vis, _Func& __f);
 
+template<typename _Graph>
+std::vector<std::size_t>
+bfs(const _Graph& __g, std::size_t __pos);
+
+template<typename _Graph, typename _Func>
+void
+bfs(const _Graph& __g, std::size_t __pos, _Func __f);
+
+template<typename _Graph, typename _Func>
+void
+__bfs_impl(const _Graph& __g, std::size_t __pos,
+	std::vector<bool>& __vis, _Func& __f);
+
 }
 
 #endif /* _POL_GRAPH_ALGO_H */
