@@ -1,0 +1,157 @@
+// Physics scientific number library -*- C++ -*-
+
+// Copyright (C) 1997-2018 Free Software Foundation, Inc.
+//
+// This file is part of the Physics C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file     ext/phy/number
+ *  @brief    Physics scientific number library
+ *  @author   Polaris Zhao
+ *  @version  1.2
+ *
+ *  This is a Physics C++ Library header.
+**/
+
+#ifndef _PHYLIB_NUMBER
+#define _PHYLIB_NUMBER 1
+
+#include <polaris/ext/phy/version>
+
+namespace physics
+{
+
+class sc_number
+{
+public:
+	typedef double base_type;
+	typedef int exp_type;
+
+private:
+	double _M_a;
+	int _M_n;
+
+public:
+	sc_number()
+		: _M_a(), _M_n()
+	{}
+
+	sc_number(double __base, int __exp)
+		: _M_a(__base), _M_n(__exp)
+	{}
+
+	explicit
+	sc_number(double __n)
+	{ assign(__n); }
+
+	base_type&
+	base()
+	{ return _M_a; }
+
+	const base_type&
+	base() const
+	{ return _M_a; }
+
+	exp_type&
+	exp()
+	{ return _M_n; }
+
+	const exp_type&
+	exp() const
+	{ return _M_n; }
+
+	void
+	assign(double __n)
+	{
+		int __exp = 0;
+
+		if (__n >= 1)
+		{
+			while (__n)
+			{
+				if (__n >= 1 && __n < 10)
+					break;
+
+				__n /= 10;
+				++__exp;
+			}
+		}
+		else
+		{
+			while (__n)
+			{
+				if (__n >= 1 && __n < 10)
+					break;
+
+				__n *= 10;
+				--__exp;
+			}
+		}
+
+		_M_a = __n;
+		_M_n = __exp;
+	}
+
+	sc_number&
+	operator = (const sc_number& __o) = default;
+
+	sc_number&
+	operator = (double __n)
+	{
+		assign(__n);
+		return *this;
+	}
+
+	friend std::ostream&
+	operator << (std::ostream& __out, const sc_number& __x)
+	{
+		if (__x._M_n <= 2 && __x._M_n >= -1)
+		{
+			switch (__x._M_n)
+			{
+				case 2:
+					__out << __x._M_a * 100;
+					break;
+				case 1:
+					__out << __x._M_a * 10;
+					break;
+				case 0:
+					__out << __x._M_a;
+					break;
+				default:
+					__out << __x._M_a / 10;
+					break;
+			}
+		}
+		else
+		{
+			__out << __x._M_a << "*10^";
+			if (__x._M_n < 0) __out << '(';
+			__out << __x._M_n;
+			if (__x._M_n < 0) __out << ')';
+		}
+
+		return __out;
+	}
+};
+
+}
+
+#endif /* _PHYLIB_NUMBER */
