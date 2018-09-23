@@ -107,7 +107,7 @@ public:
 private:
     container_type _M_sto;
 
-    iterator split(size_type __pos)
+    iterator _M_split(size_type __pos)
     {
         iterator __it{this->_M_sto.lower_bound(
             node_type{__pos, ~0u})};
@@ -118,7 +118,7 @@ private:
         size_type __r = __it->right();
         value_type __v = __it->data();
         this->_M_sto.erase(__it);
-        this->_M_sto.insert(node_type{__l, __pos-1, __v});
+        this->_M_sto.insert(node_type{__l, __pos, __v});
         return this->_M_sto.insert(node_type{__pos, __r, __v}).first;
     }
 
@@ -128,22 +128,22 @@ public:
     {
         size_type __n{__data.size()};
         for (size_type __i{}; __i < __n; ++__i)
-            this->_M_sto.insert(node_type{__i, __i, __data[__i]});
-        this->_M_sto.insert(node_type{__n, __n});
+            this->_M_sto.insert(node_type{__i, __i + 1, __data[__i]});
+        this->_M_sto.insert(node_type{__n, __n + 1});
     }
 
     void plus(size_type __l, size_type __r, const value_type& __v)
     {
-        iterator __itl = split(__l);
-        iterator __itr = split(__r + 1);
+        iterator __itl = _M_split(__l);
+        iterator __itr = _M_split(__r);
         for (; __itl != __itr; ++__itl)
             const_cast<value_type&>(__itl->data()) += __v;
     }
 
     void assign(size_type __l, size_type __r, const value_type& __v)
     {
-        iterator __itl = split(__l);
-        iterator __itr = split(__r + 1);
+        iterator __itl = _M_split(__l);
+        iterator __itr = _M_split(__r);
         this->_M_sto.erase(__itl, __itr);
         this->_M_sto.insert(node_type{__l, __r, __v});
     }
@@ -152,12 +152,12 @@ public:
     {
         using _Pair_t = std::pair<value_type, size_type>;
         std::vector<_Pair_t> __tmp;
-        iterator __itl = split(__l);
-        iterator __itr = split(__r + 1);
+        iterator __itl = _M_split(__l);
+        iterator __itr = _M_split(__r);
 
         for (; __itl != __itr; ++__itl)
             __tmp.push_back(_Pair_t{__itl->data(),
-                __itl->right() - __itl->left() + 1});
+                __itl->right() - __itl->left()});
 
         std::sort(__tmp.begin(), __tmp.end());
         size_type __cnt{};
@@ -166,7 +166,7 @@ public:
             __it != __tmp.end(); ++__it)
         {
             __cnt += __it->second;
-            if (__k <= __cnt) return __it->first;
+            if (__k < __cnt) return __it->first;
         }
 
         throw std::logic_error{"never reached here"};
@@ -175,11 +175,11 @@ public:
     value_type pow_sum(size_type __l, size_type __r, value_type __exp,
         value_type __mod)
     {
-        iterator __itl = split(__l);
-        iterator __itr = split(__r + 1);
+        iterator __itl = _M_split(__l);
+        iterator __itr = _M_split(__r);
         value_type __res{};
         for (; __itl != __itr; ++__itl)
-            __res = (__res + value_type{__itl->right() - __itl->left() + 1}
+            __res = (__res + value_type{__itl->right() - __itl->left()}
                 * pol::qpow(__itl->data(), __exp, __mod)) % __mod;
         return __res;
     }
@@ -223,9 +223,8 @@ int main()
 			x = (rnd() % rmod) + 1;
 		if (op == 4)
 			y = (rnd() % rmod) + 1;
-        --l; --r;
-        std::cout << "> main(): op = " << op << '\n';
-        std::cout << "> main(): [" << l << ", " << r+1 << ")\n";
+        --l;
+
 		switch (op)
 		{
 			case 1:
@@ -237,7 +236,7 @@ int main()
 				break;
 
 			case 3:
-                std::cout << ct.rank(l, r, x) << '\n';
+                std::cout << ct.rank(l, r, --x) << '\n';
 				break;
 
 			case 4:
