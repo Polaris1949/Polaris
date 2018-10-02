@@ -1,5 +1,5 @@
-#ifndef _POL_UTILITY_H_
-#define _POL_UTILITY_H_ 1
+#ifndef _POL_UTILITY_H
+#define _POL_UTILITY_H 1
 
 #pragma GCC system_header
 
@@ -8,12 +8,27 @@
 namespace polaris
 {
 
+template<typename _Tp, typename =
+	decltype(std::declval<_Tp>() == std::declval<_Tp>())>
+bool fully_equal_to(_Tp&& __x, _Tp&& __y);
+
+template<typename _Tp, typename _Up>
+bool fully_equal_to(_Tp&& __x, _Up&& __y);
+
 template<typename _Tp>
-inline _Tp
+[[deprecated]] inline _Tp&
+inc(_Tp& __x);
+
+template<typename _Tp>
+[[deprecated]] inline _Tp&
+dec(_Tp& __x);
+
+template<typename _Tp>
+[[deprecated]] inline _Tp
 inc_copy(const _Tp& __x);
 
 template<typename _Tp>
-inline _Tp
+[[deprecated]] inline _Tp
 dec_copy(const _Tp& __x);
 
 template<typename _Tp>
@@ -56,6 +71,37 @@ inline constexpr size_t bitof();
 
 template<typename _Tp>
 inline constexpr size_t bitof(const _Tp& __x);
+
+template<typename _Tp>
+constexpr const _Tp&
+min_of(const _Tp& __x);
+
+template<typename _Tp, typename... _Args>
+constexpr const _Tp&
+min_of(const _Tp& __x, const _Args&... __args);
+
+template<typename _Tp>
+constexpr const _Tp&
+max_of(const _Tp& __x);
+
+template<typename _Tp, typename... _Args>
+constexpr const _Tp&
+max_of(const _Tp& __x, const _Args&... __args);
+
+template<typename _Tp>
+constexpr _Tp
+sum(const _Tp& __x);
+
+template<typename _Tp, typename... _Args>
+constexpr auto
+sum(const _Tp& __x, const _Args&... __args);
+
+template<typename... _Args>
+constexpr auto
+average(const _Args&... __args);
+
+template<typename _Tp>
+_Tp qpow(_Tp __x, _Tp __y, _Tp __mod);
 
 }
 

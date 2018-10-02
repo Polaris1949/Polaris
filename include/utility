@@ -22,11 +22,13 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file utility
+/** @file     utility
+ *  @brief    Utility library
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *
  *  This is a Polaris C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _POLLIB_UTILTIY
 #define _POLLIB_UTILTIY 1
@@ -37,39 +39,5 @@
 #include <polaris/exception>
 #include <polaris/bits/utility.h>
 #include <polaris/bits/utility.tcc>
-
-namespace polaris
-{
-
-template<typename _Tp, typename =
-	decltype(std::declval<_Tp>() == std::declval<_Tp>())>
-bool fully_equal_to(_Tp&& __x, _Tp&& __y)
-{
-	return __x == __y;
-}
-
-template<typename _Tp, typename _Up>
-bool fully_equal_to(_Tp&& __x, _Up&& __y)
-{
-	return false;
-}
-
-template<typename _Tp>
-_Tp qpow(_Tp __x, _Tp __y, _Tp __mod)
-{
-	_Tp __res{1};
-	_Tp __tmp{__x % __mod};
-
-	while (__y)
-	{
-		if (__y & 1) __res = __res * __tmp % __mod;
-		__tmp = __tmp * __tmp % __mod;
-		__y >>= 1;
-	}
-
-	return __res;
-}
-
-}
 
 #endif /* _POLLIB_UTILITY */

@@ -1,5 +1,5 @@
-#ifndef _POL_UTILITY_TCC_
-#define _POL_UTILITY_TCC_ 1
+#ifndef _POL_UTILITY_TCC
+#define _POL_UTILITY_TCC 1
 
 #pragma GCC system_header
 
@@ -11,11 +11,38 @@
 namespace polaris
 {
 
+template<typename _Tp, typename =
+	decltype(std::declval<_Tp>() == std::declval<_Tp>())>
+bool fully_equal_to(_Tp&& __x, _Tp&& __y)
+{
+	return __x == __y;
+}
+
+template<typename _Tp, typename _Up>
+bool fully_equal_to(_Tp&& __x, _Up&& __y)
+{
+	return false;
+}
+
+template<typename _Tp>
+inline _Tp&
+inc(_Tp& __x)
+{
+	return ++__x;
+}
+
+template<typename _Tp>
+inline _Tp&
+dec(_Tp& __x)
+{
+	return --__x;
+}
+
 template<typename _Tp>
 inline _Tp
 inc_copy(const _Tp& __x)
 {
-	_Tp __y(__x);
+	_Tp __y{__x};
 	return ++__y;
 }
 
@@ -23,7 +50,7 @@ template<typename _Tp>
 inline _Tp
 dec_copy(const _Tp& __x)
 {
-	_Tp __y(__x);
+	_Tp __y{__x};
 	return --__y;
 }
 
@@ -117,6 +144,71 @@ template<typename _Tp>
 constexpr size_t bitof(const _Tp& __x)
 {
 	return sizeof(__x) * CHAR_BIT;
+}
+
+template<typename _Tp>
+constexpr const _Tp&
+min_of(const _Tp& __x)
+{
+	return __x;
+}
+
+template<typename _Tp, typename... _Args>
+constexpr const _Tp&
+min_of(const _Tp& __x, const _Args&... __args)
+{
+	return std::min(__x, min_of(__args...));
+}
+
+template<typename _Tp>
+constexpr const _Tp&
+max_of(const _Tp& __x)
+{
+	return __x;
+}
+
+template<typename _Tp, typename... _Args>
+constexpr const _Tp&
+max_of(const _Tp& __x, const _Args&... __args)
+{
+	return std::max(__x, max_of(__args...));
+}
+
+template<typename _Tp>
+constexpr _Tp
+sum(const _Tp& __x)
+{
+	return __x;
+}
+
+template<typename _Tp, typename... _Args>
+constexpr auto
+sum(const _Tp& __x, const _Args&... __args)
+{
+	return __x + sum(__args...);
+}
+
+template<typename... _Args>
+constexpr auto
+average(const _Args&... __args)
+{
+	return sum(__args...) / sizeof...(__args);
+}
+
+template<typename _Tp>
+_Tp qpow(_Tp __x, _Tp __y, _Tp __mod)
+{
+	_Tp __res{1};
+	_Tp __tmp{__x % __mod};
+
+	while (__y)
+	{
+		if (__y & 1) __res = __res * __tmp % __mod;
+		__tmp = __tmp * __tmp % __mod;
+		__y >>= 1;
+	}
+
+	return __res;
 }
 
 }
