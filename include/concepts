@@ -100,7 +100,7 @@ namespace polaris
  *  @note       You should use <concepts> instead
  *              if your compiler support C++20.
 **/
-inline namespace concepts
+namespace concepts
 {
 
 template<typename _Tp, typename _Up>
