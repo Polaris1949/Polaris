@@ -60,11 +60,7 @@ binary_tree_node<_Tp>&
 binary_tree_node<_Tp>::
 construct(const value_type& __x)
 {
-	delete _M_left;
-	delete _M_right;
-	_M_left = nullptr;
-	_M_right = nullptr;
-	_M_data = __x;
+	this->_M_construct(__x);
 	return *this;
 }
 
@@ -73,88 +69,84 @@ binary_tree_node<_Tp>&
 binary_tree_node<_Tp>::
 destroy()
 {
-	delete _M_left;
-	delete _M_right;
-	_M_left = nullptr;
-	_M_right = nullptr;
-	_M_data = value_type();
+	this->_M_destroy();
 	return *this;
 }
 
 template<typename _Tp>
-binary_tree_node<_Tp>*&
+inline binary_tree_node<_Tp>*&
 binary_tree_node<_Tp>::
 parent()
 { return this->_M_parent; }
 
 template<typename _Tp>
-const binary_tree_node<_Tp>*&
+inline const binary_tree_node<_Tp>*&
 binary_tree_node<_Tp>::
 parent() const
 { return this->_M_parent; }
 
 template<typename _Tp>
-binary_tree_node<_Tp>*&
+inline binary_tree_node<_Tp>*&
+binary_tree_node<_Tp>::
+child(bool __x)
+{ return __x ? this->right() : this->left(); }
+
+template<typename _Tp>
+inline const binary_tree_node<_Tp>*&
+binary_tree_node<_Tp>::
+child(bool __x) const
+{ return __x ? this->right() : this->left(); }
+
+template<typename _Tp>
+inline binary_tree_node<_Tp>*&
 binary_tree_node<_Tp>::
 left()
-{
-	return _M_left;
-}
+{ return this->_M_left; }
 
 template<typename _Tp>
-const binary_tree_node<_Tp>*&
+inline const binary_tree_node<_Tp>*&
 binary_tree_node<_Tp>::
 left() const
-{
-	return _M_left;
-}
+{ return this->_M_left; }
 
 template<typename _Tp>
-binary_tree_node<_Tp>*&
+inline binary_tree_node<_Tp>*&
 binary_tree_node<_Tp>::
 right()
-{
-	return _M_right;
-}
+{ return this->_M_right; }
 
 template<typename _Tp>
-const binary_tree_node<_Tp>*&
+inline const binary_tree_node<_Tp>*&
 binary_tree_node<_Tp>::
 right() const
-{
-	return _M_right;
-}
+{ return this->_M_right; }
 
 template<typename _Tp>
-_Tp&
+inline _Tp&
 binary_tree_node<_Tp>::
 data()
-{
-	return _M_data;
-}
+{ return this->_M_data; }
 
 template<typename _Tp>
-const _Tp&
+inline const _Tp&
 binary_tree_node<_Tp>::
 data() const
-{
-	return _M_data;
-}
+{ return this->_M_data; }
 
 template<typename _Tp>
-bool
+inline bool
 binary_tree_node<_Tp>::
 is_branch() const
 { return this->degree() > 0; }
 
 template<typename _Tp>
-bool
+inline bool
 binary_tree_node<_Tp>::
 is_leaf() const
 { return this->degree() == 0; }
 
 template<typename _Tp>
-std::size_t
+inline std::size_t
 binary_tree_node<_Tp>::
 degree() const
 {
@@ -162,23 +154,51 @@ degree() const
 		+ size_type{this->_M_right != nullptr};
 }
 
-// TODO: Replace and complete it
 template<typename _Tp>
-template<typename _Seq>
-inline typename binary_tree<_Tp>&
-binary_tree<_Tp>::
-construct(const _Seq& __data)
+void
+binary_tree_node<_Tp>::
+_M_construct(const value_type& __x)
 {
-	_M_destroy();
-	data_extractor __ext(__data);
-	_M_root = new binary_tree_node<_Tp>();
-	_M_root->parent() = _M_root;
-	_M_construct(__root, __data);
-	return *this;
+	new (&this->data()) value_type{__x};
+}
+
+template<typename _Tp>
+void
+binary_tree_node<_Tp>::
+_M_destroy()
+{
+	if (this->left())
+	{
+		delete this->left();
+		this->left() = nullptr;
+	}
+
+	if (this->right())
+	{
+		delete this->right();
+		this->right() = nullptr;
+	}
+
+	this->data().~value_type();
 }
 
 // TODO: Replace and complete it
 template<typename _Tp>
+template<typename _Seq>
+inline binary_tree<_Tp>&
+binary_tree<_Tp>::
+construct(const _Seq& __data)
+{
+	this->_M_destroy();
+	data_extractor __ext(__data);
+	this->_M_root = new binary_tree_node<_Tp>();
+	this->_M_root->parent() = _M_root;
+	this->_M_construct(this->_M_root, __data);
+	return *this;
+}
+
+// TODO: Replace and complete it
+/*template<typename _Tp>
 template<typename _Seq>
 void
 binary_tree<_Tp>::
@@ -188,7 +208,7 @@ _M_construct(node_type* __root, const data_extractor<_Seq>& __data)
 
 	// ...
 }
-
+*/
 }
 
 #endif

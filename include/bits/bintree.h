@@ -69,6 +69,12 @@ public:
 	parent() const;
 
 	node_type*&
+	child(bool __x);
+
+	const node_type*&
+	child(bool __x) const;
+
+	node_type*&
 	left();
 
 	const node_type*&
@@ -103,7 +109,13 @@ public:
 
 private:
 	void
-	_M_preorder(std::vector<size_type>& __v) const;
+	_M_construct(const value_type& __x);
+
+	void
+	_M_destroy();
+
+	/*void
+	_M_preorder(std::vector<size_type>& __v) const;*/
 };
 
 template<typename _Tp>
@@ -124,6 +136,13 @@ public:
 	template<typename _Seq>
 	binary_tree(const _Seq& __data);
 
+	template<typename _Seq>
+	tree_type&
+	construct(const _Seq& __data);
+
+	tree_type&
+	destroy();
+
 	size_type
 	degree() const;
 
@@ -134,12 +153,16 @@ public:
 	void
 	preorder(_Func&& __func);
 
-	std::vector<size_type> postorder() const;
+	std::vector<size_type>
+	postorder() const;
 
 private:
 	template<typename _Seq>
 	void
 	_M_construct(node_type* __root, const _Seq& __data);
+
+	void
+	_M_destroy();
 };
 
 }
