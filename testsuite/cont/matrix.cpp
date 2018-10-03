@@ -1,15 +1,13 @@
 #include <iostream>
 #include <polaris/matrix>
-using namespace std;
-using namespace polaris;
 
-matrix<int> m;
+pol::matrix<int> m;
 
 int main()
 {
 	int n=10;
 	m.resize(n);
-	
+
 	for (int i=0;i<n;++i)
 		for (int j=0;j<n;++j)
 		{
@@ -20,9 +18,9 @@ int main()
 	for (int i=0;i<n;++i)
 	{
 		for (int j=0;j<n;++j)
-			cout<<m[i][j]<<' ';
-		cout<<'\n';
+			std::cout<<m[i][j]<<' ';
+		std::cout<<'\n';
 	}
-	
+
 	return 0;
 }

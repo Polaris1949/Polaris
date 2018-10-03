@@ -1,21 +1,19 @@
 #include <polaris/bitfield>
 #include <iostream>
 #include <type_traits>
-using namespace std;
-using namespace pol;
 
 int pow2[8]={1,2,4,8,16,32,64,128};
 
 template<typename _Tp>
 bool num_from_char(_Tp& __x, char __c)
 {
-    static_assert(is_integral_v<_Tp>);
+    static_assert(std::is_integral_v<_Tp>);
     if (!isdigit(__c)) return false;
     __x = static_cast<_Tp>(__c - '0');
     return true;
 }
 
-union exbyte
+union _Exbyte
 {
     unsigned char __n;
 
@@ -54,7 +52,7 @@ union exbyte
         return __b[__pos];
     }
 
-    friend istream& operator >> (istream& __in, _Exbyte& __x)
+    friend std::istream& operator >> (std::istream& __in, _Exbyte& __x)
     {
         int s{};
         for (int i=7; i>=0; --i)
@@ -63,7 +61,7 @@ union exbyte
             __in >> ch;
             if (!(ch=='0'||ch=='1'))
             {
-                __in.setstate(ios_base::failbit);
+                __in.setstate(std::ios_base::failbit);
                 return __in;
             }
             s+=int(ch-'0')*pow2[i];
@@ -72,7 +70,7 @@ union exbyte
         return __in;
     }
 
-    friend ostream& operator << (ostream& __out, const _Exbyte& __x)
+    friend std::ostream& operator << (std::ostream& __out, const _Exbyte& __x)
     {
         for (int i=7; i>=0; --i)
             __out<<__x[i];
@@ -84,10 +82,10 @@ int main()
 {
     _Exbyte x;
     x.__n = 10;
-    cout << x[1] << endl;
-    cout << sizeof(x) << endl;
-    cout << x << endl;
-    cin >> x;
-    cout << (int)x.__n << endl;
+    std::cout << x[1] << '\n';
+    std::cout << sizeof(x) << '\n';
+    std::cout << x << '\n';
+    std::cin >> x;
+    std::cout << (int)x.__n << '\n';
     return 0;
 }
