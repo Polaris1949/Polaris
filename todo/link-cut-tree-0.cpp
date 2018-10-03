@@ -162,7 +162,6 @@ private:
         this->splay(__y);
     }
 
-public:
     //int xr[300005],val[300005];
     void cut(node_type* __x, node_type* __y)
     {
@@ -192,11 +191,17 @@ public:
         this->push_up(__x);
     }
 
-    inline int xor_sum(node_type* __x, node_type* __y)
+    inline value_type xor_sum(node_type* __x, node_type* __y)
     {
         this->split(__x, __y);
         return __y->data();
     }
+
+public:
+    void cut(size_type __x, size_type __y);
+    void link(size_type __x, size_type __y);
+    void modify(size_type __x, const value_type& __y);
+    value_type xor_sum(size_type __x, size_type __y);
 };
 
 }
