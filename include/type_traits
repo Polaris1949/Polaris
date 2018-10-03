@@ -57,6 +57,21 @@
 namespace polaris
 {
 
+// rebind
+template<typename>
+struct rebind;
+
+template<template<typename> typename _Tp, typename... _Up>
+struct rebind<_Tp<_Up...>>
+{
+	template<typename... _Args>
+	using type = _Tp<_Args...>;
+};
+
+// rebind_t
+template<typename _Tp, typename... _Args>
+using rebind_t = typename rebind<_Tp>::template type<_Args...>;
+
 // is_functor
 template<typename _Tp>
 struct is_functor
@@ -176,7 +191,10 @@ inline constexpr bool is_less_than_comparable_v =
 	struct ho_##NAME \
 		: public decltype(__ho_##NAME##_impl::_S_test<_Tp>(0)) \
 	{ \
-	};
+	}; \
+	\
+	template<typename _Tp> \
+	inline constexpr bool ho_##NAME##_v = ho_##NAME<_Tp>::value;
 
 #define POL_MAKE_HO_IMPL1(OP, NAME) \
 	struct __ho_##NAME##_impl \
