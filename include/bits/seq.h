@@ -42,144 +42,144 @@ namespace polaris
 inline namespace __detail
 {
 
-template<typename _C>
-using __c_value_type = typename _C::value_type;
+template<typename _Cont>
+using __c_value_type = typename _Cont::value_type;
 
-template<typename _C>
-using __c_reference = typename _C::reference;
+template<typename _Cont>
+using __c_reference = typename _Cont::reference;
 
-template<typename _C>
-using __c_const_reference = typename _C::const_reference;
+template<typename _Cont>
+using __c_const_reference = typename _Cont::const_reference;
 
-template<typename _C>
-using __c_iterator = typename _C::iterator;
+template<typename _Cont>
+using __c_iterator = typename _Cont::iterator;
 
-template<typename _C>
-using __c_const_iterator = typename _C::const_iterator;
+template<typename _Cont>
+using __c_const_iterator = typename _Cont::const_iterator;
 
-template<typename _C>
-using __c_difference_type = typename _C::difference_type;
+template<typename _Cont>
+using __c_difference_type = typename _Cont::difference_type;
 
-template<typename _C>
-using __c_size_type = typename _C::size_type;
+template<typename _Cont>
+using __c_size_type = typename _Cont::size_type;
 
-template<typename _C>
-using __c_reverse_iterator = typename _C::reverse_iterator;
+template<typename _Cont>
+using __c_reverse_iterator = typename _Cont::reverse_iterator;
 
-template<typename _C>
-using __c_const_reverse_iterator = typename _C::const_reverse_iterator;
+template<typename _Cont>
+using __c_const_reverse_iterator = typename _Cont::const_reverse_iterator;
 
-template<typename _C>
-using __c_allocator_type = typename _C::allocator_type;
+template<typename _Cont>
+using __c_allocator_type = typename _Cont::allocator_type;
 
-template<typename _C>
-concept bool __has_begin = requires(_C& __c)
+template<typename _Cont>
+concept bool __has_begin = requires(_Cont& __cont)
 {
-	{__c.begin()}->__c_iterator<_C>;
-} && requires(const _C& __c)
+	{__cont.begin()}->__c_iterator<_Cont>;
+} && requires(const _Cont& __cont)
 {
-	{__c.begin()}->__c_const_iterator<_C>;
+	{__cont.begin()}->__c_const_iterator<_Cont>;
 };
 
-template<typename _C>
-concept bool __has_end = requires(_C& __c)
+template<typename _Cont>
+concept bool __has_end = requires(_Cont& __cont)
 {
-	{__c.end()}->__c_iterator<_C>;
-} && requires(const _C& __c)
+	{__cont.end()}->__c_iterator<_Cont>;
+} && requires(const _Cont& __cont)
 {
-	{__c.end()}->__c_const_iterator<_C>;
+	{__cont.end()}->__c_const_iterator<_Cont>;
 };
 
-template<typename _C>
-concept bool __has_cbegin = requires(_C& __c)
+template<typename _Cont>
+concept bool __has_cbegin = requires(_Cont& __cont)
 {
-	{__c.cbegin()}->__c_const_iterator<_C>;
+	{__cont.cbegin()}->__c_const_iterator<_Cont>;
 };
 
-template<typename _C>
-concept bool __has_cend = requires(_C& __c)
+template<typename _Cont>
+concept bool __has_cend = requires(_Cont& __cont)
 {
-	{__c.cend()}->__c_const_iterator<_C>;
+	{__cont.cend()}->__c_const_iterator<_Cont>;
 };
 
-template<typename _C>
-concept bool __has_swap = requires(_C& __cx, _C& __cy)
+template<typename _Cont>
+concept bool __has_swap = requires(_Cont& __cx, _Cont& __cy)
 {
 	{__cx.swap(__cy)}->void;
 };
 
-template<typename _C>
-concept bool __has_size = requires(_C& __c)
+template<typename _Cont>
+concept bool __has_size = requires(_Cont& __cont)
 {
-	{__c.size()}->__c_size_type<_C>;
+	{__cont.size()}->__c_size_type<_Cont>;
 };
 
-template<typename _C>
-concept bool __has_max_size = requires(_C& __c)
+template<typename _Cont>
+concept bool __has_max_size = requires(_Cont& __cont)
 {
-	{__c.max_size()}->__c_size_type<_C>;
+	{__cont.max_size()}->__c_size_type<_Cont>;
 };
 
-template<typename _C>
-concept bool __has_empty = requires(_C& __c)
+template<typename _Cont>
+concept bool __has_empty = requires(_Cont& __cont)
 {
-	{__c.empty()}->bool;
+	{__cont.empty()}->bool;
 };
 
-template<typename _C>
-concept bool __has_rbegin = requires(_C& __c)
+template<typename _Cont>
+concept bool __has_rbegin = requires(_Cont& __cont)
 {
-	{__c.rbegin()}->__c_reverse_iterator<_C>;
-} && requires(const _C& __c)
+	{__cont.rbegin()}->__c_reverse_iterator<_Cont>;
+} && requires(const _Cont& __cont)
 {
-	{__c.rbegin()}->__c_const_reverse_iterator<_C>;
+	{__cont.rbegin()}->__c_const_reverse_iterator<_Cont>;
 };
 
-template<typename _C>
-concept bool __has_rend = requires(_C& __c)
+template<typename _Cont>
+concept bool __has_rend = requires(_Cont& __cont)
 {
-	{__c.rend()}->__c_reverse_iterator<_C>;
-} && requires(const _C& __c)
+	{__cont.rend()}->__c_reverse_iterator<_Cont>;
+} && requires(const _Cont& __cont)
 {
-	{__c.rend()}->__c_const_reverse_iterator<_C>;
+	{__cont.rend()}->__c_const_reverse_iterator<_Cont>;
 };
 
-template<typename _C>
-concept bool __has_crbegin = requires(_C& __c)
+template<typename _Cont>
+concept bool __has_crbegin = requires(_Cont& __cont)
 {
-	{__c.crbegin()}->__c_const_reverse_iterator<_C>;
+	{__cont.crbegin()}->__c_const_reverse_iterator<_Cont>;
 };
 
-template<typename _C>
-concept bool __has_crend = requires(_C& __c)
+template<typename _Cont>
+concept bool __has_crend = requires(_Cont& __cont)
 {
-	{__c.crend()}->__c_const_reverse_iterator<_C>;
+	{__cont.crend()}->__c_const_reverse_iterator<_Cont>;
 };
 
-template<typename _C>
-concept bool __has_get_allocator = requires(_C& __c)
+template<typename _Cont>
+concept bool __has_get_allocator = requires(_Cont& __cont)
 {
-	{__c.get_allocator()}->__c_allocator_type<_C>;
+	{__cont.get_allocator()}->__c_allocator_type<_Cont>;
 };
 
-template<typename _C, typename... _Args>
-concept bool __has_emplace = requires(_C& __c, __c_const_iterator<_C>& __p, \
+template<typename _Cont, typename... _Args>
+concept bool __has_emplace = requires(_Cont& __cont, __c_const_iterator<_Cont>& __p, \
 	_Args&&... __args)
 {
-	{__c.emplace(__p, __args...)}->__c_iterator<_C>;
+	{__cont.emplace(__p, __args...)}->__c_iterator<_Cont>;
 };
 
-template<typename _C, typename _Tp, typename... _Args>
-concept bool has_emplace = __has_emplace<_C, _Args...>\
-	&& std::is_convertible<_Tp, __c_value_type<_C>>::value;
+template<typename _Cont, typename _Tp, typename... _Args>
+concept bool has_emplace = __has_emplace<_Cont, _Args...>\
+	&& std::is_convertible<_Tp, __c_value_type<_Cont>>::value;
 
 template<typename _Seq, typename _Tp>
-concept bool __has_push_front = requires(_Seq __c, const _Tp& __x)
+concept bool __has_push_front = requires(_Seq __cont, const _Tp& __x)
 {
-	{__c.push_front(__x)}->void;
-} || requires(_Seq __c, _Tp&& __x)
+	{__cont.push_front(__x)}->void;
+} || requires(_Seq __cont, _Tp&& __x)
 {
-	{__c.push_front(__x)}->void;
+	{__cont.push_front(__x)}->void;
 };
 
 template<typename _Seq>
@@ -190,88 +190,88 @@ concept bool has_push_front_c = __has_push_front<_Seq, _Tp> \
 	&& std::is_convertible<_Tp, __c_value_type<_Seq>>::value;
 
 template<typename _Seq, typename _Tp>
-concept bool __has_push_back = requires(_Seq __c, const _Tp& __x)
+concept bool __has_push_back = requires(_Seq __cont, const _Tp& __x)
 {
-	{__c.push_back(__x)}->void;
-} || requires(_Seq __c, _Tp&& __x)
+	{__cont.push_back(__x)}->void;
+} || requires(_Seq __cont, _Tp&& __x)
 {
-	{__c.push_back(__x)}->void;
+	{__cont.push_back(__x)}->void;
 };
 
 template<typename _Seq>
 concept bool has_push_back = __has_push_back<_Seq, __c_value_type<_Seq>>;
 
 template<typename _Seq, typename _Tp = typename _Seq::value_type>
-concept bool __has_front = requires(_Seq __c)
+concept bool __has_front = requires(_Seq __cont)
 {
-	{__c.front()}->_Tp&;
-} || requires(const _Seq __c)
+	{__cont.front()}->_Tp&;
+} || requires(const _Seq __cont)
 {
-	{__c.front()}->const _Tp&;
+	{__cont.front()}->const _Tp&;
 };
 
 template<typename _Seq, typename _Tp = typename _Seq::value_type>
-concept bool __has_back = requires(_Seq __c)
+concept bool __has_back = requires(_Seq __cont)
 {
-	{__c.back()}->_Tp&;
-} || requires(_Seq __c)
+	{__cont.back()}->_Tp&;
+} || requires(_Seq __cont)
 {
-	{__c.back()}->const _Tp&;
+	{__cont.back()}->const _Tp&;
 };
 
 template<typename _Seq, typename _Tp = typename _Seq::value_type, \
 	typename... _Args>
-concept bool __has_emplace_front = requires(_Seq __c, _Args&&... __args)
+concept bool __has_emplace_front = requires(_Seq __cont, _Args&&... __args)
 {
-	{__c.emplace_front(__args...)}->_Tp&;
+	{__cont.emplace_front(__args...)}->_Tp&;
 };
 
 template<typename _Seq, typename _Tp = typename _Seq::value_type, \
 	typename... _Args>
-concept bool __has_emplace_back = requires(_Seq __c, _Args&&... __args)
+concept bool __has_emplace_back = requires(_Seq __cont, _Args&&... __args)
 {
-	{__c.emplace_back(__args...)}->_Tp&;
+	{__cont.emplace_back(__args...)}->_Tp&;
 };
 
 template<typename _Seq, typename _Tp = typename _Seq::value_type>
-concept bool __has_resize = requires(_Seq __c, size_t __size)
+concept bool __has_resize = requires(_Seq __cont, size_t __size)
 {
-	{__c.resize(__size)}->void;
-} && (requires(_Seq __c, size_t __size, const _Tp& __x)
+	{__cont.resize(__size)}->void;
+} && (requires(_Seq __cont, size_t __size, const _Tp& __x)
 {
-	{__c.resize(__size, __x)}->void;
-} || requires(_Seq __c, size_t __size, _Tp&& __x)
+	{__cont.resize(__size, __x)}->void;
+} || requires(_Seq __cont, size_t __size, _Tp&& __x)
 {
-	{__c.resize(__size, __x)}->void;
+	{__cont.resize(__size, __x)}->void;
 });
 
 template<typename _Seq, typename _Tp = typename _Seq::value_type>
-concept bool __has_ops = requires(_Seq __c, size_t __pos)
+concept bool __has_ops = requires(_Seq __cont, size_t __pos)
 {
-	{__c[__pos]}->_Tp&;
-} || requires(_Seq __c, size_t __pos)
+	{__cont[__pos]}->_Tp&;
+} || requires(_Seq __cont, size_t __pos)
 {
-	{__c[__pos]}->const _Tp&;
+	{__cont[__pos]}->const _Tp&;
 };
 
-template<typename _C, typename _Tp>
-concept bool __has_insert = requires(_C& __c, __c_const_iterator<_C>& __p, \
+template<typename _Cont, typename _Tp>
+concept bool __has_insert = requires(_Cont& __cont, __c_const_iterator<_Cont>& __p, \
 	const _Tp& __x)
 {
-	{__c.insert(__p, __x)}->__c_iterator<_C>;
+	{__cont.insert(__p, __x)}->__c_iterator<_Cont>;
 };
 
-template<typename _C, typename _Tp>
-concept bool __has_erase = requires(_C& __c, __c_const_iterator<_C>& __p)
+template<typename _Cont, typename _Tp>
+concept bool __has_erase = requires(_Cont& __cont, __c_const_iterator<_Cont>& __p)
 {
-	{__c.erase(__p)}->__c_iterator<_C>;
+	{__cont.erase(__p)}->__c_iterator<_Cont>;
 };
 
 /*
-template<typename _C, typename _Tp>
+template<typename _Cont, typename _Tp>
 concept bool __has_[TODO...] = requires([TODO...])
 {
-	{__c.[TODO...]()}->__c_[TODO...]<_C>;
+	{__cont.[TODO...]()}->__c_[TODO...]<_Cont>;
 };
 */
 
