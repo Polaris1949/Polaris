@@ -25,11 +25,17 @@ public:
     link_cut_tree_node() = default;
     link_cut_tree_node(const value_type& __x);
 
-    value_type& value();
-    const value_type& value() const;
+    value_type& value()
+    { return this->_M_value; }
 
-    bool& mark();
-    const bool& mark() const;
+    const value_type& value() const
+    { return this->_M_value; }
+
+    bool& mark()
+    { return this->_M_mark; }
+
+    const bool& mark() const
+    { return this->_M_mark; }
 
     void reverse()
     {
@@ -45,10 +51,11 @@ class link_cut_tree
 public:
     using value_type = _Tp;
     using node_type = link_cut_tree_node<_Tp>;
+    using tree_type = link_cut_tree<_Tp>;
+    using size_type = std::size_t;
 
 private:
     std::vector<node_type*> _M_node;
-    //int top,c[300005][2],f[300005],q[300005],rv[300005];
 
     void push_up(node_type* __x)
     {
@@ -162,7 +169,6 @@ private:
         this->splay(__y);
     }
 
-    //int xr[300005],val[300005];
     void cut(node_type* __x, node_type* __y)
     {
         if (this->find(__x) != this->find(__y)) return;
@@ -198,10 +204,47 @@ private:
     }
 
 public:
-    void cut(size_type __x, size_type __y);
-    void link(size_type __x, size_type __y);
-    void modify(size_type __x, const value_type& __y);
-    value_type xor_sum(size_type __x, size_type __y);
+    link_cut_tree() = default;
+
+    template<typename _Seq>
+    link_cut_tree(const _Seq& __data)
+    { this->construct(__data); }
+
+    ~link_cut_tree() noexcept
+    { this->destroy(); }
+
+    template<typename _Seq>
+    tree_type& construct(const _Seq& __data)
+    {
+        for (const value_type& __elem : __data)
+            this->_M_node.push_back(new node_type{__elem});
+    }
+
+    tree_type& destroy()
+    {
+        for (node_type*& __elem : this->_M_node)
+            delete __elem;
+    }
+
+    void cut(size_type __x, size_type __y)
+    {
+        this->cut(this->_M_node[__x], this->_M_node[__y]);
+    }
+
+    void link(size_type __x, size_type __y)
+    {
+        this->link(this->_M_node[__x], this->_M_node[__y]);
+    }
+
+    void modify(size_type __x, const value_type& __y)
+    {
+        this->modify(this->_M_node[__x], __y);
+    }
+
+    value_type xor_sum(size_type __x, size_type __y)
+    {
+        this->xor_sum(this->_M_node[__x], this->_M_node[__y]);
+    }
 };
 
 }
