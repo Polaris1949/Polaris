@@ -1,4 +1,4 @@
-// Binary tree -*- C++ -*-
+// Binary tree implementation -*- C++ -*-
 
 // Copyright (C) 1997-2017 Free Software Foundation, Inc.
 //
@@ -22,12 +22,16 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file bits/bintree.tcc
+/** @file        bits/bintree.tcc
+ *  @headerfile  binary_tree
+ *  @brief       Binary tree implementation
+ *  @author      Polaris Zhao
+ *  @version     3.0
+ *  @todo        Incomplete.
+ *
  *  This is an internal header file, included by other library headers.
- *  Do not attempt to use it directly. @headername{binary_tree}
- */
-
-// Written by Jingyu Zhao.
+ *  Do not attempt to use it directly.
+**/
 
 #ifndef _POL_BINTREE_TCC
 #define _POL_BINTREE_TCC 1
@@ -38,25 +42,22 @@ namespace polaris
 template<typename _Tp>
 binary_tree_node<_Tp>::
 binary_tree_node()
-	: _M_left{}, _M_right{}, _M_data{}
+	: _M_parent{nullptr}, _M_left{nullptr}, _M_right{nullptr}, _M_data{}
 {}
 
 template<typename _Tp>
 binary_tree_node<_Tp>::
 binary_tree_node(const value_type& __x)
-	: _M_left{}, _M_right{}, _M_data{__x}
+	: _M_parent{nullptr}, _M_left{nullptr}, _M_right{nullptr}, _M_data{__x}
 {}
 
 template<typename _Tp>
 binary_tree_node<_Tp>::
 ~binary_tree_node() noexcept
-{
-	delete _M_left;
-	delete _M_right;
-}
+{}
 
 template<typename _Tp>
-binary_tree_node<_Tp>&
+inline binary_tree_node<_Tp>&
 binary_tree_node<_Tp>::
 construct(const value_type& __x)
 {
@@ -65,7 +66,7 @@ construct(const value_type& __x)
 }
 
 template<typename _Tp>
-binary_tree_node<_Tp>&
+inline binary_tree_node<_Tp>&
 binary_tree_node<_Tp>::
 destroy()
 {
@@ -182,33 +183,42 @@ _M_destroy()
 	this->data().~value_type();
 }
 
-// TODO: Replace and complete it
 template<typename _Tp>
 template<typename _Seq>
 inline binary_tree<_Tp>&
 binary_tree<_Tp>::
 construct(const _Seq& __data)
 {
-	this->_M_destroy();
-	data_extractor __ext(__data);
-	this->_M_root = new binary_tree_node<_Tp>();
-	this->_M_root->parent() = _M_root;
 	this->_M_construct(this->_M_root, __data);
 	return *this;
 }
 
-// TODO: Replace and complete it
-/*template<typename _Tp>
+template<typename _Tp>
+inline binary_tree<_Tp>&
+binary_tree<_Tp>::
+destroy()
+{
+	this->_M_destroy(this->_M_root);
+	return *this;
+}
+
+template<typename _Tp>
 template<typename _Seq>
 void
 binary_tree<_Tp>::
-_M_construct(node_type* __root, const data_extractor<_Seq>& __data)
+_M_construct(node_type* __root, const _Seq& __data)
 {
-	__root->data() = __data.extract();
-
-	// ...
+	// TODO...
 }
-*/
+
+template<typename _Tp>
+void
+binary_tree<_Tp>::
+_M_destroy(node_type* __root)
+{
+	// TODO...
+}
+
 }
 
 #endif

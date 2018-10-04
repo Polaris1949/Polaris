@@ -1,4 +1,4 @@
-// Binary tree -*- C++ -*-
+// Binary tree classes -*- C++ -*-
 
 // Copyright (C) 1997-2017 Free Software Foundation, Inc.
 //
@@ -22,12 +22,16 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file bits/bintree.h
+/** @file        bits/bintree.h
+ *  @headerfile  binary_tree
+ *  @brief       Binary tree classes
+ *  @author      Polaris Zhao
+ *  @version     3.0
+ *  @todo        Incomplete.
+ *
  *  This is an internal header file, included by other library headers.
- *  Do not attempt to use it directly. @headername{binary_tree}
- */
-
-// Written by Jingyu Zhao.
+ *  Do not attempt to use it directly.
+**/
 
 #ifndef _POL_BINTREE_H
 #define _POL_BINTREE_H 1
@@ -43,7 +47,7 @@ public:
 	typedef binary_tree_node<_Tp>  node_type;
 	typedef std::size_t            size_type;
 
-private:
+protected:
 	node_type* _M_parent;
 	node_type* _M_left;
 	node_type* _M_right;
@@ -104,18 +108,12 @@ public:
 	size_type
 	depth() const;
 
-	std::vector<size_type>
-	preorder() const;
-
 private:
 	void
 	_M_construct(const value_type& __x);
 
 	void
 	_M_destroy();
-
-	/*void
-	_M_preorder(std::vector<size_type>& __v) const;*/
 };
 
 template<typename _Tp>
@@ -127,7 +125,7 @@ public:
 	typedef binary_tree<_Tp> tree_type;
 	typedef std::size_t size_type;
 
-private:
+protected:
 	node_type* _M_root;
 
 public:
@@ -135,6 +133,8 @@ public:
 
 	template<typename _Seq>
 	binary_tree(const _Seq& __data);
+
+	~binary_tree() noexcept;
 
 	template<typename _Seq>
 	tree_type&
@@ -146,23 +146,13 @@ public:
 	size_type
 	degree() const;
 
-	std::vector<size_type>
-	preorder() const;
-
-	template<typename _Func>
-	void
-	preorder(_Func&& __func);
-
-	std::vector<size_type>
-	postorder() const;
-
 private:
 	template<typename _Seq>
 	void
 	_M_construct(node_type* __root, const _Seq& __data);
 
 	void
-	_M_destroy();
+	_M_destroy(node_type* __root);
 };
 
 }
