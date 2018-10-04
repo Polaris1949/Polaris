@@ -1,4 +1,4 @@
-// Link-_M_cut tree classes -*- C++ -*-
+// Link-cut tree classes -*- C++ -*-
 
 // Copyright (C) 1997-2017 Free Software Foundation, Inc.
 //
@@ -24,7 +24,7 @@
 
 /** @file        bits/lctree.h
  *  @headerfile  link_cut_tree
- *  @brief       Link-_M_cut tree classes
+ *  @brief       Link-cut tree classes
  *  @author      Polaris Zhao
  *  @version     3.0
  *
