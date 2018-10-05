@@ -69,6 +69,21 @@ is_open() const
 }
 
 template<typename _Tp>
+byte_stream<_Tp>::
+operator bool() const
+{
+	return bool{_M_stream};
+}
+
+template<typename _Tp>
+bool
+byte_stream<_Tp>::
+operator! () const
+{
+	return !_M_stream;
+}
+
+template<typename _Tp>
 template<typename _Up>
 byte_stream<_Tp>&
 byte_stream<_Tp>::

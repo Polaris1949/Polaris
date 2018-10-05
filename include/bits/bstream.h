@@ -96,6 +96,22 @@ public:
 	**/
 	bool is_open() const;
 
+	/** @brief  Check a @c byte_stream is whether good or not
+	 *  @return  A @c bool value contained the result.
+	 *  @retval  true  The @c byte_stream is good.
+	 *  @retval  false  The @c byte_stream is bad.
+	**/
+	explicit
+	operator bool() const;
+
+	/** @brief  Check a @c byte_stream is whether bad or not
+	 *  @return  A @c bool value contained the result.
+	 *  @retval  true  The @c byte_stream is bad.
+	 *  @retval  false  The @c byte_stream is good.
+	**/
+	bool
+	operator! () const;
+
 	/** @brief  Read a value from a @c byte_stream
 	 *  @tparam  _Up  Type of a value.
 	 *  @param  __x  A value.
