@@ -10,10 +10,21 @@ public:
 
 private:
     container_type _M_tree;
+    // container_type _M_array;
     // int tree[500005], arr[500000];
 
 public:
     // void init();
+
+    inline void resize(size_type __s)
+    { this->_M_tree.resize(__s); }
+
+    value_type inquire(size_type __x)
+    {
+        value_type __res{};
+        for (size_type __i{}; __i < __x; __i += _S_lowbit(__i))
+            __res += this->_M_array[__i];
+    }
 
     /*
     inline int num(int x)
@@ -39,10 +50,15 @@ public:
     }
     */
 
-    /*
     void modify(size_type __x, size_type __y, const value_type& __k)
-    {}
+    {
+        for (size_type __i{__x}; __i < this->size(); __i += _S_lowbit(__i))
+            this->_M_array[__i] += __k;
+        for (size_type __i{__y}; __i < this->size(); __i += _S_lowbit(__i))
+            this->_M_array[__i] -= __k;
+    }
 
+    /*
     inline void add_range(int x,int y,int k)
     {
         for(register int i=x;i<=n;i+=lowbit(i)) arr[i]+=k;
@@ -50,8 +66,7 @@ public:
     }
     */
 
-    // TODO: Renaming
-    inline value_type sum(size_type __x, size_type __y)
+    inline value_type inquire(size_type __x, size_type __y)
     {
         return this->_M_prefix(__y) - this->_M_prefix(__x);
     }
