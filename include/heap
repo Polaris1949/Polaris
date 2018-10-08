@@ -10,8 +10,8 @@
 namespace polaris
 {
 
-template<typename _Tp>
-using heap = std::priority_queue<_Tp>;
+template<typename _Tp, typename _Comp = std::less<_Tp>>
+using heap = std::priority_queue<_Tp, std::vector<_Tp>, _Comp>;
 
 template<typename>
 class fib_heap;
