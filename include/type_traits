@@ -72,6 +72,14 @@ struct rebind<_Tp<_Up...>>
 template<typename _Tp, typename... _Args>
 using rebind_t = typename rebind<_Tp>::template type<_Args...>;
 
+// true_v
+template<typename...>
+inline constexpr bool true_v = true;
+
+// false_v
+template<typename...>
+inline constexpr bool false_v = false;
+
 // is_functor
 template<typename _Tp>
 struct is_functor
