@@ -6,6 +6,11 @@ namespace polaris
 
 bit_ptr::
 bit_ptr(byte_type* __ptr, level_type __lev)
+    : _M_ptr{__ptr}, _M_lev{__lev}
+{}
+
+bit_ptr::
+bit_ptr(byte_type* __ptr, size_type __lev)
     : _M_ptr{__ptr + __lev / char_bit}, _M_lev{__lev % char_bit}
 {}
 
