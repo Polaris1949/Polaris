@@ -1,4 +1,4 @@
-#include <polaris/type_traits>
+#include <polaris/type_traits> // for pol::false_v
 #include <vector>
 
 namespace polaris
@@ -35,14 +35,6 @@ struct tree_array_mode
 template<typename _Tp>
 class tree_array<_Tp, tree_array_mode::mpip>
 {
-public:
-    using value_type = _Tp;
-    using container_type = std::vector<_Tp>;
-    using size_type = std::size_t;
-
-private:
-    container_type _M_tree;
-
 public:
     static_assert(false_v<_Tp>, "deprecated");
 };
@@ -121,6 +113,7 @@ public:
 // TODO
 template<typename _Tp>
 class tree_array<_Tp, tree_array_mode::mrir>
+    : public tree_array_base
 {
 public:
     using value_type = _Tp;
@@ -131,6 +124,7 @@ private:
     container_type _M_tree;
 
 public:
+    // TODO: Best implementation?
     static_assert(false_v<_Tp>, "unimplemented");
 };
 
