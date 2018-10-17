@@ -80,6 +80,20 @@ inline constexpr bool true_v = true;
 template<typename...>
 inline constexpr bool false_v = false;
 
+// assertion_fail
+template<typename... _Args>
+struct assertion_fail
+{
+	static_assert(false_v<_Args...>);
+};
+
+// assert_support
+template<typename... _Args>
+struct assert_support
+{
+	static_assert(false_v<_Args...>, "no available support");
+};
+
 // is_functor
 template<typename _Tp>
 struct is_functor
