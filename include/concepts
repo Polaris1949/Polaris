@@ -39,8 +39,8 @@
 
 #include <polaris/version>
 #include <functional>
-#include <type_traits>
 #include <utility>
+#include <polaris/type_traits>
 
 #if __cpp_concepts
 #if __cplusplus >= 202000L
@@ -53,205 +53,441 @@
 #error no available support for this library
 #endif /* !__cpp_concepts */
 
-/** @namespace  std
- *  @brief      Polaris library @c std support
- *  @bug        There may be any bug.
- *  @todo       Make compiler support it.
- *  @note       No compiler support it now.
-**/
-namespace std
-{
-
-struct __common_ref_impl
-{
-	template<typename... _Tp, typename =
-		enable_if_t<!is_void_v<common_type_t<_Tp...>>>>
-	static common_type_t<_Tp...> __test(int);
-
-	template<typename...>
-	static void __test(...);
-};
-
-template<typename... _Tp>
-struct common_reference
-{
-	using type = decltype(__common_ref_impl::__test<_Tp...>(0));
-};
-
-template<typename... _Tp>
-using common_reference_t = typename common_reference<_Tp...>::type;
-
-template<typename _Tp>
-struct remove_cvref
-{
-	using type = remove_reference_t<remove_cv_t<_Tp>>;
-};
-
-template<typename _Tp>
-using remove_cvref_t = typename remove_cvref<_Tp>::type;
-
-}
-
 namespace polaris
 {
 
-/** @namespace  polaris::concepts
- *  @brief      Polaris concepts support
- *  @note       You should use <concepts> instead
- *              if your compiler support C++20.
-**/
-namespace concepts
+namespace __cc_detail
 {
 
+template<typename _Tp, typename _Up,
+	template<typename> typename _TpQual,
+	template<typename> typename _UpQual>
+struct basic_common_reference {};
+
+template<typename _Tp>
+struct __type_qual_impl_const
+{
+	template<typename _Up>
+	using type = std::conditional_t<std::is_const_v<_Tp>,
+		std::add_const_t<_Up>, _Up>;
+};
+
+template<typename _Tp>
+struct __type_qual_impl_volatile
+{
+	template<typename _Up>
+	using type = std::conditional_t<std::is_volatile_v<_Tp>,
+		std::add_volatile_t<_Up>, _Up>;
+};
+
+template<typename _Tp>
+struct __type_qual_impl_cv
+{
+	template<typename _Up>
+	using __type_0 = typename __type_qual_impl_const<_Tp>::
+		template type<_Up>;
+
+	template<typename _Up>
+	using type = typename __type_qual_impl_volatile<_Tp>::
+		template type<__type_0<_Up>>;
+};
+
+template<typename _Tp>
+struct __type_qual_impl_lvref
+{
+	template<typename _Up>
+	using type = std::conditional_t<std::is_lvalue_reference_v<_Tp>,
+		std::add_lvalue_reference_t<_Up>, _Up>;
+};
+
+template<typename _Tp>
+struct __type_qual_impl_rvref
+{
+	template<typename _Up>
+	using type = std::conditional_t<std::is_rvalue_reference_v<_Tp>,
+		std::add_rvalue_reference_t<_Up>, _Up>;
+};
+
+template<typename _Tp>
+struct __type_qual_impl_ref
+{
+	template<typename _Up>
+	using __type_0 = typename __type_qual_impl_lvref<_Tp>::
+		template type<_Up>;
+
+	template<typename _Up>
+	using type = typename __type_qual_impl_rvref<_Tp>::
+		template type<__type_0<_Up>>;
+};
+
+template<typename _Tp>
+struct __type_qual_impl_cvref
+{
+	template<typename _Up>
+	using __type_0 = typename __type_qual_impl_cv<_Tp>::
+		template type<_Up>;
+
+	template<typename _Up>
+	using type = typename __type_qual_impl_ref<_Tp>::
+		template type<__type_0<_Up>>;
+};
+
+template<typename _Tp>
+struct __type_qual
+{
+	template<typename _Up>
+	using type = typename __type_qual_impl_cvref<_Tp>::
+		template type<_Up>;
+};
+
+struct __basic_comref_check_impl
+{
+	template<typename _Tp, typename _Up, typename _Cz = typename
+		std::basic_common_reference<std::remove_cvref_t<_Tp>,
+		std::remove_cvref_t<_Up>, template __type_qual<_Tp>::type,
+		template __type_qual<_Up>::type>::type>
+	static std::true_type _S_test(int);
+
+	template<typename, typename>
+	static std::false_type _S_test(...);
+};
+
 template<typename _Tp, typename _Up>
-concept Same = std::is_same_v<_Tp, _Up>;
+struct __basic_comref_check_base
+	: public __basic_comref_check_impl
+{
+	using type = decltype(_S_test<_Tp, _Up>(0));
+};
+
+template<typename _Tp, typename _Up>
+struct __basic_comref_check
+	: public typename __basic_comref_check_base<_Tp, _Up>::type
+{};
+
+template<typename _Tp, typename _Up>
+struct __basic_comref
+{
+	template<typename _Tp, typename _Up>
+	using type = typename
+		std::basic_common_reference<std::remove_cvref_t<_Tp>,
+		std::remove_cvref_t<_Up>, template __type_qual<_Tp>::type,
+		template __type_qual<_Up>::type>::type;
+};
+
+template<typename _Tp, typename _Up>
+inline constexpr bool __basic_comref_check_v =
+	__basic_comref_check<_Tp, _Up>::value;
+
+template<typename _Tp, typename _Up>
+struct __simple_comref_1_check
+	: public std::conjunction_t<std::is_lvalue_reference_t<_Tp>,
+		std::is_rvalue_reference_t<_Up>>
+{
+};
+
+template<typename _Tp, typename _Up>
+struct __simple_comref_1
+{
+	// TODO
+};
+
+template<typename _Tp, typename _Up>
+struct __simple_comref;
+
+template<typename _Tp, typename _Up>
+using __simple_comref_t = typename __simple_comref<_Tp, _Up>::type;
+
+template<typename _Tp...>
+struct common_reference;
+
+template<typename _Tp...>
+using common_reference_t = typename common_reference<_Tp...>::type;
+
+struct common_reference<> {};
+
+template<typename _Tp>
+struct common_reference<_Tp>
+{
+	using type = _Tp;
+};
+
+template<typename _Tp, typename _Up>
+struct __comref_impl_1_check
+	: public std::conjunction_t<std::is_reference<_Tp>, std::is_reference<_Up>
+{};
+
+template<typename _Tp, typename _Up>
+struct __comref_impl_1
+{
+	using type = __simple_comref_t<_Tp, _Up>; // TODO
+};
+
+template<typename _Tp, typename _Up>
+struct __comref_impl_2_check
+	: public typename __basic_comref_check<_Tp, _Up>::type
+{};
+
+template<typename _Tp, typename _Up>
+struct __comref_impl_2
+{
+	using type = typename __basic_comref<_Tp, _Up>::type;
+};
+
+struct __comref_impl_3_check_impl
+{
+	template<typename _Tp>
+	static _Tp _S_val();
+
+	template<typename _Tp, typename _Up, typename _Req =
+		decltype(true ? _S_val<_Tp> : _S_val<_Up>)>
+	static std::true_type _S_test(int);
+
+	template<typename, typename>
+	static std::false_type _S_test(...);
+};
+
+template<typename _Tp, typename _Up>
+struct __comref_impl_3_check_base
+	: public __comref_impl_3_check_impl
+{
+	using type = decltype(_S_test<_Tp, _Up>(0));
+};
+
+template<typename _Tp, typename _Up>
+struct __comref_impl_3_check
+	: public typename __comref_impl_3_check_base<_Tp, _Up>::type
+{};
+
+struct __comref_impl_3_impl
+{
+	template<typename _Tp>
+	static _Tp _S_val();
+
+	using type = decltype(true ? _S_val<_Tp> : _S_val<_Up>);
+};
+
+template<typename _Tp, typename _Up>
+struct __comref_impl_3
+{
+	using type = typename __comref_impl_3_impl<_Tp, _Up>::type;
+};
+
+struct __comref_impl_4_check_impl
+{
+	template<typename _Tp, typename _Up, typename _Req =
+		std::common_type_t<_Tp, _Up>>
+	static std::true_type _S_test(int);
+
+	template<typename, typename>
+	static std::false_type _S_test(...);
+};
+
+template<typename _Tp, typename _Up>
+struct __comref_impl_4_check_base
+	: public __comref_impl_4_check_impl
+{
+	using type = decltype(_S_test<_Tp, _Up>(0));
+};
+
+template<typename _Tp, typename _Up>
+struct __comref_impl_4_check
+	: public typename __comref_impl_4_check_base<_Tp, _Up>::type
+{};
+
+template<typename _Tp, typename _Up>
+struct __comref_impl_4
+{
+	using type = std::common_type_t<_Tp, _Up>;
+};
+
+template<typename _Tp, typename _Up>
+struct common_reference<_Tp, _Up>
+{
+	using type = void; // TODO
+};
+
+template<typename _Tp, typename _Up, typename _Rest...>
+struct common_reference<_Tp, _Up, _Rest...>
+	: public common_reference_t<common_reference_t<_Tp, _Up>, _Rest...>
+{};
+
+#if POL_DEBUG
+template<typename _Tp, typename _Up>
+concept same = std::is_same_v<_Tp, _Up> && std::is_same_v<_Up, _Tp>;
+#else
+template<typename _Tp, typename _Up>
+concept same = std::is_same_v<_Tp, _Up>;
+#endif
+
+}
+
+template<typename _Tp, typename _Up>
+concept cc_same = __cc_detail::same<_Tp, _Up>;
 
 template<typename _Derived, typename _Base>
-concept DerivedFrom = std::is_base_of_v<_Base, _Derived> &&
+concept cc_derived_from = std::is_base_of_v<_Base, _Derived> &&
 	std::is_convertible_v<const volatile _Derived*, const volatile _Base*>;
 
 template<typename _From, typename _To>
-concept ConvertibleTo = std::is_convertible_v<_From, _To> &&
+concept cc_convertible_to = std::is_convertible_v<_From, _To> &&
 	requires(_From (&__f)()) { static_cast<_To>(__f()); };
 
+#if __cplusplus >= 202000L
 template<typename _Tp, typename _Up>
-concept CommonReference = Same<std::common_reference_t<_Tp, _Up>,
+concept cc_common_reference = cc_same<std::common_reference_t<_Tp, _Up>,
 	std::common_reference_t<_Up, _Tp>> &&
-	ConvertibleTo<_Tp, std::common_reference_t<_Tp, _Up>> &&
-	ConvertibleTo<_Up, std::common_reference_t<_Tp, _Up>>;
+	cc_convertible_to<_Tp, std::common_reference_t<_Tp, _Up>> &&
+	cc_convertible_to<_Up, std::common_reference_t<_Tp, _Up>>;
 
 template<typename _Tp, typename _Up>
-concept Common = Same<std::common_type_t<_Tp, _Up>,
+concept cc_common = cc_same<std::common_type_t<_Tp, _Up>,
 		std::common_type_t<_Up, _Tp>> &&
-	ConvertibleTo<_Tp, std::common_type_t<_Tp, _Up>> &&
-	ConvertibleTo<_Up, std::common_type_t<_Tp, _Up>> &&
-	CommonReference<
+	cc_convertible_to<_Tp, std::common_type_t<_Tp, _Up>> &&
+	cc_convertible_to<_Up, std::common_type_t<_Tp, _Up>> &&
+	cc_common_reference<
 		std::add_lvalue_reference_t<const _Tp>,
 		std::add_lvalue_reference_t<const _Up>> &&
-	CommonReference<
+	cc_common_reference<
 		std::add_lvalue_reference_t<std::common_type_t<_Tp, _Up>>,
 		std::common_reference_t<
 		std::add_lvalue_reference_t<const _Tp>,
 		std::add_lvalue_reference_t<const _Up>>>;
+#else
+#warning concept cc_common_reference unsupported; satisfied anywhere
+template<typename _Tp, typename _Up>
+concept cc_common_reference = true_v<_Tp, _Up>;
+
+#warning concept cc_common unsupported; satisfied anywhere
+template<typename _Tp, typename _Up>
+concept cc_common = true_v<_Tp, _Up>;
+#endif /* C++20 */
 
 template<typename _Tp>
-concept Integral = std::is_integral_v<_Tp>;
+concept cc_integral = std::is_integral_v<_Tp>;
 
 template<typename _Tp>
-concept SignedIntegral = Integral<_Tp> && std::is_signed_v<_Tp>;
+concept cc_signed_integral = cc_integral<_Tp> && std::is_signed_v<_Tp>;
 
 template<typename _Tp>
-concept UnsignedIntegral = Integral<_Tp> && !SignedIntegral<_Tp>;
+concept cc_unsigned_integral = cc_integral<_Tp> && !cc_signed_integral<_Tp>;
 
 template<typename _LHS, typename _RHS>
-concept Assignable = std::is_lvalue_reference_v<_LHS> &&
-	CommonReference<const std::remove_reference_t<_LHS>&,
+concept cc_assignable = std::is_lvalue_reference_v<_LHS> &&
+	cc_common_reference<const std::remove_reference_t<_LHS>&,
 		const std::remove_reference_t<_RHS>&> &&
 	requires(_LHS __lhs, _RHS&& __rhs)
 	{
 		__lhs = std::forward<_RHS>(__rhs);
-		requires Same<decltype(__lhs = std::forward<_RHS>(__rhs)), _LHS>;
+		requires cc_same<decltype(__lhs = std::forward<_RHS>(__rhs)), _LHS>;
 	};
 
 template<typename _Tp>
-concept Swappable = std::is_swappable_v<_Tp>;
+concept cc_swappable = std::is_swappable_v<_Tp>;
 
 template<typename _Tp, typename _Up>
-concept SwappableWith = std::is_swappable_with_v<_Tp, _Tp> &&
+concept cc_swappable_with = std::is_swappable_with_v<_Tp, _Tp> &&
 	std::is_swappable_with_v<_Up, _Up> &&
-	CommonReference<const std::remove_reference_t<_Tp>&,
+	cc_common_reference<const std::remove_reference_t<_Tp>&,
 		const std::remove_reference_t<_Up>&> &&
 	std::is_swappable_with_v<_Tp, _Up> &&
 	std::is_swappable_with_v<_Up, _Tp>;
 
 template<typename _Tp>
-concept Destructible = std::is_nothrow_destructible_v<_Tp>;
+concept cc_destructible = std::is_nothrow_destructible_v<_Tp>;
 
 template<typename _Tp, typename... _Args>
-concept Constructible = Destructible<_Tp> &&
+concept cc_constructible = cc_destructible<_Tp> &&
 	std::is_constructible_v<_Tp, _Args...>;
 
 template<typename _Tp>
-concept DefaultConstructible = Constructible<_Tp>;
+concept cc_default_constructible = cc_constructible<_Tp>;
 
 template<typename _Tp>
-concept MoveConstructible = Constructible<_Tp, _Tp> && ConvertibleTo<_Tp, _Tp>;
+concept cc_move_constructible = cc_constructible<_Tp, _Tp>
+	&& cc_convertible_to<_Tp, _Tp>;
 
 template<typename _Tp>
-concept CopyConstructible = MoveConstructible<_Tp> &&
-	Constructible<_Tp, _Tp&> && ConvertibleTo<_Tp&, _Tp> &&
-	Constructible<_Tp, const _Tp&> && ConvertibleTo<const _Tp&, _Tp> &&
-	Constructible<_Tp, const _Tp> && ConvertibleTo<const _Tp, _Tp>;
+concept cc_copy_constructible = cc_move_constructible<_Tp> &&
+	cc_constructible<_Tp, _Tp&> && cc_convertible_to<_Tp&, _Tp> &&
+	cc_constructible<_Tp, const _Tp&> && cc_convertible_to<const _Tp&, _Tp> &&
+	cc_constructible<_Tp, const _Tp> && cc_convertible_to<const _Tp, _Tp>;
 
 template<typename _Tp>
-concept Movable = std::is_object_v<_Tp> && MoveConstructible<_Tp> &&
-	Assignable<_Tp&, _Tp> && Swappable<_Tp>;
+concept cc_movable = std::is_object_v<_Tp> && cc_move_constructible<_Tp> &&
+	cc_assignable<_Tp&, _Tp> && cc_swappable<_Tp>;
 
+#if __cplusplus >= 202000L
 template<typename _Bp>
-concept Boolean = Movable<std::remove_cvref_t<_Bp>> &&
+concept cc_boolean = cc_movable<std::remove_cvref_t<_Bp>> &&
 	requires(const std::remove_reference_t<_Bp>& __b1,
 		const std::remove_reference_t<_Bp>& __b2, const bool __a)
 	{
-		requires ConvertibleTo<const std::remove_reference_t<_Bp>&, bool>;
-		!__b1;        requires ConvertibleTo<decltype(!__b1), bool>;
-		__b1 && __a;  requires Same<decltype(__b1 && __a), bool>;
-		__b1 || __a;  requires Same<decltype(__b1 || __a), bool>;
-		__b1 && __b2; requires Same<decltype(__b1 && __b2), bool>;
-		__a && __b2;  requires Same<decltype(__a && __b2), bool>;
-		__b1 || __b2; requires Same<decltype(__b1 || __b2), bool>;
-		__a || __b2;  requires Same<decltype(__a || __b2), bool>;
-		__b1 == __b2; requires ConvertibleTo<decltype(__b1 == __b2), bool>;
-		__b1 == __a;  requires ConvertibleTo<decltype(__b1 == __a), bool>;
-		__a == __b2;  requires ConvertibleTo<decltype(__a == __b2), bool>;
-		__b1 != __b2; requires ConvertibleTo<decltype(__b1 != __b2), bool>;
-		__b1 != __a;  requires ConvertibleTo<decltype(__b1 != __a), bool>;
-		__a != __b2;  requires ConvertibleTo<decltype(__a != __b2), bool>;
+		requires cc_convertible_to<const std::remove_reference_t<_Bp>&, bool>;
+		!__b1;        requires cc_convertible_to<decltype(!__b1), bool>;
+		__b1 && __a;  requires cc_same<decltype(__b1 && __a), bool>;
+		__b1 || __a;  requires cc_same<decltype(__b1 || __a), bool>;
+		__b1 && __b2; requires cc_same<decltype(__b1 && __b2), bool>;
+		__a && __b2;  requires cc_same<decltype(__a && __b2), bool>;
+		__b1 || __b2; requires cc_same<decltype(__b1 || __b2), bool>;
+		__a || __b2;  requires cc_same<decltype(__a || __b2), bool>;
+		__b1 == __b2; requires cc_convertible_to<decltype(__b1 == __b2), bool>;
+		__b1 == __a;  requires cc_convertible_to<decltype(__b1 == __a), bool>;
+		__a == __b2;  requires cc_convertible_to<decltype(__a == __b2), bool>;
+		__b1 != __b2; requires cc_convertible_to<decltype(__b1 != __b2), bool>;
+		__b1 != __a;  requires cc_convertible_to<decltype(__b1 != __a), bool>;
+		__a != __b2;  requires cc_convertible_to<decltype(__a != __b2), bool>;
 	};
+#else
+#warning concept cc_boolean unsupported; satisfied anywhere
+template<typename _Bp>
+concept cc_boolean = true_v<_Bp>;
+#endif /* C++2O */
 
 template<typename _Tp, typename _Up>
-concept __WeaklyEqualityComparableWith = // For exposition only
+concept cc_weakly_equality_comparable_with =
 	requires(const std::remove_reference_t<_Tp>& __t,
 		const std::remove_reference_t<_Up>& __u)
 	{
-		__t == __u; requires Boolean<decltype(__t == __u)>;
-		__t != __u; requires Boolean<decltype(__t != __u)>;
-		__u == __t; requires Boolean<decltype(__u == __t)>;
-		__u != __t; requires Boolean<decltype(__u != __t)>;
+		__t == __u; requires cc_boolean<decltype(__t == __u)>;
+		__t != __u; requires cc_boolean<decltype(__t != __u)>;
+		__u == __t; requires cc_boolean<decltype(__u == __t)>;
+		__u != __t; requires cc_boolean<decltype(__u != __t)>;
 	};
 
 template<typename _Tp>
-concept EqualityComparable = __WeaklyEqualityComparableWith<_Tp, _Tp>;
+concept cc_equality_comparable = cc_weakly_equality_comparable_with<_Tp, _Tp>;
 
 template<typename _Tp, typename _Up>
-concept EqualityComparableWith = EqualityComparable<_Tp> &&
-	EqualityComparable<_Up> &&
-	CommonReference<const std::remove_reference_t<_Tp>&,
+concept cc_equality_comparable_with = cc_equality_comparable<_Tp> &&
+	cc_equality_comparable<_Up> &&
+	cc_common_reference<const std::remove_reference_t<_Tp>&,
 		const std::remove_reference_t<_Up>&> &&
-	EqualityComparable<std::common_reference_t<
+	cc_equality_comparable<std::common_reference_t<
 		const std::remove_reference_t<_Tp>&,
 		const std::remove_reference_t<_Up>&>> &&
-	__WeaklyEqualityComparableWith<_Tp, _Up>;
+	cc_weakly_equality_comparable_with<_Tp, _Up>;
 
 template<typename _Tp>
-concept StrictTotallyOrdered = EqualityComparable<_Tp> &&
+concept cc_strict_totally_ordered = cc_equality_comparable<_Tp> &&
 	requires(const std::remove_reference_t<_Tp>& __a,
 		const std::remove_reference_t<_Tp>& __b)
 	{
-		__a < __b;  requires Boolean<decltype(__a < __b)>;
-		__a > __b;  requires Boolean<decltype(__a > __b)>;
-		__a <= __b; requires Boolean<decltype(__a <= __b)>;
-		__a >= __b; requires Boolean<decltype(__a >= __b)>;
+		__a < __b;  requires cc_boolean<decltype(__a < __b)>;
+		__a > __b;  requires cc_boolean<decltype(__a > __b)>;
+		__a <= __b; requires cc_boolean<decltype(__a <= __b)>;
+		__a >= __b; requires cc_boolean<decltype(__a >= __b)>;
 	};
 
 template<typename _Tp, typename _Up>
-concept StrictTotallyOrderedWith = StrictTotallyOrdered<_Tp> &&
-	StrictTotallyOrdered<_Up> &&
-	CommonReference<const std::remove_reference_t<_Tp>&,
+concept cc_strict_totally_ordered_with =
+	cc_strict_totally_ordered<_Tp> &&
+	cc_strict_totally_ordered<_Up> &&
+	cc_common_reference<const std::remove_reference_t<_Tp>&,
 		const std::remove_reference_t<_Up>&> &&
-	StrictTotallyOrdered<std::common_reference_t<
+	cc_strict_totally_ordered<std::common_reference_t<
 		const std::remove_reference_t<_Tp>&,
 		const std::remove_reference_t<_Up>&>> &&
-	EqualityComparableWith<_Tp, _Up> &&
+	cc_equality_comparable_with<_Tp, _Up> &&
 	requires(const std::remove_reference_t<_Tp>& __t,
 		const std::remove_reference_t<_Up>& __u)
 	{
@@ -272,17 +508,17 @@ concept Movable = std::is_object_v<_Tp> && MoveConstructible<_Tp> &&
 */
 
 template<typename _Tp>
-concept Copyable = CopyConstructible<_Tp> && Movable<_Tp> &&
-	Assignable<_Tp&, const _Tp&>;
+concept cc_copyable = cc_copy_constructible<_Tp> && cc_movable<_Tp> &&
+	cc_assignable<_Tp&, const _Tp&>;
 
 template<typename _Tp>
-concept Semiregular = Copyable<_Tp> && DefaultConstructible<_Tp>;
+concept cc_semiregular = cc_copyable<_Tp> && cc_default_constructible<_Tp>;
 
 template<typename _Tp>
-concept Regular = Semiregular<_Tp> && EqualityComparable<_Tp>;
+concept cc_regular = cc_semiregular<_Tp> && cc_equality_comparable<_Tp>;
 
 template<typename _Fp, typename... _Args>
-concept Invocable =
+concept cc_invocable =
 	requires(_Fp&& __f, _Args&&... __args)
 	{
 		std::invoke(std::forward<_Fp>(__f), std::forward<_Args>(__args)...);
@@ -290,27 +526,27 @@ concept Invocable =
 	};
 
 template<typename _Fp, typename... _Args>
-concept RegularInvocable = Invocable<_Fp, _Args...>;
+concept cc_regular_invocable = cc_invocable<_Fp, _Args...>;
 
 template<typename _Fp, typename... _Args>
-concept Predicate = RegularInvocable<_Fp, _Args...> &&
-	Boolean<std::invoke_result_t<_Fp, _Args...>>;
+concept cc_predicate = cc_regular_invocable<_Fp, _Args...> &&
+	cc_boolean<std::invoke_result_t<_Fp, _Args...>>;
 
 template<typename _Rp, typename _Tp, typename _Up>
-concept Relation = Predicate<_Rp, _Tp, _Tp> && Predicate<_Rp, _Up, _Up> &&
-	CommonReference<const std::remove_reference_t<_Tp>&,
-		const std::remove_reference_t<_Up>&> &&
-	Predicate<_Rp, std::common_reference_t<
+concept cc_relation = cc_predicate<_Rp, _Tp, _Tp>
+	&& cc_predicate<_Rp, _Up, _Up>
+	&& cc_common_reference<const std::remove_reference_t<_Tp>&,
+		const std::remove_reference_t<_Up>&>
+	&& cc_predicate<_Rp, std::common_reference_t<
 		const std::remove_reference_t<_Tp>&,
 		const std::remove_reference_t<_Up>&>,
 		std::common_reference_t<const std::remove_reference_t<_Tp>&,
-		const std::remove_reference_t<_Up>&>> &&
-	Predicate<_Rp, _Tp, _Up> && Predicate<_Rp, _Up, _Tp>;
+		const std::remove_reference_t<_Up>&>>
+	&& cc_predicate<_Rp, _Tp, _Up> && cc_predicate<_Rp, _Up, _Tp>;
 
 template<typename _Rp, typename _Tp, typename _Up>
-concept StrictWeakOrder = Relation<_Rp, _Tp, _Up>;
+concept cc_strict_weak_order = cc_relation<_Rp, _Tp, _Up>;
 
-} // namespace concepts
 } // namespace polaris
 
 #if __cpp_concepts && __cplusplus < 202000L
