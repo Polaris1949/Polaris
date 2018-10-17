@@ -10,7 +10,8 @@ struct alien : private animal {};
 
 int main()
 {
-    // @TODO
+    // TODO
+    /*
     static_assert(Same<int, signed int>);
     static_assert(!Same<char, signed char>);
     static_assert(DerivedFrom<human, animal>);
@@ -29,5 +30,6 @@ int main()
     static_assert(!UnsignedIntegral<char*>);
     static_assert(Boolean<bool>);
     static_assert(!Boolean<dog>);
+    */
     return 0;
 }
