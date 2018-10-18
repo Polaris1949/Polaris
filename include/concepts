@@ -59,13 +59,22 @@ namespace polaris
 namespace __cc_detail
 {
 
+template<typename _Tp>
+struct remove_cvref
+{
+	using type = std::remove_cv_t<std::remove_reference_t<_Tp>>;
+};
+
+template<typename _Tp>
+using remove_cvref_t = typename remove_cvref<_Tp>::type;
+
 template<typename _Tp, typename _Up,
 	template<typename> typename _TpQual,
 	template<typename> typename _UpQual>
 struct basic_common_reference {};
 
 template<typename _Tp>
-struct __type_qual_impl_const
+struct __type_qual_const
 {
 	template<typename _Up>
 	using type = std::conditional_t<std::is_const_v<_Tp>,
@@ -73,7 +82,7 @@ struct __type_qual_impl_const
 };
 
 template<typename _Tp>
-struct __type_qual_impl_volatile
+struct __type_qual_volatile
 {
 	template<typename _Up>
 	using type = std::conditional_t<std::is_volatile_v<_Tp>,
@@ -81,19 +90,19 @@ struct __type_qual_impl_volatile
 };
 
 template<typename _Tp>
-struct __type_qual_impl_cv
+struct __type_qual_cv
 {
 	template<typename _Up>
-	using __type_0 = typename __type_qual_impl_const<_Tp>::
+	using __type_0 = typename __type_qual_const<_Tp>::
 		template type<_Up>;
 
 	template<typename _Up>
-	using type = typename __type_qual_impl_volatile<_Tp>::
+	using type = typename __type_qual_volatile<_Tp>::
 		template type<__type_0<_Up>>;
 };
 
 template<typename _Tp>
-struct __type_qual_impl_lvref
+struct __type_qual_lvref
 {
 	template<typename _Up>
 	using type = std::conditional_t<std::is_lvalue_reference_v<_Tp>,
@@ -101,7 +110,7 @@ struct __type_qual_impl_lvref
 };
 
 template<typename _Tp>
-struct __type_qual_impl_rvref
+struct __type_qual_rvref
 {
 	template<typename _Up>
 	using type = std::conditional_t<std::is_rvalue_reference_v<_Tp>,
@@ -109,26 +118,26 @@ struct __type_qual_impl_rvref
 };
 
 template<typename _Tp>
-struct __type_qual_impl_ref
+struct __type_qual_ref
 {
 	template<typename _Up>
-	using __type_0 = typename __type_qual_impl_lvref<_Tp>::
+	using __type_0 = typename __type_qual_lvref<_Tp>::
 		template type<_Up>;
 
 	template<typename _Up>
-	using type = typename __type_qual_impl_rvref<_Tp>::
+	using type = typename __type_qual_rvref<_Tp>::
 		template type<__type_0<_Up>>;
 };
 
 template<typename _Tp>
-struct __type_qual_impl_cvref
+struct __type_qual_cvref
 {
 	template<typename _Up>
-	using __type_0 = typename __type_qual_impl_cv<_Tp>::
+	using __type_0 = typename __type_qual_cv<_Tp>::
 		template type<_Up>;
 
 	template<typename _Up>
-	using type = typename __type_qual_impl_ref<_Tp>::
+	using type = typename __type_qual_ref<_Tp>::
 		template type<__type_0<_Up>>;
 };
 
@@ -136,16 +145,16 @@ template<typename _Tp>
 struct __type_qual
 {
 	template<typename _Up>
-	using type = typename __type_qual_impl_cvref<_Tp>::
-		template type<_Up>;
+	using type = typename __type_qual_cvref<_Tp>::template type<_Up>;
 };
 
 struct __basic_comref_check_impl
 {
 	template<typename _Tp, typename _Up, typename _Cz = typename
-		std::basic_common_reference<std::remove_cvref_t<_Tp>,
-		std::remove_cvref_t<_Up>, template __type_qual<_Tp>::type,
-		template __type_qual<_Up>::type>::type>
+		basic_common_reference<
+			remove_cvref_t<_Tp>, remove_cvref_t<_Up>,
+			__type_qual<_Tp>::template type,
+			__type_qual<_Up>::template type>::type>
 	static std::true_type _S_test(int);
 
 	template<typename, typename>
@@ -161,17 +170,17 @@ struct __basic_comref_check_base
 
 template<typename _Tp, typename _Up>
 struct __basic_comref_check
-	: public typename __basic_comref_check_base<_Tp, _Up>::type
+	: public __basic_comref_check_base<_Tp, _Up>::type
 {};
 
 template<typename _Tp, typename _Up>
 struct __basic_comref
 {
-	template<typename _Tp, typename _Up>
 	using type = typename
-		std::basic_common_reference<std::remove_cvref_t<_Tp>,
-		std::remove_cvref_t<_Up>, template __type_qual<_Tp>::type,
-		template __type_qual<_Up>::type>::type;
+		basic_common_reference<remove_cvref_t<_Tp>,
+		remove_cvref_t<_Up>,
+		__type_qual<_Tp>::template type,
+		__type_qual<_Up>::template type>::type;
 };
 
 template<typename _Tp, typename _Up>
@@ -180,29 +189,113 @@ inline constexpr bool __basic_comref_check_v =
 
 template<typename _Tp, typename _Up>
 struct __simple_comref_1_check
-	: public std::conjunction_t<std::is_lvalue_reference_t<_Tp>,
-		std::is_rvalue_reference_t<_Up>>
+	: public std::conjunction<std::is_lvalue_reference<_Tp>,
+		std::is_rvalue_reference<_Up>>
 {
 };
 
-template<typename _Tp, typename _Up>
+template<typename _Tp1, typename _Tp2>
+struct __type_merge_cv
+{
+	template<typename _Up>
+	using __type_0 = std::conditional_t<std::is_const_v<_Tp1>,
+		std::add_const_t<_Up>, _Up>;
+
+	template<typename _Up>
+	using type = std::conditional_t<std::is_volatile_v<_Tp2>,
+		std::add_volatile_t<__type_0<_Up>>, __type_0<_Up>>;
+};
+
+template<typename _Tp1, typename _Tp2>
 struct __simple_comref_1
 {
-	// TODO
+	template<typename _Up>
+	using __cv_t = typename __type_merge_cv<_Tp1, _Tp2>::template type<_Up>;
+
+	using type = decltype(true ?
+		std::declval<__cv_t<std::remove_cv_t<_Tp1&>>>() :
+		std::declval<__cv_t<std::remove_cv_t<_Tp2&>>>());
 };
 
-template<typename _Tp, typename _Up>
-struct __simple_comref;
+struct __simple_comref_2_check_impl
+{
+	template<typename _Tp1, typename _Tp2, typename _Req = typename
+		__simple_comref_1<_Tp1&, _Tp2&>::type>
+	static std::true_type _S_test(int);
+
+	template<typename, typename>
+	static std::false_type _S_test(...);
+};
+
+template<typename _Tp1, typename _Tp2>
+struct __simple_comref_2_check_base
+	: public __simple_comref_2_check_impl
+{
+	using type = decltype(_S_test<_Tp1, _Tp2>(0));
+};
+
+template<typename _Tp1, typename _Tp2>
+struct __simple_comref_2_check
+	: public __simple_comref_2_check_base<_Tp1, _Tp2>::type
+{};
+
+template<typename _Tp1, typename _Tp2>
+struct __simple_comref_2
+{
+	using __type_0 = __simple_comref_1<_Tp1&, _Tp2&>;
+	using __type_res = std::add_rvalue_reference<
+		std::remove_reference<__type_0>>;
+	using type = std::enable_if_t<std::conjunction_v<
+		std::is_convertible<_Tp1, __type_res>,
+		std::is_convertible<_Tp2, __type_res>>, __type_res>;
+};
+
+template<typename _Tp1, typename _Tp2>
+struct __simple_comref_3_check_base
+	: public std::conjunction<std::is_lvalue_reference<_Tp1>,
+		std::is_rvalue_reference<_Tp2>>
+{};
+
+template<typename _Tp1, typename _Tp2>
+struct __simple_comref_3_check
+	: public std::disjunction<__simple_comref_3_check_base<_Tp1, _Tp2>,
+		__simple_comref_3_check_base<_Tp2, _Tp1>>
+{};
+
+template<typename _Tp1, typename _Tp2>
+struct __simple_comref_3
+{
+	using __check_order = __simple_comref_3_check_base<_Tp1, _Tp2>;
+	using __type_lvref = std::conditional_t<__check_order::value, _Tp1, _Tp2>;
+	using __type_rvref = std::conditional_t<__check_order::value, _Tp2, _Tp1>;
+	using __type_res = typename __simple_comref_1<__type_lvref&,
+		__type_rvref const&>::type;
+	using type = std::enable_if_t<std::is_convertible_v<
+		_Tp2, __type_res>, __type_res>;
+};
+
+template<typename _Tp1, typename _Tp2>
+struct __simple_comref
+{
+	using type = std::conditional_t<
+		__simple_comref_1_check<_Tp1, _Tp2>::value,
+		__simple_comref_1<_Tp1, _Tp2>, std::conditional_t<
+		__simple_comref_2_check<_Tp1, _Tp2>::value,
+		__simple_comref_2<_Tp1, _Tp2>, std::enable_if_t<
+		__simple_comref_3_check<_Tp1, _Tp2>::value,
+		__simple_comref_3<_Tp1, _Tp2>>>>;
+};
 
 template<typename _Tp, typename _Up>
 using __simple_comref_t = typename __simple_comref<_Tp, _Up>::type;
 
-template<typename _Tp...>
+template<typename... _Tp>
 struct common_reference;
 
-template<typename _Tp...>
+template<typename... _Tp>
 using common_reference_t = typename common_reference<_Tp...>::type;
 
+template<>
 struct common_reference<> {};
 
 template<typename _Tp>
@@ -212,28 +305,28 @@ struct common_reference<_Tp>
 };
 
 template<typename _Tp, typename _Up>
-struct __comref_impl_1_check
-	: public std::conjunction_t<std::is_reference<_Tp>, std::is_reference<_Up>
+struct __comref_1_check
+	: public std::conjunction<std::is_reference<_Tp>, std::is_reference<_Up>>
 {};
 
 template<typename _Tp, typename _Up>
-struct __comref_impl_1
+struct __comref_1
 {
-	using type = __simple_comref_t<_Tp, _Up>; // TODO
+	using type = __simple_comref_t<_Tp, _Up>;
 };
 
 template<typename _Tp, typename _Up>
-struct __comref_impl_2_check
-	: public typename __basic_comref_check<_Tp, _Up>::type
+struct __comref_2_check
+	: public __basic_comref_check<_Tp, _Up>::type
 {};
 
 template<typename _Tp, typename _Up>
-struct __comref_impl_2
+struct __comref_2
 {
 	using type = typename __basic_comref<_Tp, _Up>::type;
 };
 
-struct __comref_impl_3_check_impl
+struct __comref_3_check_impl
 {
 	template<typename _Tp>
 	static _Tp _S_val();
@@ -247,32 +340,33 @@ struct __comref_impl_3_check_impl
 };
 
 template<typename _Tp, typename _Up>
-struct __comref_impl_3_check_base
-	: public __comref_impl_3_check_impl
+struct __comref_3_check_base
+	: public __comref_3_check_impl
 {
 	using type = decltype(_S_test<_Tp, _Up>(0));
 };
 
 template<typename _Tp, typename _Up>
-struct __comref_impl_3_check
-	: public typename __comref_impl_3_check_base<_Tp, _Up>::type
+struct __comref_3_check
+	: public __comref_3_check_base<_Tp, _Up>::type
 {};
 
-struct __comref_impl_3_impl
+struct __comref_3_impl
 {
 	template<typename _Tp>
 	static _Tp _S_val();
 
-	using type = decltype(true ? _S_val<_Tp> : _S_val<_Up>);
+	template<typename _Tp, typename _Up>
+	using type = decltype(true ? _S_val<_Tp>() : _S_val<_Up>());
 };
 
 template<typename _Tp, typename _Up>
-struct __comref_impl_3
+struct __comref_3
 {
-	using type = typename __comref_impl_3_impl<_Tp, _Up>::type;
+	using type = typename __comref_3_impl::template type<_Tp, _Up>;
 };
 
-struct __comref_impl_4_check_impl
+struct __comref_4_check_impl
 {
 	template<typename _Tp, typename _Up, typename _Req =
 		std::common_type_t<_Tp, _Up>>
@@ -283,19 +377,19 @@ struct __comref_impl_4_check_impl
 };
 
 template<typename _Tp, typename _Up>
-struct __comref_impl_4_check_base
-	: public __comref_impl_4_check_impl
+struct __comref_4_check_base
+	: public __comref_4_check_impl
 {
 	using type = decltype(_S_test<_Tp, _Up>(0));
 };
 
 template<typename _Tp, typename _Up>
-struct __comref_impl_4_check
-	: public typename __comref_impl_4_check_base<_Tp, _Up>::type
+struct __comref_4_check
+	: public __comref_4_check_base<_Tp, _Up>::type
 {};
 
 template<typename _Tp, typename _Up>
-struct __comref_impl_4
+struct __comref_4
 {
 	using type = std::common_type_t<_Tp, _Up>;
 };
@@ -303,10 +397,18 @@ struct __comref_impl_4
 template<typename _Tp, typename _Up>
 struct common_reference<_Tp, _Up>
 {
-	using type = void; // TODO
+	using type = std::conditional_t<
+		__comref_1_check<_Tp, _Up>::value,
+		__comref_1<_Tp, _Up>, std::conditional_t<
+		__comref_2_check<_Tp, _Up>::value,
+		__comref_2<_Tp, _Up>, std::conditional_t<
+		__comref_3_check<_Tp, _Up>::value,
+		__comref_3<_Tp, _Up>, std::enable_if_t<
+		__comref_4_check<_Tp, _Up>::value,
+		__comref_4<_Tp, _Up>>>>>;
 };
 
-template<typename _Tp, typename _Up, typename _Rest...>
+template<typename _Tp, typename _Up, typename... _Rest>
 struct common_reference<_Tp, _Up, _Rest...>
 	: public common_reference_t<common_reference_t<_Tp, _Up>, _Rest...>
 {};
@@ -353,11 +455,11 @@ concept cc_common = cc_same<std::common_type_t<_Tp, _Up>,
 		std::add_lvalue_reference_t<const _Tp>,
 		std::add_lvalue_reference_t<const _Up>>>;
 #else
-#warning concept cc_common_reference unsupported; satisfied anywhere
+// #warning concept cc_common_reference unsupported; satisfied anywhere
 template<typename _Tp, typename _Up>
 concept cc_common_reference = true_v<_Tp, _Up>;
 
-#warning concept cc_common unsupported; satisfied anywhere
+// #warning concept cc_common unsupported; satisfied anywhere
 template<typename _Tp, typename _Up>
 concept cc_common = true_v<_Tp, _Up>;
 #endif /* C++20 */
@@ -438,7 +540,7 @@ concept cc_boolean = cc_movable<std::remove_cvref_t<_Bp>> &&
 		__a != __b2;  requires cc_convertible_to<decltype(__a != __b2), bool>;
 	};
 #else
-#warning concept cc_boolean unsupported; satisfied anywhere
+// #warning concept cc_boolean unsupported; satisfied anywhere
 template<typename _Bp>
 concept cc_boolean = true_v<_Bp>;
 #endif /* C++2O */
@@ -457,6 +559,7 @@ concept cc_weakly_equality_comparable_with =
 template<typename _Tp>
 concept cc_equality_comparable = cc_weakly_equality_comparable_with<_Tp, _Tp>;
 
+#if __cplusplus >= 202000L
 template<typename _Tp, typename _Up>
 concept cc_equality_comparable_with = cc_equality_comparable<_Tp> &&
 	cc_equality_comparable<_Up> &&
@@ -466,6 +569,11 @@ concept cc_equality_comparable_with = cc_equality_comparable<_Tp> &&
 		const std::remove_reference_t<_Tp>&,
 		const std::remove_reference_t<_Up>&>> &&
 	cc_weakly_equality_comparable_with<_Tp, _Up>;
+#else
+// #warning concept cc_equality_comparable_with unsupported; satisfied anywhere
+template<typename _Tp, typename _Up>
+concept cc_equality_comparable_with = true_v<_Tp, _Up>;
+#endif /* C++20 */
 
 template<typename _Tp>
 concept cc_strict_totally_ordered = cc_equality_comparable<_Tp> &&
@@ -478,6 +586,7 @@ concept cc_strict_totally_ordered = cc_equality_comparable<_Tp> &&
 		__a >= __b; requires cc_boolean<decltype(__a >= __b)>;
 	};
 
+#if __cplusplus >= 202000L
 template<typename _Tp, typename _Up>
 concept cc_strict_totally_ordered_with =
 	cc_strict_totally_ordered<_Tp> &&
@@ -500,6 +609,11 @@ concept cc_strict_totally_ordered_with =
 		__u <= __t; requires Boolean<decltype(__u <= __t)>;
 		__u >= __t; requires Boolean<decltype(__u >= __t)>;
 	};
+#else
+// #warning concept cc_strict_totally_ordered_with unsupported; satisfied anywhere
+template<typename _Tp, typename _Up>
+concept cc_strict_totally_ordered_with = true_v<_Tp, _Up>;
+#endif /* C++20 */
 
 /* @FIXME
 template<typename _Tp>
@@ -532,6 +646,7 @@ template<typename _Fp, typename... _Args>
 concept cc_predicate = cc_regular_invocable<_Fp, _Args...> &&
 	cc_boolean<std::invoke_result_t<_Fp, _Args...>>;
 
+#if __cplusplus >= 202000L
 template<typename _Rp, typename _Tp, typename _Up>
 concept cc_relation = cc_predicate<_Rp, _Tp, _Tp>
 	&& cc_predicate<_Rp, _Up, _Up>
@@ -543,6 +658,11 @@ concept cc_relation = cc_predicate<_Rp, _Tp, _Tp>
 		std::common_reference_t<const std::remove_reference_t<_Tp>&,
 		const std::remove_reference_t<_Up>&>>
 	&& cc_predicate<_Rp, _Tp, _Up> && cc_predicate<_Rp, _Up, _Tp>;
+#else
+// #warning concept cc_relation unsupported; satisfied anywhere
+template<typename _Rp, typename _Tp, typename _Up>
+concept cc_relation = true_v<_Rp, _Tp, _Up>;
+#endif /* C++20 */
 
 template<typename _Rp, typename _Tp, typename _Up>
 concept cc_strict_weak_order = cc_relation<_Rp, _Tp, _Up>;
