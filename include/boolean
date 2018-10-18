@@ -1,4 +1,4 @@
-// Boolean value utiltiy -*- C++ -*-
+// A fundamental type for holding a boolean value -*- C++ -*-
 
 // Copyright (C) 1997-2017 Free Software Foundation, Inc.
 //
@@ -23,7 +23,7 @@
 // <http://www.gnu.org/licenses/>.
 
 /** @file      boolean
- *  @brief     Boolean value utiltiy
+ *  @brief     A fundamental type for holding a boolean value
  *  @author    Polaris Zhao
  *  @version   3.0
  *
@@ -38,7 +38,5 @@
 #include <polaris/version>
 #include <polaris/bits/boolean.h>
 #include <polaris/bits/boolean.tcc>
-#include <polaris/bits/boolobs.h>
-#include <polaris/bits/boolobs.tcc>
 
 #endif /* _POLLIB_BOOLEAN */

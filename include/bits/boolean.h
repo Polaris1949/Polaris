@@ -1,4 +1,4 @@
-// A fundamental type for holding a boolean value -*- C++ -*-
+// Boolean classes -*- C++ -*-
 
 // Copyright (C) 1997-2017 Free Software Foundation, Inc.
 //
@@ -24,7 +24,7 @@
 
 /** @file        bits/boolean.h
  *  @headerfile  boolean
- *  @brief       A fundamental type for holding a boolean value
+ *  @brief       Boolean classes
  *  @author      Polaris Zhao
  *  @version     3.0
  *
