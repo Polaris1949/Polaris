@@ -40,7 +40,7 @@
 namespace polaris
 {
 
-class basic_bool_observer
+class basic_bit_observer
 {
 public:
     using size_type = std::size_t;
@@ -72,14 +72,14 @@ public:
     flip(size_type __pos);
 
     friend std::istream&
-	operator >> (std::istream& __in, basic_bool_observer& __x);
+	operator >> (std::istream& __in, basic_bit_observer& __x);
 
     friend std::ostream&
-	operator << (std::ostream& __out, const basic_bool_observer& __x);
+	operator << (std::ostream& __out, const basic_bit_observer& __x);
 };
 
 template<typename _Tp>
-class bool_observer
+class bit_observer
 {
 public:
     using value_type = _Tp;
@@ -91,7 +91,7 @@ private:
     union _Impl
     {
         _Tp _M_data;
-        basic_bool_observer _M_obs[_S_len];
+        basic_bit_observer _M_obs[_S_len];
 
         _Impl() = default;
         _Impl(const value_type& __x);

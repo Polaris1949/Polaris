@@ -1,6 +1,6 @@
-#include <polaris/boolean>
+#include <polaris/bit_observer>
 
-pol::basic_bool_observer x;
+pol::basic_bit_observer x;
 
 int main()
 {

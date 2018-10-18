@@ -42,7 +42,7 @@ namespace polaris
 {
 
 bool
-basic_bool_observer::
+basic_bit_observer::
 at(size_type __pos) const
 {
     switch (__pos)
@@ -55,12 +55,12 @@ at(size_type __pos) const
 		case 5: return b5;
 		case 6: return b6;
 		case 7: return b7;
-		default: throw std::out_of_range{"basic_bool_observer::at()"};
+		default: throw std::out_of_range{"basic_bit_observer::at()"};
 	}
 }
 
 bool
-basic_bool_observer::
+basic_bit_observer::
 operator[] (size_type __pos) const noexcept
 {
 	switch (__pos)
@@ -78,7 +78,7 @@ operator[] (size_type __pos) const noexcept
 }
 
 void
-basic_bool_observer::
+basic_bit_observer::
 set(size_type __pos)
 {
     switch (__pos)
@@ -91,12 +91,12 @@ set(size_type __pos)
 		case 5: b5 = true; return;
 		case 6: b6 = true; return;
 		case 7: b7 = true; return;
-		default: throw std::out_of_range{"basic_bool_observer::set()"};
+		default: throw std::out_of_range{"basic_bit_observer::set()"};
 	}
 }
 
 void
-basic_bool_observer::
+basic_bit_observer::
 reset(size_type __pos)
 {
     switch (__pos)
@@ -109,21 +109,21 @@ reset(size_type __pos)
 		case 5: b5 = false; return;
 		case 6: b6 = false; return;
 		case 7: b7 = false; return;
-		default: throw std::out_of_range{"basic_bool_observer::reset()"};
+		default: throw std::out_of_range{"basic_bit_observer::reset()"};
 	}
 }
 
 void
-basic_bool_observer::
+basic_bit_observer::
 flip(size_type __pos)
 {
-    if (__pos >= 8) throw std::out_of_range{"basic_bool_observer::flip()"};
+    if (__pos >= 8) throw std::out_of_range{"basic_bit_observer::flip()"};
     if (this->at(__pos)) this->reset(__pos);
     else this->set(__pos);
 }
 
 std::istream&
-operator >> (std::istream& __in, basic_bool_observer& __x)
+operator >> (std::istream& __in, basic_bit_observer& __x)
 {
 	for (std::size_t __i{}; __i < char_bit; ++__i)
 	{
@@ -145,7 +145,7 @@ operator >> (std::istream& __in, basic_bool_observer& __x)
 }
 
 std::ostream&
-operator << (std::ostream& __out, const basic_bool_observer& __x)
+operator << (std::ostream& __out, const basic_bit_observer& __x)
 {
     for (std::size_t __i{}; __i < char_bit; ++__i)
 	{
