@@ -1,4 +1,4 @@
-// Boolean value utiltiy -*- C++ -*-
+// A fundamental type for holding a boolean value -*- C++ -*-
 
 // Copyright (C) 1997-2017 Free Software Foundation, Inc.
 //
@@ -22,23 +22,57 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file      boolean
- *  @brief     Boolean value utiltiy
- *  @author    Polaris Zhao
- *  @version   3.0
+/** @file        bits/boolean.tcc
+ *  @headerfile  boolean
+ *  @brief       A fundamental type for holding a boolean value
+ *  @author      Polaris Zhao
+ *  @version     3.0
  *
- *  This is a Polaris C++ Library header.
+ *  This is an internal header file, included by other library headers.
+ *  Do not attempt to use it directly.
 **/
 
-#ifndef _POLLIB_BOOLEAN
-#define _POLLIB_BOOLEAN 1
+#ifndef _POL_BOOLEAN_TCC
+#define _POL_BOOLEAN_TCC 1
 
-#pragma GCC system_header
+#include <iostream>
 
-#include <polaris/version>
-#include <polaris/bits/boolean.h>
-#include <polaris/bits/boolean.tcc>
-#include <polaris/bits/boolobs.h>
-#include <polaris/bits/boolobs.tcc>
+namespace polaris
+{
 
-#endif /* _POLLIB_BOOLEAN */
+boolean::
+boolean(bool __arg) noexcept
+	: _M_data{__arg}
+{}
+
+bool
+boolean::
+operator == (const boolean& __arg) const noexcept
+{ return _M_data == __arg._M_data; }
+
+bool
+boolean::
+operator != (const boolean& __arg) const noexcept
+{ return _M_data != __arg._M_data; }
+
+boolean::
+operator bool() const noexcept
+{ return _M_data; }
+
+std::istream&
+operator >> (std::istream& __in, boolean& __arg)
+{
+	__in >> __arg._M_data;
+	return __in;
+}
+
+std::ostream&
+operator << (std::ostream& __out, const boolean& __arg)
+{
+	__out << __arg._M_data;
+	return __out;
+}
+
+}
+
+#endif /* _POL_BOOLEAN_TCC */
