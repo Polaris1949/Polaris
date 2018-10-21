@@ -72,10 +72,10 @@ public:
     flip(size_type __pos);
 
     friend std::istream&
-	operator >> (std::istream& __in, basic_bit_observer& __x);
+    operator >> (std::istream& __in, basic_bit_observer& __x);
 
     friend std::ostream&
-	operator << (std::ostream& __out, const basic_bit_observer& __x);
+    operator << (std::ostream& __out, const basic_bit_observer& __x);
 };
 
 template<typename _Tp>
@@ -100,6 +100,10 @@ private:
     _Impl _M_impl;
 
 public:
+    bit_observer() = default;
+
+    bit_observer(const value_type& __x);
+
     bool
     at(size_type __pos) const;
 

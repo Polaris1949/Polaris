@@ -46,35 +46,35 @@ basic_bit_observer::
 at(size_type __pos) const
 {
     switch (__pos)
-	{
-		case 0: return b0;
-		case 1: return b1;
-		case 2: return b2;
-		case 3: return b3;
-		case 4: return b4;
-		case 5: return b5;
-		case 6: return b6;
-		case 7: return b7;
-		default: throw std::out_of_range{"basic_bit_observer::at()"};
-	}
+    {
+        case 0: return b0;
+        case 1: return b1;
+        case 2: return b2;
+        case 3: return b3;
+        case 4: return b4;
+        case 5: return b5;
+        case 6: return b6;
+        case 7: return b7;
+        default: throw std::out_of_range{"basic_bit_observer::at()"};
+    }
 }
 
 bool
 basic_bit_observer::
 operator[] (size_type __pos) const noexcept
 {
-	switch (__pos)
-	{
-		case 0: return b0;
-		case 1: return b1;
-		case 2: return b2;
-		case 3: return b3;
-		case 4: return b4;
-		case 5: return b5;
-		case 6: return b6;
-		case 7: return b7;
-		default: return false;
-	}
+    switch (__pos)
+    {
+        case 0: return b0;
+        case 1: return b1;
+        case 2: return b2;
+        case 3: return b3;
+        case 4: return b4;
+        case 5: return b5;
+        case 6: return b6;
+        case 7: return b7;
+        default: return false;
+    }
 }
 
 void
@@ -82,17 +82,17 @@ basic_bit_observer::
 set(size_type __pos)
 {
     switch (__pos)
-	{
-		case 0: b0 = true; return;
-		case 1: b1 = true; return;
-		case 2: b2 = true; return;
-		case 3: b3 = true; return;
-		case 4: b4 = true; return;
-		case 5: b5 = true; return;
-		case 6: b6 = true; return;
-		case 7: b7 = true; return;
-		default: throw std::out_of_range{"basic_bit_observer::set()"};
-	}
+    {
+        case 0: b0 = true; return;
+        case 1: b1 = true; return;
+        case 2: b2 = true; return;
+        case 3: b3 = true; return;
+        case 4: b4 = true; return;
+        case 5: b5 = true; return;
+        case 6: b6 = true; return;
+        case 7: b7 = true; return;
+        default: throw std::out_of_range{"basic_bit_observer::set()"};
+    }
 }
 
 void
@@ -100,17 +100,17 @@ basic_bit_observer::
 reset(size_type __pos)
 {
     switch (__pos)
-	{
-		case 0: b0 = false; return;
-		case 1: b1 = false; return;
-		case 2: b2 = false; return;
-		case 3: b3 = false; return;
-		case 4: b4 = false; return;
-		case 5: b5 = false; return;
-		case 6: b6 = false; return;
-		case 7: b7 = false; return;
-		default: throw std::out_of_range{"basic_bit_observer::reset()"};
-	}
+    {
+        case 0: b0 = false; return;
+        case 1: b1 = false; return;
+        case 2: b2 = false; return;
+        case 3: b3 = false; return;
+        case 4: b4 = false; return;
+        case 5: b5 = false; return;
+        case 6: b6 = false; return;
+        case 7: b7 = false; return;
+        default: throw std::out_of_range{"basic_bit_observer::reset()"};
+    }
 }
 
 void
@@ -125,37 +125,65 @@ flip(size_type __pos)
 std::istream&
 operator >> (std::istream& __in, basic_bit_observer& __x)
 {
-	for (std::size_t __i{}; __i < char_bit; ++__i)
-	{
+    for (std::size_t __i{}; __i < char_bit; ++__i)
+    {
         std::size_t __j{char_bit - 1 - __i};
-		char __ch;
-		__in >> __ch;
+        char __ch;
+        __in >> __ch;
 
-		if (!(__ch == '0' || __ch == '1'))
-		{
-			__in.setstate(std::ios_base::failbit);
-			return __in;
-		}
+        if (!(__ch == '0' || __ch == '1'))
+        {
+            __in.setstate(std::ios_base::failbit);
+            return __in;
+        }
 
         if (__ch - '0') __x.set(__j);
         else __x.reset(__j);
-	}
+    }
 
-	return __in;
+    return __in;
 }
 
 std::ostream&
 operator << (std::ostream& __out, const basic_bit_observer& __x)
 {
     for (std::size_t __i{}; __i < char_bit; ++__i)
-	{
+    {
         std::size_t __j{char_bit - 1 - __i};
         char __ch{__x[__j] + '0'};
-		__out << __ch;
-	}
+        __out << __ch;
+    }
 
-	return __out;
+    return __out;
 }
+
+template<typename _Tp>
+bit_observer<_Tp>::
+bit_observer(const value_type& __x)
+    : _M_impl{__x}
+{}
+
+template<typename _Tp>
+bit_observer<_Tp>::_Impl::
+_Impl(const value_type& __x)
+    : _M_data{__x}
+{}
+
+template<typename _Tp>
+bool
+bit_observer<_Tp>::
+at(size_type __pos) const
+{
+    size_type __byte{__pos / char_bit};
+    if (__byte >= _S_len) throw std::out_of_range{"bit_observer::at()"};
+    return this->_M_impl._M_obs[__byte][__pos % char_bit];
+}
+
+template<typename _Tp>
+bool
+bit_observer<_Tp>::
+at(size_type __pos) const noexcept
+{ return this->_M_impl._M_obs[__pos / char_bit][__pos % char_bit]; }
 
 }
 
