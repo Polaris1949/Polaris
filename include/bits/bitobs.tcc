@@ -180,9 +180,15 @@ at(size_type __pos) const
 }
 
 template<typename _Tp>
+basic_bit_observer&
+bit_observer<_Tp>::
+at_observer(size_type __pos)
+{ return this->_M_impl._M_obs[__pos]; }
+
+template<typename _Tp>
 bool
 bit_observer<_Tp>::
-at(size_type __pos) const noexcept
+operator[] (size_type __pos) const noexcept
 { return this->_M_impl._M_obs[__pos / char_bit][__pos % char_bit]; }
 
 }

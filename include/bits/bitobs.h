@@ -107,6 +107,9 @@ public:
     bool
     at(size_type __pos) const;
 
+    basic_bit_observer&
+    at_observer(size_type __pos);
+
     bool
     operator[] (size_type __pos) const noexcept;
 };
