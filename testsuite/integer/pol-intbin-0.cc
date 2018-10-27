@@ -2,6 +2,9 @@
 #include <string>
 #include <deque>
 #include <sstream>
+#include <cstdlib>
+#define private public
+#define protected public
 #include <polaris/byte>
 #include <polaris/binary_integer>
 
@@ -51,6 +54,7 @@ public:
 
 int main()
 {
+    /*
     bbint x{9223372036854775808ull};
     bbint y{9223372036854775809ull};
     _Bitfield bx(reinterpret_cast<_Int_base*>(&x));
@@ -63,5 +67,19 @@ int main()
     x -= y;
     cout << bx << endl;
     cout << x.size() << ' ' << x.capacity() << endl;
+    */
+    srand((unsigned)time(nullptr));
+    std::cout << malloc_usable_size() << '\n';
+
+    /*{
+        bbint x{128u};
+        bbint y{255u};
+        //x._M_basic_minus(y);
+        bbint z{y.flip()};
+        std::cout << _Bitfield{&z} << '\n';
+        x._M_basic_calc(y.flip()+bbint(1u), std::plus<_Int_exdata>{});
+        std::cout << _Bitfield{&x} << '\n';
+    }*/
+
     return 0;
 }
