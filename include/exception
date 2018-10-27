@@ -38,6 +38,29 @@
 
 #include <polaris/version>
 #include <stdexcept>
+
+#if __has_include(<experimental/source_location>)
+#include <experimental/source_location>
+#define POL_SOURCE_LOCATION 1
+#define POL_SOURCE_LOCATION_PARA , __srcloc
+#define POL_SOURCE_LOCATION_ARGU \
+    (std::string{__srcloc.file_name()} + ": " \
+    + std::to_string(__srcloc.line()) + ':' \
+    + std::to_string(__srcloc.column()) + ": " \
+    + __srcloc.function_name() + ": ") +
+#define POL_SOURCE_LOCATION_DEFN , \
+    std::experimental::source_location __srcloc
+#define POL_SOURCE_LOCATION_DECL \
+    POL_SOURCE_LOCATION_DEFN = \
+    std::experimental::source_location::current()
+#else
+#define POL_SOURCE_LOCATION 0
+#define POL_SOURCE_LOCATION_PARA
+#define POL_SOURCE_LOCATION_ARGU
+#define POL_SOURCE_LOCATION_DEFN
+#define POL_SOURCE_LOCATION_DECL
+#endif
+
 #include <polaris/bits/exception.h>
 #include <polaris/bits/exception.tcc>
 

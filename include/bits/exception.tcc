@@ -5,47 +5,52 @@ namespace polaris
 {
 
 inline void
-assert_always(bool __c)
+assert_always(bool __c POL_SOURCE_LOCATION_DEFN)
 {
-	if (!__c)
-		throw std::runtime_error("assertion failed");
+    if (!__c)
+        throw std::runtime_error(POL_SOURCE_LOCATION_ARGU
+			"assertion failed");
 }
 
 inline void
-assert_always(bool __c, const std::string& __msg)
+assert_always(bool __c, const std::string& __msg POL_SOURCE_LOCATION_DEFN)
 {
-	if (!__c)
-		throw std::runtime_error(std::string("assertion failed: ") + __msg);
+    if (!__c)
+        throw std::runtime_error(POL_SOURCE_LOCATION_ARGU
+			std::string("assertion failed: ") + __msg);
 }
 
 inline void
-assert_debug(bool __c)
+assert_debug(bool __c POL_SOURCE_LOCATION_DEFN)
 {
 #if POL_DEBUG
-	assert_always(__c);
+    assert_always(__c POL_SOURCE_LOCATION_PARA);
 #endif
 }
 
 inline void
-assert_debug(bool __c, const std::string& __msg)
+assert_debug(bool __c, const std::string& __msg POL_SOURCE_LOCATION_DEFN)
 {
 #if POL_DEBUG
-	assert_always(__c, __msg);
+    assert_always(__c, __msg POL_SOURCE_LOCATION_PARA);
 #endif
 }
 
 inline void
-assert_if(bool __p, bool __c)
+assert_if(bool __p, bool __c POL_SOURCE_LOCATION_DEFN)
 {
-	if (__p) assert_always(__c);
+    if (__p)
+	    assert_always(__c POL_SOURCE_LOCATION_PARA);
 }
 
 inline void
-assert_if(bool __p, bool __c, const std::string& __msg)
+assert_if(bool __p, bool __c, const std::string& __msg
+    POL_SOURCE_LOCATION_DEFN)
 {
-	if (__p) assert_always(__c, __msg);
+    if (__p)
+	    assert_always(__c, __msg POL_SOURCE_LOCATION_PARA);
 }
 
 }
 
-#endif
+#endif /* _POL_EXCEPTION_TCC */
