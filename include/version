@@ -40,7 +40,7 @@
 #define __POLLIB_MINOR__ 0
 
 /** @brief  Patch level of the library **/
-#define __POLLIB_PATCHLEVEL__ 2
+#define __POLLIB_PATCHLEVEL__ 3
 
 #if __cplusplus < 201703L
 #error polaris library generally need c++17 or later versions
@@ -53,6 +53,10 @@
 **/
 namespace polaris
 {
+
+using size_t = std::size_t;
+
+using ptrdiff_t = std::ptrdiff_t;
 
 /** @brief Bytes of @c char **/
 constexpr size_t char_byte = sizeof(char);
@@ -74,13 +78,11 @@ struct unsigned_type : blank {};
 
 }
 
-#if !_POL_NO_SHORT_NAMESPACE
+#if !POL_NO_NAMESPACE_ALIAS
 /** @namespace pol
  *  @brief     Short namespace alias for the library
 **/
 namespace pol = polaris;
 #endif
-
-#include <polaris/debug>
 
 #endif /* _POLLIB_VERSION */
