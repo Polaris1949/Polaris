@@ -72,19 +72,33 @@ get_allocator() const noexcept
 	return _Int_allocator(_M_get_allocator());
 }
 
-inline
 _Int_base::
 _Int_base()
 	: _M_impl()
 {
 }
 
-inline
 _Int_base::
 _Int_base(size_t __n)
 	: _M_impl()
 {
 	this->_M_create_storage(__n);
+}
+
+_Int_base::
+_Int_base(const _Int_base& __x)
+	: _M_impl{}
+{
+	std::cerr << "copy ctor\n";
+	this->_M_create_storage(__x._M_impl._M_end_of_storage - __x._M_impl._M_start);
+	std::uninitialized_copy(__x._M_impl._M_start, __x._M_impl._M_end_of_storage, this->_M_impl._M_start);
+}
+
+_Int_base::
+_Int_base(_Int_base&& __x)
+	: _M_impl{}
+{
+	this->_M_impl._M_swap_data(__x._M_impl);
 }
 
 inline

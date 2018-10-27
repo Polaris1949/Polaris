@@ -36,8 +36,8 @@
 
 #pragma GCC system_header
 
-#include <functional>
 #include <polaris/version>
+#include <functional>
 #include <polaris/bits/segtree.h>
 #include <polaris/bits/segtree.tcc>
 

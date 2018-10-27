@@ -46,46 +46,46 @@ template<typename _Tp>
 class range_observer
 {
 public:
-	typedef _Tp                       container_type;
-	typedef typename _Tp::value_type  value_type;
-	typedef typename _Tp::size_type   size_type;
-	typedef typename std::make_signed<typename \
-		_Tp::size_type>::type         off_type;
-	typedef typename std::make_signed<typename \
-		_Tp::size_type>::type         pos_type;
+    typedef _Tp                       container_type;
+    typedef typename _Tp::value_type  value_type;
+    typedef typename _Tp::size_type   size_type;
+    typedef typename std::make_signed<typename \
+        _Tp::size_type>::type         off_type;
+    typedef typename std::make_signed<typename \
+        _Tp::size_type>::type         pos_type;
 
 private:
-	container_type _M_c;
-	off_type _M_o;
+    container_type _M_c;
+    off_type _M_o;
 
 public:
-	range_observer();
-	range_observer(const container_type& __c);
-	range_observer(const container_type& __c, off_type __o);
-	~range_observer() noexcept = default;
+    range_observer();
+    range_observer(const container_type& __c);
+    range_observer(const container_type& __c, off_type __o);
+    ~range_observer() noexcept = default;
 
-	value_type& operator[] (pos_type __p);
-	const value_type& operator[] (pos_type __p) const;
+    value_type& operator[] (pos_type __p);
+    const value_type& operator[] (pos_type __p) const;
 };
 
 template<typename _Tp>
 range_observer<_Tp>::
 range_observer()
-	: _M_c(), _M_o()
+    : _M_c(), _M_o()
 {
 }
 
 template<typename _Tp>
 range_observer<_Tp>::
 range_observer(const container_type& __c)
-	: _M_c(__c), _M_o()
+    : _M_c(__c), _M_o()
 {
 }
 
 template<typename _Tp>
 range_observer<_Tp>::
 range_observer(const container_type& __c, off_type __o)
-	: _M_c(__c), _M_o(__o)
+    : _M_c(__c), _M_o(__o)
 {
 }
 
@@ -94,7 +94,7 @@ typename _Tp::value_type&
 range_observer<_Tp>::
 operator[] (pos_type __p)
 {
-	return _M_c[size_type(__p + _M_o)];
+    return _M_c[size_type(__p + _M_o)];
 }
 
 template<typename _Tp>
@@ -102,7 +102,7 @@ const typename _Tp::value_type&
 range_observer<_Tp>::
 operator[] (pos_type __p) const
 {
-	return _M_c[size_type(__p + _M_o)];
+    return _M_c[size_type(__p + _M_o)];
 }
 
 }

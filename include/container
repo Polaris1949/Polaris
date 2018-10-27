@@ -38,13 +38,12 @@
 
 // Support headers
 #include <polaris/version>
-// #include <polaris/concepts>
 
 // Standard containers
-#if !_POL_NO_STD_CONTAINER
+#if !POL_NO_STD_CONTAINER
 
 // Standard sequence containers
-#if !_POL_NO_STD_SEQUENCE_CONTAINER
+#if !POL_NO_STD_SEQUENCE_CONTAINER
 #include <array>
 #include <deque>
 #include <forward_list>
@@ -53,24 +52,24 @@
 #endif
 
 // Standard associative containers
-#if !_POL_NO_STD_ASSOCIATIVE_CONTAINER
+#if !POL_NO_STD_ASSOCIATIVE_CONTAINER
 #include <map>
 #include <set>
 #endif
 
 // Standard unordered containers
-#if !_POL_NO_STD_UNORDERED_CONTAINER
+#if !POL_NO_STD_UNORDERED_CONTAINER
 #include <unordered_map>
 #include <unordered_set>
 #endif
 
 // Standard container adaptors
-#if !_POL_NO_STD_CONTAINER_ADAPTOR
+#if !POL_NO_STD_CONTAINER_ADAPTOR
 #include <queue>
 #include <stack>
 #endif
 
-#endif /* !_POL_NO_STD_CONTAINER */
+#endif /* !POL_NO_STD_CONTAINER */
 
 // Library containers
 #include <polaris/sequence>

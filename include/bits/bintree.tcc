@@ -42,13 +42,13 @@ namespace polaris
 template<typename _Tp>
 binary_tree_node<_Tp>::
 binary_tree_node()
-	: _M_parent{nullptr}, _M_left{nullptr}, _M_right{nullptr}, _M_data{}
+    : _M_parent{nullptr}, _M_left{nullptr}, _M_right{nullptr}, _M_data{}
 {}
 
 template<typename _Tp>
 binary_tree_node<_Tp>::
 binary_tree_node(const value_type& __x)
-	: _M_parent{nullptr}, _M_left{nullptr}, _M_right{nullptr}, _M_data{__x}
+    : _M_parent{nullptr}, _M_left{nullptr}, _M_right{nullptr}, _M_data{__x}
 {}
 
 template<typename _Tp>
@@ -61,8 +61,8 @@ inline binary_tree_node<_Tp>&
 binary_tree_node<_Tp>::
 construct(const value_type& __x)
 {
-	this->_M_construct(__x);
-	return *this;
+    this->_M_construct(__x);
+    return *this;
 }
 
 template<typename _Tp>
@@ -70,8 +70,8 @@ inline binary_tree_node<_Tp>&
 binary_tree_node<_Tp>::
 destroy()
 {
-	this->_M_destroy();
-	return *this;
+    this->_M_destroy();
+    return *this;
 }
 
 template<typename _Tp>
@@ -151,8 +151,8 @@ inline std::size_t
 binary_tree_node<_Tp>::
 degree() const
 {
-	return size_type{this->_M_left != nullptr}
-		+ size_type{this->_M_right != nullptr};
+    return size_type{this->_M_left != nullptr}
+        + size_type{this->_M_right != nullptr};
 }
 
 template<typename _Tp>
@@ -160,7 +160,7 @@ void
 binary_tree_node<_Tp>::
 _M_construct(const value_type& __x)
 {
-	new (&this->data()) value_type{__x};
+    new (&this->data()) value_type{__x};
 }
 
 template<typename _Tp>
@@ -168,19 +168,19 @@ void
 binary_tree_node<_Tp>::
 _M_destroy()
 {
-	if (this->left())
-	{
-		delete this->left();
-		this->left() = nullptr;
-	}
+    if (this->left())
+    {
+        delete this->left();
+        this->left() = nullptr;
+    }
 
-	if (this->right())
-	{
-		delete this->right();
-		this->right() = nullptr;
-	}
+    if (this->right())
+    {
+        delete this->right();
+        this->right() = nullptr;
+    }
 
-	this->data().~value_type();
+    this->data().~value_type();
 }
 
 template<typename _Tp>
@@ -189,8 +189,8 @@ inline binary_tree<_Tp>&
 binary_tree<_Tp>::
 construct(const _Seq& __data)
 {
-	this->_M_construct(this->_M_root, __data);
-	return *this;
+    this->_M_construct(this->_M_root, __data);
+    return *this;
 }
 
 template<typename _Tp>
@@ -198,8 +198,8 @@ inline binary_tree<_Tp>&
 binary_tree<_Tp>::
 destroy()
 {
-	this->_M_destroy(this->_M_root);
-	return *this;
+    this->_M_destroy(this->_M_root);
+    return *this;
 }
 
 template<typename _Tp>
@@ -208,7 +208,7 @@ void
 binary_tree<_Tp>::
 _M_construct(node_type* __root, const _Seq& __data)
 {
-	// TODO...
+    // TODO...
 }
 
 template<typename _Tp>
@@ -216,7 +216,7 @@ void
 binary_tree<_Tp>::
 _M_destroy(node_type* __root)
 {
-	// TODO...
+    // TODO...
 }
 
 }

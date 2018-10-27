@@ -7,25 +7,23 @@ namespace polaris
 constexpr
 cstring::
 cstring()
-	: _M_data()
-{
-}
+	: _M_data{}
+{}
 
 constexpr
 cstring::
 cstring(value_type __s)
-	: _M_data(__s)
-{
-}
+	: _M_data{__s}
+{}
 
 constexpr bool
 cstring::
 operator == (const cstring& __s) const
 {
 	const char *__p = this->_M_data, *__q = __s._M_data;
-	
+
 	while ((*__p) && (*__q) && (*__p++ == *__q++));
-	
+
 	if (*--__p == *--__q) return true;
 	else return false;
 }

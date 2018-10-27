@@ -22,11 +22,13 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file ranges
+/** @file     ranges
+ *  @brief    Ranges library
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *
  *  This is a Polaris C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _POLLIB_RANGES
 #define _POLLIB_RANGES 1

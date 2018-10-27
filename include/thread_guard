@@ -22,11 +22,14 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file thread_guard
+/** @file     thread_guard
+ *  @brief    A guard for threads
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *  @deprecated  This header has been deprecated.
+ *
  *  This is a Polaris C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _POLLIB_THREAD_GUARD
 #define _POLLIB_THREAD_GUARD 1
@@ -38,7 +41,7 @@
 #include <polaris/bits/tguard.tcc>
 #else
 #warning compiler does not support 'std::thread'
-#warning this included header will be ignored
+#warning this header will be ignored
 #endif
 
 #endif /* _POLLIB_THREAD_GUARD */

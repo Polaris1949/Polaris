@@ -44,30 +44,30 @@ namespace polaris
 class timer
 {
 public:
-	typedef std::chrono::steady_clock  clock;
-	typedef clock::time_point          time_point;
-	typedef clock::duration            duration;
+    typedef std::chrono::steady_clock  clock;
+    typedef clock::time_point          time_point;
+    typedef clock::duration            duration;
 
 private:
-	time_point _M_start;
-	time_point _M_finish;
+    time_point _M_start;
+    time_point _M_finish;
 
 public:
-	timer();
+    timer();
 
-	time_point& clock_begin();
-	time_point& clock_end();
+    time_point& clock_begin();
+    time_point& clock_end();
 
-	time_point begin() const;
-	time_point end() const;
+    time_point begin() const;
+    time_point end() const;
 
-	duration distance() const;
-	double second() const;
+    duration distance() const;
+    double second() const;
 };
 
 timer::
 timer()
-	: _M_start(), _M_finish()
+    : _M_start(), _M_finish()
 {
 }
 
@@ -75,44 +75,44 @@ std::chrono::steady_clock::time_point&
 timer::
 clock_begin()
 {
-	return this->_M_start = clock::now();
+    return this->_M_start = clock::now();
 }
 
 std::chrono::steady_clock::time_point&
 timer::
 clock_end()
 {
-	return this->_M_finish = clock::now();
+    return this->_M_finish = clock::now();
 }
 
 std::chrono::steady_clock::time_point
 timer::
 begin() const
 {
-	return this->_M_start;
+    return this->_M_start;
 }
 
 std::chrono::steady_clock::time_point
 timer::
 end() const
 {
-	return this->_M_finish;
+    return this->_M_finish;
 }
 
 std::chrono::steady_clock::duration
 timer::
 distance() const
 {
-	return this->_M_finish - this->_M_start;
+    return this->_M_finish - this->_M_start;
 }
 
 double
 timer::
 second() const
 {
-	return (double)this->distance().count()/duration::period::den;
+    return (double)this->distance().count()/duration::period::den;
 }
 
 }
 
-#endif
+#endif /* _POLLIB_TIMER */

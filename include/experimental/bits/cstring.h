@@ -7,10 +7,7 @@ namespace polaris
 {
 
 class cstring;
-/*
-std::istream&
-operator >> (std::istream& __in, const cstring& __s);
-*/
+
 std::ostream&
 operator << (std::ostream& __out, const cstring& __s);
 

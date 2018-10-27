@@ -12,14 +12,14 @@ class monotony_queue
 public:
 	typedef _Tp value_type;
 	typedef std::deque<_Tp> container_type;
-	
+
 private:
 	std::deque<_Tp> _M_q;
-	
+
 public:
 	container_type&
 	raw();
-	
+
 	const container_type&
 	raw() const;
 };

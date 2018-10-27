@@ -43,116 +43,116 @@ template<typename _Tp>
 class binary_tree_node
 {
 public:
-	typedef _Tp                    value_type;
-	typedef binary_tree_node<_Tp>  node_type;
-	typedef std::size_t            size_type;
+    typedef _Tp                    value_type;
+    typedef binary_tree_node<_Tp>  node_type;
+    typedef std::size_t            size_type;
 
 protected:
-	node_type* _M_parent;
-	node_type* _M_left;
-	node_type* _M_right;
-	value_type _M_data;
+    node_type* _M_parent;
+    node_type* _M_left;
+    node_type* _M_right;
+    value_type _M_data;
 
 public:
-	binary_tree_node();
+    binary_tree_node();
 
-	binary_tree_node(const value_type& __x);
+    binary_tree_node(const value_type& __x);
 
-	~binary_tree_node() noexcept;
+    ~binary_tree_node() noexcept;
 
-	node_type&
-	construct(const value_type& __x);
+    node_type&
+    construct(const value_type& __x);
 
-	node_type&
-	destroy();
+    node_type&
+    destroy();
 
-	node_type*&
-	parent();
+    node_type*&
+    parent();
 
-	const node_type*&
-	parent() const;
+    const node_type*&
+    parent() const;
 
-	node_type*&
-	child(bool __x);
+    node_type*&
+    child(bool __x);
 
-	const node_type*&
-	child(bool __x) const;
+    const node_type*&
+    child(bool __x) const;
 
-	node_type*&
-	left();
+    node_type*&
+    left();
 
-	const node_type*&
-	left() const;
+    const node_type*&
+    left() const;
 
-	node_type*&
-	right();
+    node_type*&
+    right();
 
-	const node_type*&
-	right() const;
+    const node_type*&
+    right() const;
 
-	value_type&
-	data();
+    value_type&
+    data();
 
-	const value_type&
-	data() const;
+    const value_type&
+    data() const;
 
-	bool
-	is_branch() const;
+    bool
+    is_branch() const;
 
-	bool
-	is_leaf() const;
+    bool
+    is_leaf() const;
 
-	size_type
-	degree() const;
+    size_type
+    degree() const;
 
-	size_type
-	depth() const;
+    size_type
+    depth() const;
 
 private:
-	void
-	_M_construct(const value_type& __x);
+    void
+    _M_construct(const value_type& __x);
 
-	void
-	_M_destroy();
+    void
+    _M_destroy();
 };
 
 template<typename _Tp>
 class binary_tree
 {
 public:
-	typedef _Tp value_type;
-	typedef binary_tree_node<_Tp> node_type;
-	typedef binary_tree<_Tp> tree_type;
-	typedef std::size_t size_type;
+    typedef _Tp value_type;
+    typedef binary_tree_node<_Tp> node_type;
+    typedef binary_tree<_Tp> tree_type;
+    typedef std::size_t size_type;
 
 protected:
-	node_type* _M_root;
+    node_type* _M_root;
 
 public:
-	binary_tree();
+    binary_tree();
 
-	template<typename _Seq>
-	binary_tree(const _Seq& __data);
+    template<typename _Seq>
+    binary_tree(const _Seq& __data);
 
-	~binary_tree() noexcept;
+    ~binary_tree() noexcept;
 
-	template<typename _Seq>
-	tree_type&
-	construct(const _Seq& __data);
+    template<typename _Seq>
+    tree_type&
+    construct(const _Seq& __data);
 
-	tree_type&
-	destroy();
+    tree_type&
+    destroy();
 
-	size_type
-	degree() const;
+    size_type
+    degree() const;
 
 private:
-	template<typename _Seq>
-	void
-	_M_construct(node_type* __root, const _Seq& __data);
+    template<typename _Seq>
+    void
+    _M_construct(node_type* __root, const _Seq& __data);
 
-	void
-	_M_destroy(node_type* __root);
+    void
+    _M_destroy(node_type* __root);
 };
 
 }

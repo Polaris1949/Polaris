@@ -22,11 +22,14 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file literal_guard
+/** @file     literal_guard
+ *  @brief    A guard for literals
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *  @deprecated  This header has been deprecated.
+ *
  *  This is a Polaris C++ Library header.
- */
-
-// Written by Jingyu Zhao.
+**/
 
 #ifndef _POLLIB_LITERAL_GUARD
 #define _POLLIB_LITERAL_GUARD 1

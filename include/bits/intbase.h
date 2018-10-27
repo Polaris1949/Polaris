@@ -39,40 +39,42 @@ namespace polaris
 
 struct _Int_base
 {
-	// typedef _Int_data data_type;
-	// typedef _Int_radix radix_type;
-	// typedef size_t size_type;
-	
-	struct _Int_impl
-		: public _Int_allocator
-	{
-		_Int_pointer _M_start;
-		_Int_pointer _M_finish;
-		_Int_pointer _M_end_of_storage;
-		
-		_Int_impl();
-		
-		void _M_swap_data(_Int_impl& __x) noexcept;
-	};
-	
+    // typedef _Int_data data_type;
+    // typedef _Int_radix radix_type;
+    // typedef size_t size_type;
+
+    struct _Int_impl
+        : public _Int_allocator
+    {
+        _Int_pointer _M_start;
+        _Int_pointer _M_finish;
+        _Int_pointer _M_end_of_storage;
+
+        _Int_impl();
+
+        void _M_swap_data(_Int_impl& __x) noexcept;
+    };
+
 public:
-	_Int_allocator& _M_get_allocator() noexcept;
-	const _Int_allocator& _M_get_allocator() const noexcept;
-	_Int_allocator get_allocator() const noexcept;
-	
-	_Int_base();
-	_Int_base(size_t __n);
-	~_Int_base() noexcept;
-	
+    _Int_allocator& _M_get_allocator() noexcept;
+    const _Int_allocator& _M_get_allocator() const noexcept;
+    _Int_allocator get_allocator() const noexcept;
+
+    _Int_base();
+    _Int_base(size_t __n);
+    _Int_base(const _Int_base& __x);
+    _Int_base(_Int_base&& __x);
+    ~_Int_base() noexcept;
+
 public:
-	_Int_impl _M_impl;
-	
-	_Int_pointer _M_allocate(size_t __n);
-	void _M_deallocate(_Int_pointer __p, size_t __n);
-	_Int_pointer _M_reallocate(_Int_pointer __p, size_t __n);
-	
+    _Int_impl _M_impl;
+
+    _Int_pointer _M_allocate(size_t __n);
+    void _M_deallocate(_Int_pointer __p, size_t __n);
+    _Int_pointer _M_reallocate(_Int_pointer __p, size_t __n);
+
 private:
-	void _M_create_storage(size_t __n);
+    void _M_create_storage(size_t __n);
 };
 
 }
