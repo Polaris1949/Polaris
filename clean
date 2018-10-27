@@ -1,0 +1,3 @@
+#!/bin/bash
+
+rm -fr testsuite/*/*.exe testsuite/*/*.stackdump
