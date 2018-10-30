@@ -13,7 +13,7 @@ public:
             int tmp=0;
             for(int i=x;i;i-=lowbit(i))
             {
-                std::cerr << "$ i=" << i-1 << '\n';
+                //std::cerr << "$ i=" << i-1 << '\n';
                 tmp+=tree[i];
             }
             return tmp;
@@ -38,7 +38,7 @@ public:
             for(int i=y+1;i<=n;i+=lowbit(i)) arr[i]-=k;
         }
         inline int sum(int x,int y){
-            std::cerr << "# x=" << x-1 << " y=" << y << '\n';
+            //std::cerr << "# x=" << x-1 << " y=" << y << '\n';
             return prefix(y)-prefix(x-1);
         }
 };
@@ -47,28 +47,37 @@ tree_array a;
 
 int main()
 {
-    int o, x, y;
+    int o, x, y, k;
     std::cin >> n >> m;
-    //a.resize(n);
+
     auto check = [&a]()
     {
         std::cerr << "> ";
         for (int i=1; i<=n; ++i)
-            std::cerr << a.tree[i] << ' ';
+            std::cerr << a.arr[i] << ' ';
         std::cerr << '\n';
     };
-    check();
+
     for (int i=1; i<=n; ++i)
     {
         std::cin >> x;
-        a.add(i, x);
+        a.add_range(i, i, x);
         check();
     }
+
     for (int i=0; i<m; ++i)
     {
-        std::cin >> o >> x >> y;
-        if (o==1) a.add(x, y);
-        else std::cout<<a.sum(x, y)<<'\n';
-        check();
+        std::cin >> o;
+
+        if (o==1)
+        {
+            std::cin >> x >> y >> k;
+            a.add_range(x, y, k);
+        }
+        else
+        {
+            std::cin >> x;
+            std::cout << a.num(x) << '\n';
+        }
     }
 }
