@@ -26,7 +26,7 @@
  *  @brief    Tree array library
  *  @author   Polaris Zhao
  *  @version  3.0
- *  @todo     Incomplete.
+ *  @todo     Most features implemented; Incomplete.
  *
  *  This is a Polaris C++ Library header.
 **/
