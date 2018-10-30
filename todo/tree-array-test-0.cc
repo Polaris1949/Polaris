@@ -1,3 +1,5 @@
+#include <iostream>
+#include <vector>
 #include <polaris/tree_array>
 
 pol::tree_array<int, pol::tree_array_mode::mpir> a;
