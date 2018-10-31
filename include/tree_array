@@ -37,6 +37,7 @@
 #include <polaris/version>
 #include <polaris/functional> // for pol::plus_eq, pol::max_f
 #include <polaris/type_traits> // for pol::false_v
+#include <vector>
 #include <polaris/bits/treearr.h>
 #include <polaris/bits/treearr.tcc>
 
