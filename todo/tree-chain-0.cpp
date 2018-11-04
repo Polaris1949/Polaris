@@ -1,11 +1,12 @@
 #include <polaris/version>
+#include <polaris/tree>
 
 namespace polaris
 {
 
 template<typename _Tp>
 class tree_chain_node
-    : public binary_tree_node<_Tp>
+    : public tree_node<_Tp>
 {
 public:
     using value_type = _Tp;
