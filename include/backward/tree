@@ -46,6 +46,11 @@ class tree_node_base;
 template<typename _Tp>
 class tree_node;
 
+class tree_layer;
+
+template<typename _Tp>
+class tree_iterator;
+
 template<typename _Tp>
 class tree;
 
