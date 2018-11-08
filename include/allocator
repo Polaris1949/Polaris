@@ -1,0 +1,10 @@
+#ifndef _POLLIB_ALLOCATOR
+#define _POLLIB_ALLOCATOR 1
+
+#pragma GCC system_header
+
+#include <polaris/version>
+#include <polaris/bits/alloc.h>
+#include <polaris/bits/alloc.tcc>
+
+#endif /* _POLLIB_ALLOCATOR */
