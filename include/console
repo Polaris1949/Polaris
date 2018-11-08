@@ -49,7 +49,6 @@ namespace polaris
  *  @deprecated  This class is thought removed in a future version.
  *               You should use @c terminal instead.
 **/
-[[deprecated]]
 class console_t
 {
     std::string _M_data;
@@ -171,8 +170,8 @@ public:
     void locate(int __x, int __y)
     {
         _M_data = "x;yH";
-        _M_data.replace(0, 1, std::to_string(++__x));
-        _M_data.replace(2, 1, std::to_string(++__y));
+        _M_data.replace(_M_data.find('x'), 1, std::to_string(++__x));
+        _M_data.replace(_M_data.find('y'), 1, std::to_string(++__y));
         _M_do();
     }
 
@@ -221,7 +220,6 @@ public:
  *  @deprecated  This variable is thought removed in a future version.
  *               You should use @c terminal instead.
 **/
-[[deprecated]]
 console_t console;
 
 }
