@@ -5,12 +5,28 @@ namespace polaris
 {
 
 template<typename _Tp>
-basic_bit<_Tp>*
+bit_ptr
 bit_allocator<_Tp>::
 allocate()
 {
-    basic_bit_view<_Tp> __tmp{global_bit_resource<>()->allocate_v()};
-    //return new bit_type{global_bit_resource<>()->allocate()};
+    return global_bit_resource().allocate();
+}
+
+template<typename _Tp>
+void
+bit_allocator<_Tp>::
+deallocate(bit_ptr __p)
+{
+    global_bit_resource().deallocate(__p);
+}
+
+template<typename _Tp>
+bit_ptr
+bit_allocator<_Tp>::
+reallocate(bit_ptr __p)
+{
+    this->deallocate(__p);
+    return this->allocate();
 }
 
 }

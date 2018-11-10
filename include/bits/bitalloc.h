@@ -6,22 +6,30 @@ namespace polaris
 
 template<typename _Tp>
 class bit_allocator
+    : public allocator<_Tp>
 {
 public:
     using size_type = std::size_t;
-    using bit_type = basic_bit<_Tp>;
 
 public:
-    bit_type* allocate();
-    //bitfield_view* allocate(size_type __n);
+    bit_ptr allocate();
+    void deallocate(bit_ptr __p);
+    bit_ptr reallocate(bit_ptr __p);
+};
 
-    void deallocate(bit_type* __p);
-    //void deallocate(bitfield_view* __p);
+template<typename _Tp>
+class bitfield_allocator
+    : public allocator<_Tp>
+{
+public:
+    using size_type = std::size_t;
 
-    bit_type* reallocate();
-    //bitfield_view* reallocate(size_type __n);
+public:
+    bitfield_ptr allocate(size_type __n);
+    void deallocate(bitfield_ptr __p);
+    bitfield_ptr reallocate(bitfield_ptr __p, size_type __n);
 };
 
 }
 
-#endif
+#endif /* _POL_BITALLOC_H */

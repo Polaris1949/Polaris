@@ -29,6 +29,19 @@ public:
     bit_ptr& operator = (bool __x);
 };
 
+class bitfield_ptr
+{
+public:
+    // TODO...
+
+private:
+    bit_ptr _M_left;
+    bit_ptr _M_right;
+
+public:
+    // TODO...
+};
+
 }
 
 #endif /* _POL_BITPTR_H */
