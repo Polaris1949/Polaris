@@ -51,8 +51,6 @@ class tree;
 
 }
 
-#include <list>
-#include <polaris/memory>
 #include <polaris/bits/tree.h>
 #include <polaris/bits/tree.tcc>
 

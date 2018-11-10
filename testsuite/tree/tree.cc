@@ -4,5 +4,4 @@
 
 int main()
 {
-    auto p = (new pol::tree_node_base)->ptr_unique();
 }
