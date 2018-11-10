@@ -22,25 +22,23 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file backward/byte
+/** @file     backward/byte
+ *  @brief    A fundamental type for holding a byte
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *
  *  This is a Polaris C++ Library header.
- */
+**/
 
-// Written by Jingyu Zhao.
+#ifndef _POLLIB_BACK_BYTE
+#define _POLLIB_BACK_BYTE 1
 
-#ifndef _POLLIB_BYTE
-#define _POLLIB_BYTE 1
-
-#if __POL_WARN_DEPRECATED
-#warning this is a deprecated library header
-#endif
-
-#if __POL_NO_DEPRECATED
-#error this is a deprecated library header
+#if POL_WARN_DEPRECATED
+#warning library header deprecated
 #endif
 
 #include <polaris/version>
 #include <polaris/backward/bits/byte.h>
 #include <polaris/backward/bits/byte.tcc>
 
-#endif /* _POLLIB_BYTE */
+#endif /* _POLLIB_BACK_BYTE */
