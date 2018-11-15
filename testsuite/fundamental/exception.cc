@@ -1,8 +1,15 @@
-#define POL_DEBUG 1
 #include <polaris/exception>
+
+int fun(int x)
+{
+    pol::expect(x >= 0, "x >= 0");
+    ++x;
+    pol::ensure(x > 0, "x > 0");
+    return x;
+}
 
 int main()
 {
-    pol::assert_debug(false, "test");
+    fun(2147483647);
     return 0;
 }
