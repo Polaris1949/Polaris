@@ -13,8 +13,8 @@ Install headers in Polaris Library to DIRECTORY, or /usr/local.
 fi
 
 if test "x${header_dir}" = "x--version"; then
-    echo "insheader (Polaris utils) 1.0
-Copyright (C) 2016 Free Software Foundation, Inc.
+    echo "insheader (Polaris Library utils) 1.0
+Copyright (C) 2018 Free Software Foundation, Inc.
 License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
