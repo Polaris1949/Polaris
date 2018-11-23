@@ -49,17 +49,23 @@ public:
     using pointer = _Tp*;
     using size_type = size_t;
 
-    pointer allocate(size_type __n);
+    [[nodiscard]] pointer
+    allocate(size_type __n);
+
     void deallocate(pointer __p);
-    pointer reallocate(pointer __p, size_type __n);
+
+    [[nodiscard]] pointer
+    reallocate(pointer __p, size_type __n);
 
     template<typename... _Args>
-    pointer construct(_Args&&... __args);
+    [[nodiscard]] pointer
+    construct(_Args&&... __args);
 
     void destroy(pointer __p);
 
     template<typename... _Args>
-    pointer reconstruct(pointer __p, _Args&&... __args);
+    [[nodiscard]] pointer
+    reconstruct(pointer __p, _Args&&... __args);
 };
 
 template<>
@@ -69,9 +75,13 @@ public:
     using pointer = void*;
     using size_type = size_t;
 
-    pointer allocate(size_type __n);
+    [[nodiscard]] pointer
+    allocate(size_type __n);
+
     void deallocate(pointer __p);
-    pointer reallocate(pointer __p, size_type __n);
+
+    [[nodiscard]] pointer
+    reallocate(pointer __p, size_type __n);
 };
 
 }

@@ -35,6 +35,8 @@
 #ifndef _POL_ALLOC_TCC
 #define _POL_ALLOC_TCC 1
 
+#include <new> // for ::operator new and ::operator delete
+
 namespace polaris
 {
 
@@ -43,7 +45,7 @@ _Tp*
 allocator<_Tp>::
 allocate(size_type __n)
 {
-    return ::operator new (sizeof(_Tp) * __n);
+    return static_cast<_Tp*>(::operator new (sizeof(_Tp) * __n));
 }
 
 template<typename _Tp>
@@ -51,7 +53,7 @@ void
 allocator<_Tp>::
 deallocate(pointer __p)
 {
-    ::operator delete (__p);
+    ::operator delete (static_cast<void*>(__p));
 }
 
 template<typename _Tp>
