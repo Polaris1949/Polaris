@@ -1,0 +1,32 @@
+#ifndef _POLLIB_NUMERIC
+#define _POLLIB_NUMERIC 1
+
+#pragma GCC system_header
+
+namespace polaris
+{
+
+template<typename _Tp>
+class integer_base
+{
+public:
+    integer_base() = default;
+    integer_base(const integer_base& __x) = default;
+    virtual ~integer_base() = default;
+
+    virtual _Tp operator + (const _Tp& __x) = 0;
+    virtual _Tp operator - (const _Tp& __x) = 0;
+    virtual _Tp operator * (const _Tp& __x) = 0;
+    virtual _Tp operator / (const _Tp& __x) = 0;
+    virtual _Tp operator % (const _Tp& __x) = 0;
+
+    virtual _Tp& operator += (const _Tp& __x) = 0;
+    virtual _Tp& operator -= (const _Tp& __x) = 0;
+    virtual _Tp& operator *= (const _Tp& __x) = 0;
+    virtual _Tp& operator /= (const _Tp& __x) = 0;
+    virtual _Tp& operator %= (const _Tp& __x) = 0;
+};
+
+}
+
+#endif /* _POLLIB_NUMERIC */

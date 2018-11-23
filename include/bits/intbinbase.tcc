@@ -67,7 +67,7 @@ basic_binary_integer(unsigned long long __x)
 }
 
 basic_binary_integer::
-basic_binary_integer(size_type_tag_t, size_type __n)
+basic_binary_integer(size_tag_t, size_type __n)
     : _Int_genbase(__n)
 {
 }

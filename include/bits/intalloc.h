@@ -7,7 +7,6 @@ namespace polaris
 {
 
 /** @class  integer_allocator
- *  @headerfile  integer
  *  @brief  Integer allocator abstract base class
 **/
 class integer_allocator

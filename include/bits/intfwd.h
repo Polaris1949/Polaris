@@ -22,9 +22,6 @@ struct fp_size_data;
 
 }
 
-struct size_type_tag_t {};
-constexpr size_type_tag_t size_type_tag;
-
 typedef __int_detail::data_type _Int_data;
 typedef _Int_data* _Int_pointer;
 typedef __int_detail::exdata_type _Int_exdata;
@@ -33,22 +30,22 @@ typedef __int_detail::radix_type _Int_radix;
 template<size_t __x, size_t __y>
 struct __mp_div_floor
 {
-	constexpr static bool is_exact = (__x % __y) == 0;
-	constexpr static size_t value = __x / __y;
+    constexpr static bool is_exact = (__x % __y) == 0;
+    constexpr static size_t value = __x / __y;
 };
 
 template<size_t __x, size_t __y>
 struct __mp_div_ceil
 {
-	constexpr static bool is_exact = (__x % __y) == 0;
-	constexpr static size_t value = __x / __y + !is_exact;
+    constexpr static bool is_exact = (__x % __y) == 0;
+    constexpr static size_t value = __x / __y + !is_exact;
 };
 
 template<typename _Tp>
 struct integer_size
 {
-	constexpr static size_t value = __mp_div_ceil<sizeof(_Tp), \
-		sizeof(_Int_data)>::value;
+    constexpr static size_t value = __mp_div_ceil<sizeof(_Tp), \
+        sizeof(_Int_data)>::value;
 };
 
 template<typename _Tp>
@@ -73,19 +70,19 @@ class unsigned_integer;
 
 // @modular_integer
 template<int _Tag, class _ModT = integer>
-	class modular_integer;
+    class modular_integer;
 
 // @allocated_integer
 template<int _Tag>
-	class allocated_integer;
+    class allocated_integer;
 
 // @allocated_unsigned_integer
 template<int _Tag>
-	class allocated_unsigned_integer;
+    class allocated_unsigned_integer;
 
 // @allocated_modular_integer
 template<int _Tag, class _ModT = allocated_integer<_Tag> >
-	class allocated_modular_integer;
+    class allocated_modular_integer;
 
 }
 

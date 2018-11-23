@@ -42,6 +42,7 @@
 #include <polaris/exception> // Exception support
 #include <polaris/utility> // Utility support
 #include <polaris/type_traits> // Type traits support
+#include <polaris/numeric>
 #include <polaris/bits/intfwd.h> // Forward header
 #include <polaris/bits/intexcept.h> // Integer exception
 #include <polaris/bits/intalloc.h> // Integer allocation

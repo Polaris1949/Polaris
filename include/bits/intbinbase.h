@@ -8,8 +8,8 @@ class basic_binary_integer
     : protected _Int_genbase
 {
 public:
-    typedef size_t size_type;
-    typedef _Int_data data_type;
+    using size_type = size_t;
+    using data_type = _Int_data;
 
 protected:
     template<typename _Tp>
@@ -44,7 +44,7 @@ public:
 
     basic_binary_integer(unsigned long long __x);
 
-    [[deprecated]] basic_binary_integer(size_type_tag_t, size_type __n);
+    basic_binary_integer(size_tag_t, size_type __n);
 
     size_type size() const;
 
@@ -78,6 +78,9 @@ public:
 
     basic_binary_integer
     operator + (const basic_binary_integer& __x) const;
+
+    basic_binary_integer
+    operator - (const basic_binary_integer& __x) const;
 
     basic_binary_integer&
     operator += (const basic_binary_integer& __x);

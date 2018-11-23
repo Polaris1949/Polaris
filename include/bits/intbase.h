@@ -32,17 +32,11 @@
 #ifndef _POL_INTBASE_H
 #define _POL_INTBASE_H 1
 
-// #include <vector>
-
 namespace polaris
 {
 
 struct _Int_base
 {
-    // typedef _Int_data data_type;
-    // typedef _Int_radix radix_type;
-    // typedef size_t size_type;
-
     struct _Int_impl
         : public _Int_allocator
     {
@@ -51,6 +45,7 @@ struct _Int_base
         _Int_pointer _M_end_of_storage;
 
         _Int_impl();
+        _Int_impl(const _Int_allocator& __a);
 
         void _M_swap_data(_Int_impl& __x) noexcept;
     };

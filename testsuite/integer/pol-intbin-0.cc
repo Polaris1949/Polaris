@@ -54,7 +54,7 @@ public:
 
 int main()
 {
-    /*
+    static_assert(pol::integer_size_v<unsigned long long> == 2);
     bbint x{9223372036854775808ull};
     bbint y{9223372036854775809ull};
     _Bitfield bx(reinterpret_cast<_Int_base*>(&x));
@@ -67,9 +67,6 @@ int main()
     x -= y;
     cout << bx << endl;
     cout << x.size() << ' ' << x.capacity() << endl;
-    */
-    srand((unsigned)time(nullptr));
-    std::cout << malloc_usable_size() << '\n';
 
     /*{
         bbint x{128u};

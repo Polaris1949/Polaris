@@ -1,16 +1,11 @@
-#define _POL_DEBUG 1
-#define _POL_NEWLIB 1
-#define _POL_DEPRECATED 1
 #include <iostream>
-#include <polaris/integer>
+#include <polaris/binary_integer>
 #include <vector>
-using namespace std;
-using namespace polaris;
 
-_Int_genbase x;
+pol::_Int_genbase x;
 
 int main()
 {
-	cout<<x.size()<<endl;
+	std::cout<<x.size()<<'\n';
 	return 0;
 }

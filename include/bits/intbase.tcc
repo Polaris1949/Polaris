@@ -32,44 +32,44 @@
 #ifndef _POL_INTBASE_TCC
 #define _POL_INTBASE_TCC 1
 
+#include <utility> // for std::swap
+
 namespace polaris
 {
 
-inline
 _Int_base::_Int_impl::
 _Int_impl()
-	: _M_start(), _M_finish(), _M_end_of_storage()
-{
-}
+	: _M_start{}, _M_finish{}, _M_end_of_storage{}
+{}
 
-inline void
+void
 _Int_base::_Int_impl::
 _M_swap_data(_Int_impl& __x) noexcept
 {
-	std::swap(_M_start, __x._M_start);
-	std::swap(_M_finish, __x._M_finish);
-	std::swap(_M_end_of_storage, __x._M_end_of_storage);
+	std::swap(this->_M_start, __x._M_start);
+	std::swap(this->_M_finish, __x._M_finish);
+	std::swap(this->_M_end_of_storage, __x._M_end_of_storage);
 }
 
-inline _Int_allocator&
+_Int_allocator&
 _Int_base::
 _M_get_allocator() noexcept
 {
 	return *static_cast<_Int_allocator*>(&this->_M_impl);
 }
 
-inline const _Int_allocator&
+const _Int_allocator&
 _Int_base::
 _M_get_allocator() const noexcept
 {
 	return *static_cast<const _Int_allocator*>(&this->_M_impl);
 }
 
-inline _Int_allocator
+_Int_allocator
 _Int_base::
 get_allocator() const noexcept
 {
-	return _Int_allocator(_M_get_allocator());
+	return _Int_allocator{this->_M_get_allocator()};
 }
 
 _Int_base::
@@ -91,7 +91,8 @@ _Int_base(const _Int_base& __x)
 {
 	std::cerr << "copy ctor\n";
 	this->_M_create_storage(__x._M_impl._M_end_of_storage - __x._M_impl._M_start);
-	std::uninitialized_copy(__x._M_impl._M_start, __x._M_impl._M_end_of_storage, this->_M_impl._M_start);
+	std::uninitialized_copy(__x._M_impl._M_start,
+		__x._M_impl._M_end_of_storage, this->_M_impl._M_start);
 }
 
 _Int_base::
@@ -101,7 +102,6 @@ _Int_base(_Int_base&& __x)
 	this->_M_impl._M_swap_data(__x._M_impl);
 }
 
-inline
 _Int_base::
 ~_Int_base() noexcept
 {
@@ -109,7 +109,7 @@ _Int_base::
 		this->_M_impl._M_end_of_storage - this->_M_impl._M_start);
 }
 
-inline _Int_pointer
+_Int_pointer
 _Int_base::
 _M_allocate(size_t __n)
 {
@@ -117,7 +117,7 @@ _M_allocate(size_t __n)
 	return __n != 0 ? _Int_pointer(_M_impl.allocate(__n)) : nullptr;
 }
 
-inline void
+void
 _Int_base::
 _M_deallocate(_Int_pointer __p, size_t __n)
 {
@@ -126,7 +126,7 @@ _M_deallocate(_Int_pointer __p, size_t __n)
 		_M_impl.deallocate(__p);
 }
 
-inline _Int_pointer
+_Int_pointer
 _Int_base::
 _M_reallocate(_Int_pointer __p, size_t __n)
 {
@@ -135,7 +135,7 @@ _M_reallocate(_Int_pointer __p, size_t __n)
 		: _Int_pointer(_M_impl.allocate(__n)) : nullptr;
 }
 
-inline void
+void
 _Int_base::
 _M_create_storage(size_t __n)
 {
