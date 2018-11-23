@@ -40,7 +40,7 @@
 #define __POLLIB_MINOR__ 0
 
 /** @brief  Patch level of the library **/
-#define __POLLIB_PATCHLEVEL__ 3
+#define __POLLIB_PATCHLEVEL__ 4
 
 #if __cplusplus < 201703L
 #error polaris library generally need c++17 or later versions
@@ -48,15 +48,18 @@
 
 #include <iosfwd>
 
+#if __has_include(<version>)
+#include <version> // C++20
+#endif
+
 /** @namespace  polaris
  *  @brief      Library namespace
 **/
 namespace polaris
 {
 
-using size_t = std::size_t;
-
-using ptrdiff_t = std::ptrdiff_t;
+using size_t = std::size_t; /// Size type
+using ptrdiff_t = std::ptrdiff_t; /// Pointer difference type
 
 /** @brief Bytes of @c char **/
 constexpr size_t char_byte = sizeof(char);
@@ -75,6 +78,12 @@ struct signed_type : blank {};
 
 /** @brief Unsigned type tag struct **/
 struct unsigned_type : blank {};
+
+struct size_tag_t : blank {}; /// Size tag type
+inline constexpr size_tag_t size_tag; /// Size tag
+
+struct uninitialized_tag_t : blank {}; /// Uninitialized tag type
+inline constexpr uninitialized_tag_t uninitialized_tag; /// Uninitialized tag
 
 }
 
