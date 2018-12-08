@@ -49,6 +49,9 @@ class tree_node;
 template<typename _Tp>
 class tree;
 
+template<typename _Tp>
+class tree_iterator;
+
 }
 
 #include <polaris/bits/tree.h>

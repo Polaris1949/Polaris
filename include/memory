@@ -57,7 +57,7 @@ using observer_ptr = std::experimental::observer_ptr<_Tp>;
 }
 
 #include <polaris/allocator>
-#include <polaris/bits/bitptr.h>
-#include <polaris/bits/bitptr.tcc>
+#include <polaris/bits/bitaddr.h>
+#include <polaris/bits/bitaddr.tcc>
 
 #endif /* _POLLIB_MEMORY */

@@ -1,4 +1,4 @@
-// Byte classes implementation -*- C++ -*-
+// Byte implementation -*- C++ -*-
 
 // Copyright (C) 1997-2017 Free Software Foundation, Inc.
 //

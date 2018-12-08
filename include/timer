@@ -44,9 +44,9 @@ namespace polaris
 class timer
 {
 public:
-    typedef std::chrono::steady_clock  clock;
-    typedef clock::time_point          time_point;
-    typedef clock::duration            duration;
+    using clock = std::chrono::steady_clock;
+    using time_point = clock::time_point;
+    using duration = clock::duration;
 
 private:
     time_point _M_start;
@@ -54,6 +54,7 @@ private:
 
 public:
     timer();
+    ~timer() = default;
 
     time_point& clock_begin();
     time_point& clock_end();
@@ -67,7 +68,7 @@ public:
 
 timer::
 timer()
-    : _M_start(), _M_finish()
+    : _M_start{}, _M_finish{}
 {
 }
 
@@ -110,7 +111,8 @@ double
 timer::
 second() const
 {
-    return (double)this->distance().count()/duration::period::den;
+    return static_cast<double>(this->distance().count())
+        / duration::period::den;
 }
 
 }

@@ -85,13 +85,29 @@ inline constexpr size_tag_t size_tag; /// Size tag
 struct uninitialized_tag_t : blank {}; /// Uninitialized tag type
 inline constexpr uninitialized_tag_t uninitialized_tag; /// Uninitialized tag
 
+using schar = signed char;
+using uchar = unsigned char;
+using ushort = unsigned short;
+using uint = unsigned int;
+using ulong = unsigned long;
+using llong = long long;
+using ullong = unsigned long long;
+
 }
 
-#if !POL_NO_NAMESPACE_ALIAS
 /** @namespace pol
  *  @brief     Short namespace alias for the library
 **/
 namespace pol = polaris;
-#endif
+
+#if POL_KEYWORDS
+using pol::schar;
+using pol::uchar;
+using pol::ushort;
+using pol::uint;
+using pol::ulong;
+using pol::llong;
+using pol::ullong;
+#endif /* POL_KEYWORDS */
 
 #endif /* _POLLIB_VERSION */

@@ -1,4 +1,4 @@
-// Byte classes -*- C++ -*-
+// Byte -*- C++ -*-
 
 // Copyright (C) 1997-2017 Free Software Foundation, Inc.
 //
