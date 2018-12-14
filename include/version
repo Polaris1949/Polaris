@@ -22,7 +22,7 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file     version
+/** @file     include/version
  *  @brief    Library version and configurations
  *  @author   Polaris Zhao
  *  @version  3.0
@@ -31,16 +31,13 @@
 **/
 
 #ifndef _POLLIB_VERSION
-#define _POLLIB_VERSION 1
+#define _POLLIB_VERSION 1 ///< Header @c @<version@> inclusion
 
-/** @brief  Major version of the library **/
-#define __POLLIB__ 3
+#pragma GCC system_header
 
-/** @brief  Minor version of the library **/
-#define __POLLIB_MINOR__ 0
-
-/** @brief  Patch level of the library **/
-#define __POLLIB_PATCHLEVEL__ 4
+#define __POLLIB__ 3 ///< Major version of the library
+#define __POLLIB_MINOR__ 0 ///< Minor version of the library
+#define __POLLIB_PATCHLEVEL__ 4 ///< Patch level of the library
 
 #if __cplusplus < 201703L
 #error polaris library generally need c++17 or later versions
@@ -58,8 +55,8 @@
 namespace polaris
 {
 
-using size_t = std::size_t; /// Size type
-using ptrdiff_t = std::ptrdiff_t; /// Pointer difference type
+using size_t = std::size_t; ///< Size type
+using ptrdiff_t = std::ptrdiff_t; ///< Pointer difference type
 
 /** @brief Bytes of @c char **/
 constexpr size_t char_byte = sizeof(char);
@@ -79,11 +76,11 @@ struct signed_type : blank {};
 /** @brief Unsigned type tag struct **/
 struct unsigned_type : blank {};
 
-struct size_tag_t : blank {}; /// Size tag type
-inline constexpr size_tag_t size_tag; /// Size tag
+struct size_tag_t : blank {}; ///< Size tag type
+inline constexpr size_tag_t size_tag; ///< Size tag
 
-struct uninitialized_tag_t : blank {}; /// Uninitialized tag type
-inline constexpr uninitialized_tag_t uninitialized_tag; /// Uninitialized tag
+struct uninitialized_tag_t : blank {}; ///< Uninitialized tag type
+inline constexpr uninitialized_tag_t uninitialized_tag; ///< Uninitialized tag
 
 using schar = signed char;
 using uchar = unsigned char;
