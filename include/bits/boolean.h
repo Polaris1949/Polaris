@@ -1,4 +1,4 @@
-// Boolean classes -*- C++ -*-
+// Boolean -*- C++ -*-
 
 // Copyright (C) 1997-2017 Free Software Foundation, Inc.
 //
@@ -24,7 +24,7 @@
 
 /** @file        bits/boolean.h
  *  @headerfile  boolean
- *  @brief       Boolean classes
+ *  @brief       Boolean
  *  @author      Polaris Zhao
  *  @version     3.0
  *
@@ -34,8 +34,6 @@
 
 #ifndef _POL_BOOLEAN_H
 #define _POL_BOOLEAN_H 1
-
-#include <iosfwd>
 
 namespace polaris
 {

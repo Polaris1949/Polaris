@@ -22,7 +22,7 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file     container
+/** @file     include/container
  *  @brief    Container library
  *  @author   Polaris Zhao
  *  @version  3.0
