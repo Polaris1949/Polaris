@@ -1,6 +1,6 @@
 // Allocator support -*- C++ -*-
 
-// Copyright (C) 1997-2017 Free Software Foundation, Inc.
+// Copyright (C) 2004-2018 Free Software Foundation, Inc.
 //
 // This file is part of the Polaris C++ Library.  This library is free
 // software; you can redistribute it and/or modify it under the
@@ -23,13 +23,12 @@
 // <http://www.gnu.org/licenses/>.
 
 /** @file        bits/alloc.tcc
- *  @headerfile  allocator
  *  @brief       Allocator support
  *  @author      Polaris Zhao
  *  @version     3.0
  *
  *  This is an internal header file, included by other library headers.
- *  Do not attempt to use it directly.
+ *  Do not attempt to use it directly. @headername{allocator}
 **/
 
 #ifndef _POL_ALLOC_TCC
