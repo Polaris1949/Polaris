@@ -27,13 +27,13 @@ int main()
     console.purge();
     console.clear_screen();
     console.hide_cursor();
-    console.locate(39, 11);
+    console.locate(11, 39);
     cerr << "PK" << endl;
-    console.locate(35, 12);
+    console.locate(12, 35);
     cerr << "Loading";
     for (int i=0; i<2; ++i)
     {
-        console.locate(42, 12);
+        console.locate(12, 42);
         console.clear_line_after();
         for (int j=0; j<3; ++j)
         {
@@ -47,16 +47,16 @@ int main()
     console.purge();
     console.clear_screen();
     console.hide_cursor();
-    console.locate(39, 11);
+    console.locate(11, 39);
     cerr << "PK" << endl;
-    console.locate(35, 12);
+    console.locate(12, 35);
     cerr << "Loading";
     string s="-\\|/";
     for (int i=0; i<4; ++i)
     {
         for (int j=0; j<4; ++j)
         {
-            console.locate(44, 12);
+            console.locate(12, 44);
             cerr<<s[j];
             sleep(1);
         }
