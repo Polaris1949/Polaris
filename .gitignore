@@ -33,3 +33,7 @@
 
 # Stack dump files
 *.stackdump
+
+# Documentation (temporarily)
+*doc*
+*data*
