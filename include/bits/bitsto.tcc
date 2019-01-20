@@ -23,13 +23,12 @@
 // <http://www.gnu.org/licenses/>.
 
 /** @file        bits/bitsto.tcc
- *  @headerfile  bit
  *  @brief       Bit storage implementation
  *  @author      Polaris Zhao
  *  @version     3.0
  *
  *  This is an internal header file, included by other library headers.
- *  Do not attempt to use it directly.
+ *  Do not attempt to use it directly. @headername{bit}
 **/
 
 #ifndef _POL_BITSTO_TCC

@@ -23,13 +23,12 @@
 // <http://www.gnu.org/licenses/>.
 
 /** @file        bits/bitsto.h
- *  @headerfile  bit
  *  @brief       Bit storage
  *  @author      Polaris Zhao
  *  @version     3.0
  *
  *  This is an internal header file, included by other library headers.
- *  Do not attempt to use it directly.
+ *  Do not attempt to use it directly. @headername{bit}
 **/
 
 #ifndef _POL_BITSTO_H
@@ -51,8 +50,8 @@ private:
 
 public:
     basic_bit_storage() = default;
-    explicit basic_bit_storage(const storage_type& __data);
-    explicit basic_bit_storage(storage_type&& __data);
+    [[deprecated]] explicit basic_bit_storage(const storage_type& __data);
+    [[deprecated]] explicit basic_bit_storage(storage_type&& __data);
 
     bool empty() const;
     bool full() const;
@@ -70,7 +69,8 @@ public:
     void release(level_type __n);
 };
 
-using bit_storage = basic_bit_storage<unsigned int>;
+using  bit_storage = basic_bit_storage<uint32_t>;
+using wbit_storage = basic_bit_storage<uint64_t>;
 
 }
 
