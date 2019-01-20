@@ -1,0 +1,33 @@
+#ifndef _POLLIB_TYPE
+#define _POLLIB_TYPE 1
+
+#include <polaris/version>
+#include <type_traits>
+
+namespace polaris
+{
+
+// A wrapper class for fundamental types.
+template<typename _Tp, typename _Req =
+    std::enable_if_t<std::is_fundamental_v<_Tp>>>
+class fundamental_type
+{
+public:
+    using value_type = _Tp;
+
+private:
+    _Tp _M_data;
+
+public:
+    fundamental_type() noexcept = default;
+    fundamental_type(const _Tp& __data) noexcept;
+    fundamental_type(_Tp&& __data) noexcept;
+    ~fundamental_type() noexcept = default;
+
+    value_type data() const;
+    value_type* address() const;
+};
+
+}
+
+#endif /* _POLLIB_TYPE */
