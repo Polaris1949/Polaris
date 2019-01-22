@@ -37,9 +37,15 @@
 
 #include <polaris/version>
 #include <algorithm>
+#include <functional>
 
 namespace polaris
 {
+
+template<typename _Tp = void, typename _Up = void>
+struct plus_with;
+
+// minus_with ...
 
 template<typename _Tp = void>
 struct plus_eq;
@@ -55,6 +61,22 @@ struct divides_eq;
 
 template<typename _Tp = void>
 struct modulus_eq;
+
+template<typename _Tp, typename _Up>
+struct plus_with
+{
+    auto operator() (const _Tp& __x, const _Up& __y) const
+    { return __x + __y; }
+};
+
+template<>
+struct plus_with<void, void>
+{
+    auto operator() (const auto& __x, const auto& __y) const
+    { return __x + __y; }
+};
+
+// minus_with ...
 
 template<typename _Tp>
 struct plus_eq
