@@ -25,10 +25,27 @@ public:
     fundamental_type(value_type&& __data) noexcept;
     ~fundamental_type() noexcept = default;
 
-    value_type data() const;
-    value_type* address() const;
+    value_type
+    data() const;
 
-    fundamental_type& operator += (const fundamental_type& __rhs) noexcept;
+    value_type*
+    address() const;
+
+    std::enable_if_t<is_plusable_v<value_type>, fundamental_type>&
+    operator += (const fundamental_type& __rhs) noexcept;
+
+    std::enable_if_t<is_minusable_v<value_type>, fundamental_type>&
+    operator -= (const fundamental_type& __rhs) noexcept;
+
+    std::enable_if_t<is_multiplyable_v<value_type>, fundamental_type>&
+    operator *= (const fundamental_type& __rhs) noexcept;
+
+    fundamental_type&
+    operator /= (const fundamental_type& __rhs) noexcept;
+
+    fundamental_type&
+    operator %= (const fundamental_type& __rhs) noexcept;
+
     // ...
 };
 
