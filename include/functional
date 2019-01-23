@@ -42,26 +42,20 @@
 namespace polaris
 {
 
-/* New ABI:
-template<typename... _Args>
-struct has_void;
-
-template<bool, typename, typename>
-struct plus_with_base;
-
-template<typename _Tp, typename _Up>
-struct plus_with_base<false, _Tp, _Up>; // Regular
-
-template<typename _Tp, typename _Up>
-struct plus_with_base<true, _Tp, _Up>; // Auto
-
-template<typename _Tp = void, typename _Up = void>
-struct plus_with : public plus_with_base<has_void_v<_Tp, _Up>, _Tp, _Up>;
-*/
 template<typename _Tp = void, typename _Up = void>
 struct plus_with;
 
-// minus_with ...
+template<typename _Tp = void, typename _Up = void>
+struct minus_with;
+
+template<typename _Tp = void, typename _Up = void>
+struct multiplies_with;
+
+template<typename _Tp = void, typename _Up = void>
+struct divides_with;
+
+template<typename _Tp = void, typename _Up = void>
+struct modulus_with;
 
 template<typename _Tp = void>
 struct plus_eq;
@@ -92,7 +86,61 @@ struct plus_with<void, void>
     { return __x + __y; }
 };
 
-// minus_with ...
+template<typename _Tp, typename _Up>
+struct minus_with
+{
+    auto operator() (const _Tp& __x, const _Up& __y) const
+    { return __x - __y; }
+};
+
+template<>
+struct minus_with<void, void>
+{
+    auto operator() (const auto& __x, const auto& __y) const
+    { return __x - __y; }
+};
+
+template<typename _Tp, typename _Up>
+struct multiplies_with
+{
+    auto operator() (const _Tp& __x, const _Up& __y) const
+    { return __x * __y; }
+};
+
+template<>
+struct multiplies_with<void, void>
+{
+    auto operator() (const auto& __x, const auto& __y) const
+    { return __x * __y; }
+};
+
+template<typename _Tp, typename _Up>
+struct divides_with
+{
+    auto operator() (const _Tp& __x, const _Up& __y) const
+    { return __x / __y; }
+};
+
+template<>
+struct divides_with<void, void>
+{
+    auto operator() (const auto& __x, const auto& __y) const
+    { return __x / __y; }
+};
+
+template<typename _Tp, typename _Up>
+struct modulus_with
+{
+    auto operator() (const _Tp& __x, const _Up& __y) const
+    { return __x % __y; }
+};
+
+template<>
+struct modulus_with<void, void>
+{
+    auto operator() (const auto& __x, const auto& __y) const
+    { return __x % __y; }
+};
 
 template<typename _Tp>
 struct plus_eq
