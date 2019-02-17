@@ -31,7 +31,7 @@
 **/
 
 #ifndef _POLLIB_VERSION
-#define _POLLIB_VERSION 1 ///< Header @c @<version@> inclusion
+#define _POLLIB_VERSION 1
 
 #pragma GCC system_header
 
@@ -43,68 +43,26 @@
 #error polaris library generally need c++17 or later versions
 #endif
 
-#include <iosfwd>
-
 #if __has_include(<version>)
 #include <version> // C++20
+#else
+#include <iosfwd> // Workaround
 #endif
 
 /** @namespace  polaris
  *  @brief      Library namespace
 **/
-namespace polaris
-{
+namespace polaris {}
 
-using size_t = std::size_t; ///< Size type
-using ptrdiff_t = std::ptrdiff_t; ///< Pointer difference type
+#ifndef POL_NAMESPACE_ALIAS
+#define POL_NAMESPACE_ALIAS 1
+#endif
 
-/** @brief Bytes of @c char **/
-constexpr size_t char_byte = sizeof(char);
-
-/** @brief Bits of @c char **/
-constexpr size_t char_bit = __CHAR_BIT__ * char_byte;
-
-/** @brief @c npos for the library **/
-constexpr size_t npos = static_cast<size_t>(-1);
-
-/** @brief A blank tag struct **/
-struct blank {};
-
-/** @brief Signed type tag struct **/
-struct signed_type : blank {};
-
-/** @brief Unsigned type tag struct **/
-struct unsigned_type : blank {};
-
-struct size_tag_t : blank {}; ///< Size tag type
-inline constexpr size_tag_t size_tag; ///< Size tag
-
-struct uninitialized_tag_t : blank {}; ///< Uninitialized tag type
-inline constexpr uninitialized_tag_t uninitialized_tag; ///< Uninitialized tag
-
-using schar = signed char;
-using uchar = unsigned char;
-using ushort = unsigned short;
-using uint = unsigned int;
-using ulong = unsigned long;
-using llong = long long;
-using ullong = unsigned long long;
-
-}
-
+#if POL_NAMESPACE_ALIAS
 /** @namespace pol
  *  @brief     Short namespace alias for the library
 **/
 namespace pol = polaris;
-
-#if POL_KEYWORDS
-using pol::schar;
-using pol::uchar;
-using pol::ushort;
-using pol::uint;
-using pol::ulong;
-using pol::llong;
-using pol::ullong;
-#endif /* POL_KEYWORDS */
+#endif
 
 #endif /* _POLLIB_VERSION */
