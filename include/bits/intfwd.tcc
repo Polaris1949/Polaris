@@ -30,6 +30,9 @@ struct fp_size_data<_FloatingPoint, true>
         / data_bit + 1;
 };
 
+template<typename _FP>
+constexpr size_t fp_size_data_v = fp_size_data<_FP>::value;
+
 }
 
 constexpr size_t _Int_data_byte = __int_detail::data_byte;
@@ -38,7 +41,7 @@ constexpr size_t _Int_data_min = __int_detail::data_min;
 constexpr size_t _Int_data_max = __int_detail::data_max;
 
 template<typename _FP>
-constexpr size_t _Int_fp_size = __int_detail::fp_size_data<_FP>::value;
+constexpr size_t _Int_fp_size = __int_detail::fp_size_data_v<_FP>;
 
 }
 

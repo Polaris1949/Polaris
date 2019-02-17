@@ -11,11 +11,15 @@ namespace polaris
 namespace __int_detail
 {
 
-typedef unsigned int data_type;
-//typedef unsigned char data_type;
-typedef unsigned long long exdata_type;
-//typedef unsigned short exdata_type;
-typedef unsigned int radix_type;
+#if POL_POOR_MEMORY
+using data_type = uint8_t;
+using exdata_type = uint16_t;
+#else
+using data_type = uint32_t;
+using exdata_type = uint64_t;
+#endif
+
+using radix_type = size_t;
 
 template<typename, bool>
 struct fp_size_data;
@@ -68,6 +72,7 @@ class integer;
 // @unsigned_integer
 class unsigned_integer;
 
+/*
 // @modular_integer
 template<int _Tag, class _ModT = integer>
     class modular_integer;
@@ -83,6 +88,7 @@ template<int _Tag>
 // @allocated_modular_integer
 template<int _Tag, class _ModT = allocated_integer<_Tag> >
     class allocated_modular_integer;
+*/
 
 }
 
