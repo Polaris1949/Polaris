@@ -50,6 +50,7 @@ struct ignore_byte;
 
 }
 
+#include <iostream>
 #include <polaris/bits/bstream.h>
 #include <polaris/bits/bstream.tcc>
 
