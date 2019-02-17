@@ -41,6 +41,22 @@
 namespace polaris
 {
 
+/** @brief A blank tag struct **/
+struct blank {};
+
+/** @brief Signed type tag struct **/
+struct signed_type : blank {};
+
+/** @brief Unsigned type tag struct **/
+struct unsigned_type : blank {};
+
+struct size_tag_t : blank {}; ///< Size tag type
+inline constexpr size_tag_t size_tag; ///< Size tag
+
+struct uninitialized_tag_t : blank {}; ///< Uninitialized tag type
+inline constexpr uninitialized_tag_t uninitialized_tag; ///< Uninitialized tag
+
+/*
 template<typename _Tp>
 class tag
 {
@@ -205,6 +221,7 @@ make_tpop_wrap(const tvalue<_Args...>& __arg)
 {
 	return tpop_wrap<_Args...>(__arg);
 }
+*/
 
 }
 
