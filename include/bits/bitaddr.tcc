@@ -1,7 +1,7 @@
 #ifndef _POL_BITADDR_TCC
 #define _POL_BITADDR_TCC 1
 
-#include <polaris/exception>
+#include <iostream>
 
 namespace polaris
 {
@@ -9,7 +9,7 @@ namespace polaris
 constexpr
 bit_address::
 bit_address() noexcept
-    : _M_ptr{nullptr}, _M_lev{}
+    : _M_ptr{}, _M_lev{}
 {}
 
 constexpr
@@ -18,38 +18,35 @@ bit_address(nullptr_t) noexcept
     : _M_ptr{nullptr}, _M_lev{}
 {}
 
+constexpr
 bit_address::
-bit_address(byte_type* __ptr, level_type __n) noexcept
-    : _M_ptr{__ptr}, _M_lev{__n}
-{ pol::expect(__n >= 0 && __n < 8, "bad bit level"); }
-
-bit_address::
-bit_address(byte_type* __ptr, size_type __n) noexcept
+bit_address(void* __ptr, size_t __n) noexcept
     : _M_ptr{__ptr + __n / char_bit}, _M_lev{__n % char_bit}
 {}
 
-uchar*
+void*
 bit_address::
 byte_address() const noexcept
 { return this->_M_ptr; }
 
-uchar
+ubyte_t&
+bit_address::
+byte_reference() const
+{ return *static_cast<ubyte_t*>(this->byte_address()); }
+
+size_t
 bit_address::
 bit_level() const noexcept
 { return this->_M_lev; }
 
-void
+bool
 bit_address::
-assign(byte_type* __ptr, level_type __n) noexcept
-{
-    pol::expect(__n >= 0 && __n < 8, "bad bit level");
-    this->_M_ptr = __ptr;
-    this->_M_lev = __n;
-}
+empty() const noexcept
+{ return this->_M_ptr == nullptr; }
 
 void
 bit_address::
-assign(byte_type* __ptr, size_type __n) noexcept
+assign(void* __ptr, size_t __n) noexcept
 {
     this->_M_ptr = __ptr + __n / char_bit;
     this->_M_lev = __n % char_bit;
@@ -61,8 +58,8 @@ operator >> (std::istream& __in, bit_address& __x)
     void* __p; char __c; size_t __n;
     __in >> __p >> __c >> __n;
 
-    if (__c == '@')
-        __x.assign(static_cast<uchar*>(__p), __n);
+    if (__c == bit_address::separator)
+        __x.assign(__p, __n);
     else
         __in.setstate(std::ios_base::failbit);
 
@@ -72,46 +69,63 @@ operator >> (std::istream& __in, bit_address& __x)
 std::ostream&
 operator << (std::ostream& __out, const bit_address& __x)
 {
-    __out << static_cast<void*>(__x.byte_address()) << '@'
-        << static_cast<size_t>(__x.bit_level());
+    __out << __x.byte_address() << bit_address::separator << __x.bit_level();
     return __out;
 }
 
+constexpr
 bit_ptr::
-bit_ptr(byte_type* __ptr, level_type __n)
-    : _M_ptr{__ptr}, _M_lev{__n}
+bit_ptr(nullptr_t)
+    : _M_adr{nullptr}
 {}
 
+constexpr
 bit_ptr::
-bit_ptr(byte_type* __ptr, size_type __n)
-    : _M_ptr{__ptr + __n / char_bit}, _M_lev{__n % char_bit}
+bit_ptr(bit_address __a)
+    : _M_adr{__a}
 {}
 
 bool
 bit_ptr::
-empty() const
-{ return this->_M_ptr == nullptr; }
+empty() const noexcept
+{ return this->_M_adr.empty(); }
 
 bit_ptr::
-operator bool() const
-{ return !this->empty(); }
+operator bool() const noexcept
+{ return !this->_M_adr.empty(); }
+
+bool
+bit_ptr::
+operator! () const noexcept
+{ return this->_M_adr.empty(); }
+
+bit_ref
+bit_ptr::
+operator* ()
+{ return bit_ref{this->_M_adr}; }
 
 bool
 bit_ptr::
 operator* () const
-{ return (*this->_M_ptr >> this->_M_lev) & true; }
+{
+    return (this->_M_adr.byte_reference() >> this->_M_adr.bit_level())
+        & ubyte_t{1};
+}
 
-bool
-bit_ptr::
-operator! () const
-{ return !this->operator bool(); }
+constexpr
+bit_ref::
+bit_ref(bit_address __a)
+    : _M_adr{__a}
+{}
 
-bit_ptr&
-bit_ptr::
+bit_ref&
+bit_ref::
 operator = (bool __x)
 {
-    if (__x) *this->_M_ptr |= (true << this->_M_lev);
-    else *this->_M_ptr &= ~(true << this->_M_lev);
+    if (__x) this->_M_adr.byte_reference()
+        |= (ubyte_t{1} << this->_M_adr.bit_level());
+    else this->_M_adr.byte_reference()
+        &= ~(ubyte_t{1} << this->_M_adr.bit_level());
     return *this;
 }
 

@@ -9,7 +9,7 @@ class bit_allocator
     : public allocator<_Tp>
 {
 public:
-    using size_type = std::size_t;
+    using size_type = size_t;
 
 public:
     bit_ptr allocate();
@@ -22,7 +22,7 @@ class bitfield_allocator
     : public allocator<_Tp>
 {
 public:
-    using size_type = std::size_t;
+    using size_type = size_t;
 
 public:
     bitfield_ptr allocate(size_type __n);

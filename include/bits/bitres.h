@@ -54,11 +54,17 @@ private:
     iterator _M_cur;
 
 public:
+    bit_ptr allocate(size_type __n);
+    void deallocate(bit_ptr __p, size_type __n);
+
+/*
     bit_view_type allocate_v();
     [[deprecated]] bit_type* allocate();
     [[deprecated]] storage_type* allocate(level_type& __n);
+
     void deallocate(bit_type* __ptr);
     void deallocate_v(bit_view_type __v);
+*/
 };
 
 template<typename _Tp = unsigned int>

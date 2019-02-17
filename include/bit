@@ -43,10 +43,10 @@
 namespace polaris
 {
 
-inline namespace __bit_detail
+namespace __bit_detail
 {
 
-using _Bitres_deful_t = unsigned int;
+using data_type = uint32_t;
 
 }
 
@@ -65,8 +65,14 @@ class bit_resource;
 template<typename _Tp>
 class basic_bit_view;
 
-template<typename _Tp = _Bitres_deful_t>
+template<typename _Tp = __bit_detail::data_type>
 bit_resource<_Tp>* global_bit_resource();
+
+template<typename _Tp>
+auto* rich_bit_resource();
+
+template<typename _Tp>
+auto* poor_bit_resource();
 
 }
 

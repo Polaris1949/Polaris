@@ -51,7 +51,7 @@ private:
 public:
     basic_bit_storage() = default;
     [[deprecated]] explicit basic_bit_storage(const storage_type& __data);
-    [[deprecated]] explicit basic_bit_storage(storage_type&& __data);
+    explicit basic_bit_storage(storage_type&& __data);
 
     bool empty() const;
     bool full() const;
