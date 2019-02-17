@@ -2,83 +2,44 @@
 #define _POLLIB_TYPE 1
 
 #include <polaris/version>
-#include <type_traits>
-#include <utility>
 
 namespace polaris
 {
 
-// A wrapper class for fundamental types.
-template<typename _Tp, typename _Req =
-    std::enable_if_t<std::is_fundamental_v<_Tp>>>
-class fundamental_type
-{
-public:
-    using value_type = _Tp;
+using size_t = std::size_t; ///< Size type
+using ptrdiff_t = std::ptrdiff_t; ///< Pointer difference type
 
-private:
-    _Tp _M_data;
+/** @brief Bytes of @c char **/
+constexpr size_t char_byte = sizeof(char);
 
-public:
-    fundamental_type() noexcept = default;
-    fundamental_type(const value_type& __data) noexcept;
-    fundamental_type(value_type&& __data) noexcept;
-    ~fundamental_type() noexcept = default;
+/** @brief Bits of @c char **/
+constexpr size_t char_bit = __CHAR_BIT__ * char_byte;
 
-    value_type
-    data() const;
+/** @brief @c npos for the library **/
+constexpr size_t npos = static_cast<size_t>(-1);
 
-    value_type*
-    address() const;
+using schar = signed char;
+using uchar = unsigned char;
+using ushort = unsigned short;
+using uint = unsigned int;
+using ulong = unsigned long;
+using llong = long long;
+using ullong = unsigned long long;
 
-    std::enable_if_t<is_plusable_v<value_type>, fundamental_type>&
-    operator += (const fundamental_type& __rhs) noexcept;
-
-    std::enable_if_t<is_minusable_v<value_type>, fundamental_type>&
-    operator -= (const fundamental_type& __rhs) noexcept;
-
-    std::enable_if_t<is_multiplyable_v<value_type>, fundamental_type>&
-    operator *= (const fundamental_type& __rhs) noexcept;
-
-    fundamental_type&
-    operator /= (const fundamental_type& __rhs) noexcept;
-
-    fundamental_type&
-    operator %= (const fundamental_type& __rhs) noexcept;
-
-    // ...
-};
-
-template<typename _Tp, typename _Req>
-fundamental_type<_Tp, _Req>::
-fundamental_type(const value_type& __data) noexcept
-    : _M_data{__data}
-{}
-
-template<typename _Tp, typename _Req>
-fundamental_type<_Tp, _Req>::
-fundamental_type(value_type&& __data) noexcept
-    : _M_data{std::move(__data)}
-{}
-
-template<typename _Tp, typename _Req>
-_Tp
-fundamental_type<_Tp, _Req>::
-data() const
-{ return this->_M_data; }
-
-template<typename _Tp, typename _Req>
-_Tp*
-fundamental_type<_Tp, _Req>::
-address() const
-{ return &this->_M_data; }
-
-template<typename _Tp, typename _Req>
-fundamental_type<_Tp, _Req>&
-fundamental_type<_Tp, _Req>::
-operator += (const fundamental_type& __rhs) noexcept
-{ this->_M_data += __rhs._M_data; return *this; }
+using char_t = char;
+using byte_t = signed char;
+using ubyte_t = unsigned char;
 
 }
+
+#if POL_KEYWORDS
+using pol::schar;
+using pol::uchar;
+using pol::ushort;
+using pol::uint;
+using pol::ulong;
+using pol::llong;
+using pol::ullong;
+#endif /* POL_KEYWORDS */
 
 #endif /* _POLLIB_TYPE */
