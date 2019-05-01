@@ -38,7 +38,7 @@ namespace polaris
 {
 
 /** @brief  Default allocator
- *  @tparam  _Tp  Type of allocated value block.
+ *  @tparam  _Tp  Type of allocated memory block.
 **/
 template<typename _Tp>
 class allocator

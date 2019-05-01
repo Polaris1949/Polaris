@@ -33,8 +33,6 @@
 #ifndef _POLLIB_ALLOCATOR
 #define _POLLIB_ALLOCATOR 1
 
-#pragma GCC system_header
-
 #include <polaris/version>
 
 namespace polaris
