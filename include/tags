@@ -22,7 +22,7 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file     tag
+/** @file     tags
  *  @brief    Tags to specify concepts
  *  @author   Polaris Zhao
  *  @version  3.0
@@ -30,8 +30,8 @@
  *  This is a Polaris C++ Library header.
 **/
 
-#ifndef _POLLIB_TAG
-#define _POLLIB_TAG 1
+#ifndef _POLLIB_TAGS
+#define _POLLIB_TAGS 1
 
 #include <polaris/version>
 #include <tuple>
