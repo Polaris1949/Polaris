@@ -31,9 +31,12 @@
 *.out
 *.app
 
-# Stack dump files
-*.stackdump
+# Documentation (TODO: temporarily)
+data
+doc
 
-# Documentation (temporarily)
-*doc*
-*data*
+# Temporary files
+*.tmp
+*.bak
+*.cache
+*.stackdump
