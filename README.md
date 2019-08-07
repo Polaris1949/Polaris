@@ -1,7 +1,8 @@
 # Polaris Library
 
 ## Introduction
-- This header-only library provides a lot of facilities for modern C++.
+- This library provides a lot of facilities for modern C++.
+- Still in beta version.
 
 ## Installation
 - Run the following command in your shell to install headers:
@@ -11,11 +12,12 @@ cd /tmp/polaris # Library root of local git clone
 ```
 - Run `./insheader --help` for more information.
 
-## Manual
-- See [Wiki](https://github.com/Polaris1949/Polaris/wiki).
+## Wiki
+- Click [here](https://github.com/Polaris1949/Polaris/wiki).
 
 ## Features
 - [ ] TODO
 
 ## About
-- Polaris Library is developing by Polaris1949.
+- Maintainer: Polaris1949
+- Version: 0.8.0
