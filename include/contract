@@ -1,0 +1,105 @@
+// Contract library -*- C++ -*-
+
+// Copyright (C) 1997-2017 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file     contract
+ *  @brief    Contract library
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *  @todo     Partial support.
+ *
+ *  This is a Polaris C++ Library header.
+**/
+
+#ifndef _POLLIB_CONTRACT
+#define _POLLIB_CONTRACT 1
+
+#include <polaris/version>
+#include <polaris/type>
+
+#if __has_include(<experimental/source_location>)
+#include <experimental/source_location>
+#else
+#error no std::experimental::source_location support
+#endif
+
+#if POL_COMPAT
+#ifdef NDEBUG
+# define c_assert(__e) ((void)0)
+#else
+#define c_assert(__e) ((__e) ? (void)0 : __assert_func (__FILE__, __LINE__, \
+						       __PRETTY_FUNCTION__, #__e))
+#endif
+#endif
+
+#ifdef assert
+#if POL_COMPAT
+#undef assert
+#else
+#error assert macro found
+#endif
+#endif
+
+namespace pol
+{
+
+using srcloc_t = std::experimental::source_location;
+
+extern uint8_t __contr_flag;
+
+void
+__contr_set_conti(uint8_t) noexcept;
+
+uint8_t
+__contr_get_conti() noexcept;
+
+void
+__contr_set_level() noexcept;
+
+uint8_t
+__contr_get_level() noexcept;
+
+bool
+__contr_check(const char*, bool, const char*, uint8_t, srcloc_t);
+
+bool
+assert(bool, const char* = 0, uint8_t = 1, srcloc_t = srcloc_t::current());
+
+bool
+expect(bool, const char* = 0, uint8_t = 1, srcloc_t = srcloc_t::current());
+
+bool
+ensure(bool, const char* = 0, uint8_t = 1, srcloc_t = srcloc_t::current());
+
+}
+
+// Deprecated features
+#if __GNUC__
+#define POL_SRCLOC_CURRENT_NEW \
+	pol::srcloc_t::current(__FILE__, __PRETTY_FUNCTION__, __LINE__, 0)
+#define POL_ASSERT(P) pol::assert((P), 0, 1, POL_SRCLOC_CURRENT_NEW)
+#define POL_EXPECT(P) pol::expect((P), 0, 1, POL_SRCLOC_CURRENT_NEW)
+#define POL_ENSURE(P) pol::ensure((P), 0, 1, POL_SRCLOC_CURRENT_NEW)
+#endif
+
+#endif /* _POLLIB_CONTRACT */
