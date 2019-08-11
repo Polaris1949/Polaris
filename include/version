@@ -25,7 +25,7 @@
 /** @file     include/version
  *  @brief    Library version and configurations
  *  @author   Polaris Zhao
- *  @version  3.0
+ *  @version  0.8.0
  *
  *  This is a Polaris C++ Library header.
 **/
@@ -33,13 +33,20 @@
 #ifndef _POLLIB_VERSION
 #define _POLLIB_VERSION 1
 
-#pragma GCC system_header
+#define __POLLIB__ 0 ///< Major version
+#define __POLLIB_MINOR__ 8 ///< Minor version
+#define __POLLIB_PATCHLEVEL__ 0 ///< Patch level
+#define __POL_VERSION "0.8.0" ///< Version string
 
-#define __POLLIB__ 3 ///< Major version of the library
-#define __POLLIB_MINOR__ 0 ///< Minor version of the library
-#define __POLLIB_PATCHLEVEL__ 4 ///< Patch level of the library
+#define __pol_cpp98 199711L
+#define __pol_cpp11 201103L
+#define __pol_cpp14 201402L
+#define __pol_cpp17 201703L
+#define __pol_cpp2a 201709L
+#define __pol_cppver(VER) __pol_cpp##VER
+#define POL_REQ_CPPVER(VER) (__cplusplus >= __pol_cppver(VER))
 
-#if __cplusplus < 201703L
+#if !POL_REQ_CPPVER(17)
 #error polaris library generally need c++17 or later versions
 #endif
 
@@ -49,20 +56,20 @@
 #include <iosfwd> // Workaround
 #endif
 
-/** @namespace  polaris
+/** @namespace  pol
  *  @brief      Library namespace
 **/
-namespace polaris {}
+namespace pol
+{
 
-#ifndef POL_NAMESPACE_ALIAS
-#define POL_NAMESPACE_ALIAS 1
-#endif
+const char* version() noexcept;
 
-#if POL_NAMESPACE_ALIAS
-/** @namespace pol
- *  @brief     Short namespace alias for the library
-**/
-namespace pol = polaris;
+}
+
+#define polaris pol ///< Workaround for deprecated library namespace
+
+#ifndef POL_COMPAT
+#define POL_COMPAT 1
 #endif
 
 #endif /* _POLLIB_VERSION */
