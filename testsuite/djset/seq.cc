@@ -1,7 +1,7 @@
 #include <iostream>
-#include <polaris/ufset>
+#include <polaris/djset>
 
-pol::ufset u;
+pol::djset u;
 
 int main()
 {
@@ -14,7 +14,7 @@ int main()
 		std::cin >> o >> x >> y;
 		--x; --y;
 		if (o == 1) u.merge(x, y);
-		else std::cout << (u.is_brother(x, y) ? 'Y' : 'N') << '\n';
+		else std::cout << (u.is_sibling(x, y) ? 'Y' : 'N') << '\n';
 	}
 
 	return 0;

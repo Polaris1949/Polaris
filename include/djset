@@ -1,0 +1,102 @@
+// Disjoint set data structure -*- C++ -*-
+
+// Copyright (C) 1997-2017 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file     djset
+ *  @brief    Disjoint set data structure
+ *  @author   Polaris Zhao
+ *  @version  0.8.0
+ *  @todo     Partial support.
+ *
+ *  This is a Polaris C++ Library header.
+**/
+
+#ifndef _POLLIB_DJSET
+#define _POLLIB_DJSET 1
+
+#include <polaris/version>
+#include <polaris/type>
+#include <polaris/contract>
+
+namespace pol
+{
+
+template<typename _Tp>
+class djset_data_node_base;
+
+template<typename _Tp, typename _Rank>
+class djset_data_node;
+
+template<typename _Tp>
+class djset_iter_node_base;
+
+template<typename _Tp, typename _Rank>
+class djset_iter_node;
+
+template<typename _Tp, typename _Rank, typename _Iter>
+class djset_auto_node;
+
+template<typename _Tp, typename _Rank>
+class seq_djset;
+
+template<typename _Tp, typename _Rank>
+class tree_djset;
+
+template<typename _Tp, typename _Rank>
+class hash_djset;
+
+#if POL_NEWLIB
+
+template<typename _Tp, typename _Rank,
+    typename _Node = djset_auto_node<_Tp, _Rank,
+        std::vector<erased_t>::iterator>,
+    typename _Cont = std::vector<_Node>>
+class __new_seq_djset;
+
+template<typename _Tp, typename _Rank,
+    typename _Node = djset_auto_node<_Tp, _Rank,
+        std::map<_Tp, erased_t>::iterator>,
+    typename _Cont = std::map<_Node>>
+class __new_tree_djset;
+
+template<typename _Tp, typename _Rank,
+    typename _Node = djset_auto_node<_Tp, _Rank,
+        std::unordered_map<_Tp, erased_t>::iterator>,
+    typename _Cont = std::unordered_map<_Node>>
+class __new_tree_djset;
+
+#endif
+
+using djset     = seq_djset<size_t,   size_t>;
+using djsetnr   = seq_djset<size_t,   void>;
+using djset32   = seq_djset<uint32_t, uint32_t>;
+using djset32nr = seq_djset<uint32_t, void>;
+using djset64   = seq_djset<uint64_t, uint64_t>;
+using djset64nr = seq_djset<uint64_t, void>;
+
+}
+
+#include <polaris/bits/djset.h>
+#include <polaris/bits/djset.tcc>
+
+#endif /* _POLLIB_DJSET */
