@@ -25,7 +25,7 @@
 /** @file     include/allocator
  *  @brief    Allocator support
  *  @author   Polaris Zhao
- *  @version  3.0
+ *  @version  0.8.0
  *
  *  This is a Polaris C++ Library header.
 **/
@@ -34,8 +34,9 @@
 #define _POLLIB_ALLOCATOR 1
 
 #include <polaris/version>
+#include <polaris/type>
 
-namespace polaris
+namespace pol
 {
 
 template<typename = void>
@@ -43,6 +44,7 @@ class allocator;
 
 }
 
+#include <new> // for ::operator new and ::operator delete
 #include <polaris/bits/alloc.h>
 #include <polaris/bits/alloc.tcc>
 

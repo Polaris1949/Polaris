@@ -25,7 +25,7 @@
 /** @file        bits/alloc.tcc
  *  @brief       Allocator support
  *  @author      Polaris Zhao
- *  @version     3.0
+ *  @version     0.8.0
  *
  *  This is an internal header file, included by other library headers.
  *  Do not attempt to use it directly. @headername{allocator}
@@ -34,26 +34,20 @@
 #ifndef _POL_ALLOC_TCC
 #define _POL_ALLOC_TCC 1
 
-#include <new> // for ::operator new and ::operator delete
-
-namespace polaris
+namespace pol
 {
 
 template<typename _Tp>
 _Tp*
 allocator<_Tp>::
 allocate(size_type __n)
-{
-    return static_cast<_Tp*>(::operator new (sizeof(_Tp) * __n));
-}
+{ return static_cast<_Tp*>(::operator new (sizeof(_Tp) * __n)); }
 
 template<typename _Tp>
 void
 allocator<_Tp>::
-deallocate(pointer __p)
-{
-    ::operator delete (static_cast<void*>(__p));
-}
+deallocate(pointer __p) noexcept
+{ ::operator delete (static_cast<void*>(__p)); }
 
 template<typename _Tp>
 _Tp*
@@ -69,17 +63,13 @@ template<typename... _Args>
 _Tp*
 allocator<_Tp>::
 construct(_Args&&... __args)
-{
-    return new _Tp{__args...};
-}
+{ return new _Tp{__args...}; }
 
 template<typename _Tp>
 void
 allocator<_Tp>::
-destroy(pointer __p)
-{
-    delete __p;
-}
+destroy(pointer __p) noexcept
+{ delete __p; }
 
 template<typename _Tp>
 template<typename... _Args>
@@ -89,28 +79,6 @@ reconstruct(pointer __p, _Args&&... __args)
 {
     this->destroy(__p);
     return this->construct(__args...);
-}
-
-void*
-allocator<void>::
-allocate(size_type __n)
-{
-    return ::operator new (sizeof(char) * __n);
-}
-
-void
-allocator<void>::
-deallocate(pointer __p)
-{
-    ::operator delete (__p);
-}
-
-void*
-allocator<void>::
-reallocate(pointer __p, size_type __n)
-{
-    this->deallocate(__p);
-    return this->allocate(__n);
 }
 
 }

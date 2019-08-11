@@ -25,7 +25,7 @@
 /** @file        bits/alloc.h
  *  @brief       Allocator support
  *  @author      Polaris Zhao
- *  @version     3.0
+ *  @version     0.8.0
  *
  *  This is an internal header file, included by other library headers.
  *  Do not attempt to use it directly. @headername{allocator}
@@ -34,7 +34,7 @@
 #ifndef _POL_ALLOC_H
 #define _POL_ALLOC_H 1
 
-namespace polaris
+namespace pol
 {
 
 /** @brief  Default allocator
@@ -60,7 +60,7 @@ public:
      *  @param  __p  Pointer to a memory block.
     **/
     void
-    deallocate(pointer __p);
+    deallocate(pointer __p) noexcept;
 
     /** @brief  Reallocate a fixed size block
      *  @param  __p  Old pointer to a memory block.
@@ -85,7 +85,7 @@ public:
      *  @param  __p  Pointer to an object.
     **/
     void
-    destroy(pointer __p);
+    destroy(pointer __p) noexcept;
 
     /** @brief  Reconstruct an object
      *  @tparam  _Args  Types of parameters.
@@ -112,7 +112,7 @@ public:
     [[nodiscard]] pointer
     allocate(size_type __n);
 
-    void deallocate(pointer __p);
+    void deallocate(pointer __p) noexcept;
 
     [[nodiscard]] pointer
     reallocate(pointer __p, size_type __n);
