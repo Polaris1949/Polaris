@@ -33,34 +33,58 @@
 #ifndef _POLLIB_EXCEPTION
 #define _POLLIB_EXCEPTION 1
 
-#pragma GCC system_header
-
 #include <polaris/version>
+#include <polaris/type>
+#include <polaris/typeinfo>
 #include <stdexcept>
+#include <string>
 
-#if __has_include(<experimental/source_location>)
-#include <experimental/source_location>
-#define POL_SOURCE_LOCATION 1
-#define POL_SOURCE_LOCATION_PARA , __srcloc
-#define POL_SOURCE_LOCATION_ARGU \
-    (std::string{__srcloc.file_name()} + ": " \
-    + std::to_string(__srcloc.line()) + ':' \
-    + std::to_string(__srcloc.column()) + ": " \
-    + __srcloc.function_name() + ": ") +
-#define POL_SOURCE_LOCATION_DEFN , \
-    std::experimental::source_location __srcloc
-#define POL_SOURCE_LOCATION_DECL \
-    POL_SOURCE_LOCATION_DEFN = \
-    std::experimental::source_location::current()
-#else
-#define POL_SOURCE_LOCATION 0
-#define POL_SOURCE_LOCATION_PARA
-#define POL_SOURCE_LOCATION_ARGU
-#define POL_SOURCE_LOCATION_DEFN
-#define POL_SOURCE_LOCATION_DECL
-#endif
+namespace pol
+{
 
-#include <polaris/bits/exception.h>
-#include <polaris/bits/exception.tcc>
+class exception
+{
+public:
+    exception() = delete;
+
+    template<typename _Ex>
+    exception(_Ex __e);
+
+    std::exception_ptr
+    eptr() const noexcept;
+
+    const char*
+    name() const noexcept;
+
+    const char*
+    what() const noexcept;
+
+private:
+    std::exception_ptr _M_eptr;
+    std::string _M_name;
+};
+
+template<typename _Ex>
+exception::
+exception(_Ex __e)
+    : _M_eptr{std::make_exception_ptr(__e)}, _M_name{move(check_type<_Ex>())}
+{ static_assert(std::is_base_of_v<std::exception, _Ex>, "bad exception"); }
+
+class std_exception
+    : public std::exception
+{
+public:
+    std_exception(pol::exception&& __ex);
+    virtual ~std_exception() noexcept = default;
+
+    virtual const char* what() const noexcept override;
+
+private:
+    std::string _M_what;
+};
+
+void throw_ex(exception&& __e);
+
+}
 
 #endif /* _POLLIB_EXCEPTION */
