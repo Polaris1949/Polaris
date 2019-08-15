@@ -10,19 +10,20 @@ constexpr
 bit_address::
 bit_address() noexcept
     : _M_ptr{}, _M_lev{}
-{}
+{ }
 
 constexpr
 bit_address::
 bit_address(nullptr_t) noexcept
     : _M_ptr{nullptr}, _M_lev{}
-{}
+{ }
 
 constexpr
 bit_address::
 bit_address(void* __ptr, size_t __n) noexcept
-    : _M_ptr{__ptr + __n / char_bit}, _M_lev{__n % char_bit}
-{}
+    : _M_ptr{static_cast<ubyte_t*>(__ptr) + __n / char_bit},
+        _M_lev{__n % char_bit}
+{ }
 
 void*
 bit_address::
@@ -48,7 +49,7 @@ void
 bit_address::
 assign(void* __ptr, size_t __n) noexcept
 {
-    this->_M_ptr = __ptr + __n / char_bit;
+    this->_M_ptr = static_cast<ubyte_t*>(__ptr) + __n / char_bit;
     this->_M_lev = __n % char_bit;
 }
 
@@ -75,13 +76,13 @@ operator << (std::ostream& __out, const bit_address& __x)
 
 constexpr
 bit_ptr::
-bit_ptr(nullptr_t)
+bit_ptr(nullptr_t) noexcept
     : _M_adr{nullptr}
 {}
 
 constexpr
 bit_ptr::
-bit_ptr(bit_address __a)
+bit_ptr(bit_address __a) noexcept
     : _M_adr{__a}
 {}
 
@@ -116,7 +117,13 @@ constexpr
 bit_ref::
 bit_ref(bit_address __a)
     : _M_adr{__a}
-{}
+{ expect(!__a.empty(), "null bit address"); }
+
+constexpr
+bit_ref::
+bit_ref(const bit_ref& __a) noexcept
+    : _M_adr{__a._M_adr}
+{ }
 
 bit_ref&
 bit_ref::
@@ -128,6 +135,23 @@ operator = (bool __x)
         &= ~(ubyte_t{1} << this->_M_adr.bit_level());
     return *this;
 }
+
+bit_ref&
+bit_ref::
+operator = (const bit_ref& __x)
+{ return *this = bool(__x); }
+
+bit_ref::
+operator bool() const
+{
+    return this->_M_adr.byte_reference()
+        & (ubyte_t{1} << this->_M_adr.bit_level());
+}
+
+bool
+bit_ref::
+operator! () const
+{ return !bool(*this); }
 
 }
 

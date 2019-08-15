@@ -35,9 +35,7 @@
 #ifndef _POL_BITOBS_H
 #define _POL_BITOBS_H 1
 
-#include <iosfwd>
-
-namespace polaris
+namespace pol
 {
 
 class basic_bit_observer
@@ -46,18 +44,35 @@ public:
     using size_type = std::size_t;
 
 private:
-    bool b0 : 1;
-    bool b1 : 1;
-    bool b2 : 1;
-    bool b3 : 1;
-    bool b4 : 1;
-    bool b5 : 1;
-    bool b6 : 1;
-    bool b7 : 1;
+    struct _Bit
+    {
+        bool b0 : 1;
+        bool b1 : 1;
+        bool b2 : 1;
+        bool b3 : 1;
+        bool b4 : 1;
+        bool b5 : 1;
+        bool b6 : 1;
+        bool b7 : 1;
+    };
+
+    union _Impl
+    {
+        ubyte_t _M_data;
+        _Bit _M_obs;
+    };
+
+    _Impl _M_impl;
 
 public:
+    bit_ref
+    at(size_type __pos);
+
     bool
     at(size_type __pos) const;
+
+    bit_ref
+    operator[] (size_type __pos) noexcept;
 
     bool
     operator[] (size_type __pos) const noexcept;
@@ -110,8 +125,18 @@ public:
     basic_bit_observer&
     at_observer(size_type __pos);
 
+    const basic_bit_observer&
+    at_observer(size_type __pos) const;
+
     bool
     operator[] (size_type __pos) const noexcept;
+
+    value_type&
+    data() noexcept;
+
+    template<typename _Up>
+    friend std::ostream&
+    operator << (std::ostream& __out, const bit_observer<_Up>& __x);
 };
 
 }

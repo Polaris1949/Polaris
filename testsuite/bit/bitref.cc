@@ -26,5 +26,6 @@ int main()
     pol::bit_ref pe{{sto.a, 0xeu}};
     pol::bit_ref pf{{sto.a, 0xfu}};
     p1 = true; p8 = true; pa = true;
+    p0 = p1;
     std::cout << sto.b << '\n';
 }
