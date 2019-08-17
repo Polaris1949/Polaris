@@ -2,21 +2,13 @@
 
 ## Introduction
 - This library provides a lot of facilities for modern C++.
-- Still in beta version.
+- Still in beta version. Impl & Wiki in flux.
 
 ## Installation
-- Run the following command in your shell to install headers:
-```shell
-cd /tmp/polaris # Library root of local git clone
-./insheader /usr/local # Destination, /usr/local by default
-```
-- Run `./insheader --help` for more information.
+- [ ] TODO
 
 ## Wiki
-- Click [here](https://github.com/Polaris1949/Polaris/wiki).
-
-## Features
-- [ ] TODO
+- Click [here](https://polaris1949.github.io/wiki/polaris/).
 
 ## About
 - Maintainer: Polaris1949
