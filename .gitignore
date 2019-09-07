@@ -38,5 +38,6 @@ doc
 # Temporary files
 *.tmp
 *.bak
+*.log
 *.cache
 *.stackdump
