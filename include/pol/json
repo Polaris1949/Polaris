@@ -1,0 +1,53 @@
+// JSON support from third-party library -*- C++ -*-
+
+// Copyright (C) 2004-2019 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file     json
+ *  @brief    JSON support from third-party library
+ *  @author   Polaris Zhao
+ *  @version  0.8.0
+ *  @note     Require library from <https://github.com/nlohmann/json>.
+ *
+ *  This is a Polaris C++ Library header.
+**/
+
+#ifndef _POLLIB_JSON
+#define _POLLIB_JSON 1
+
+#include <pol/version>
+
+#if __has_include(<nlohmann/json.hpp>)
+#include <nlohmann/json.hpp>
+
+namespace pol
+{
+
+using namespace nlohmann;
+
+}
+
+#else
+#error required library not found
+#endif
+
+#endif /* _POLLIB_JSON */

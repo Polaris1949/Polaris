@@ -1,0 +1,38 @@
+#ifndef _POL_DYNAMIC
+#define _POL_DYNAMIC 1
+
+#include <polaris/version>
+#include <typeinfo>
+#include <any>
+
+namespace pol
+{
+
+template<const char*>
+struct dyn_info_type;
+
+#define POL_DEF_INFO_TYPE(_Tp) \
+extern const char* __dyn##_Tp = typeid(_Tp).name(); \
+template<> \
+struct dyn_info_type<__dyn##_Tp> \
+{ using type = _Tp; };
+
+template<const char* __info>
+using dyn_info_type_t = typename dyn_info_type<__info>::type;
+
+class dynamic
+{
+public:
+    template<typename _Tp>
+    dynamic(_Tp __x) : _M_data{__x} {}
+
+    auto get() const
+    { return std::any_cast<dyn_info_type_t<_M_data.type().name()>>(_M_data); }
+
+private:
+    std::any _M_data;
+};
+
+}
+
+#endif

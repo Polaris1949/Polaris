@@ -1,0 +1,365 @@
+// Bit memory management -*- C++ -*-
+
+// Copyright (C) 1997-2017 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file     bit_memory
+ *  @brief    Bit memory management
+ *  @author   Polaris Zhao
+ *  @version  0.8.0
+ *  @todo     Partial support.
+ *  @bug      Only support little endian platform.
+ *
+ *  This is a Polaris C++ Library header.
+**/
+
+#ifndef _POLLIB_BIT_MEMORY
+#define _POLLIB_BIT_MEMORY 1
+
+#include <pol/version>
+#include <pol/type>
+#include <pol/contract>
+#include <iosfwd>
+
+// Check for platform support.
+// {
+#if __BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__
+#error only support little endian
+#endif
+
+#if __CHAR_BIT__ != 8
+#error only support 8-bit byte type
+#endif
+// }
+
+namespace pol
+{
+
+class bit_address;
+class bit_ptr;
+class bit_ref;
+
+/** @brief  Bit address representation
+**/
+class bit_address
+{
+public:
+	/** @brief  Separator between byte address and bit level
+	**/
+    constexpr static const char separator{'@'};
+
+	/** @brief  Construct a null bit address
+	**/
+    constexpr
+	bit_address() noexcept;
+
+	/** @brief  Construct a null bit address
+	 *  @param  __x  Just @c nullptr.
+	**/
+    constexpr
+	bit_address(nullptr_t __x) noexcept;
+
+	/** @brief  Construct a bit address from byte address and bit offset
+	 *  @param  __p  Byte address pointer.
+	 *  @param  __n  Bit offset.
+	 *  @note   Bit offset can not only be 0~7. For example, if @c __n is 8,
+	 *          byte address would be increased and bit level would be set
+	 *          to 0. This feature is very useful.
+	**/
+    constexpr
+	bit_address(void* __p, size_t __n) noexcept;
+
+	/** @brief    Get byte address
+     *  @return   Byte address pointer.
+	**/
+    void*
+	byte_address() const noexcept;
+
+	/** @brief    Get byte reference
+     *  @return   Byte address reference.
+	 *  @pre      Byte address shall not be null.
+	 *  @note     This function does not check null bit address.
+	 *            Null reference remains valid unless converts it.
+	**/
+    ubyte_t&
+	byte_reference() const noexcept;
+
+	/** @brief    Get bit level
+     *  @return   Bit level number.
+	 *  @post     Return value is always 0~7.
+	**/
+    size_t
+	bit_level() const noexcept;
+
+	/** @brief    Check null bit address
+	 *  @return   @c true if null bit address, @c false otherwise.
+	 *  @warning  Return value shall not be discarded.
+	**/
+    [[nodiscard]] bool
+	empty() const noexcept;
+
+	/** @brief  Assign a bit address from byte address and bit offset
+	 *  @param  __p  Byte address pointer.
+	 *  @param  __n  Bit offset.
+	 *  @note   Bit offset can not only be 0~7. For example, if @c __n is 8,
+	 *          byte address would be increased and bit level would be set
+	 *          to 0. This feature is very useful.
+	**/
+    void
+	assign(void* __p, size_t __n) noexcept;
+
+private:
+    void* _M_ptr;
+    size_t _M_lev;
+};
+
+/** @brief   Input support for @c bit_address
+ *  @param   __in  Input stream.
+ *  @param   __x   @c bit_address object.
+ *  @return  Input stream.
+**/
+std::istream&
+operator >> (std::istream& __in, bit_address& __x);
+
+/** @brief   Output support for @c bit_address
+ *  @param   __out  Output stream.
+ *  @param   __x    @c bit_address object.
+ *  @return  Output stream.
+**/
+std::ostream&
+operator << (std::ostream& __out, const bit_address& __x);
+
+/** @brief  Bit pointer representation
+**/
+class bit_ptr
+{
+public:
+	/** @brief  Construct a null bit pointer
+	 *  @note   Implicit default constructor.
+	**/
+    constexpr
+	bit_ptr() noexcept = default;
+
+	/** @brief  Construct a null bit pointer
+	 *  @param  __x  Just @c nullptr.
+	**/
+    constexpr
+	bit_ptr(nullptr_t __x) noexcept;
+
+	/** @brief  Construct from @c bit_address
+	 *  @param  __a  Bit address.
+	**/
+    constexpr
+	bit_ptr(bit_address __a) noexcept;
+
+	/** @brief    Check null pointer
+	 *  @return   @c true if null pointer, @c false otherwise.
+	 *  @warning  Return value shall not be discarded.
+	**/
+    [[nodiscard]] bool
+	empty() const noexcept;
+
+	/** @brief    Check non-null pointer
+	 *  @return   @c true if non-null pointer, @c false otherwise.
+	**/
+    explicit
+	operator bool() const noexcept;
+
+	/** @brief    Check null pointer
+	 *  @return   @c true if null pointer, @c false otherwise.
+	**/
+    bool
+	operator! () const noexcept;
+
+	/** @brief   Dereference pointer to get a @c bit_ref
+	 *  @return  Bit reference.
+	 *  @pre     Require non-null @c bit_ptr.
+	**/
+    bit_ref
+	operator* ();
+
+	/** @brief   Dereference pointer to get a @c bool
+	 *  @return  Bit reference.
+	 *  @pre     Require non-null @c bit_ptr.
+	**/
+    bool
+	operator* () const;
+
+	explicit
+	operator bit_address() const noexcept;
+
+	bit_address
+	address() const noexcept;
+
+	bit_ptr&
+	operator = (const bit_address& __a) noexcept;
+
+private:
+    bit_address _M_adr;
+};
+
+/** @brief   Input support for @c bit_ptr
+ *  @param   __in  Input stream.
+ *  @param   __x   @c bit_ptr object.
+ *  @return  Input stream.
+**/
+std::istream&
+operator >> (std::istream& __in, bit_ptr& __x);
+
+/** @brief   Output support for @c bit_ptr
+ *  @param   __out  Output stream.
+ *  @param   __x    @c bit_ptr object.
+ *  @return  Output stream.
+**/
+std::ostream&
+operator << (std::ostream& __out, const bit_ptr& __x);
+
+/** @brief      Bit reference representation
+ *  @attention  Null reference never allowed.
+**/
+class bit_ref
+{
+public:
+    /** @brief  Disable construct a null @c bit_ref
+	 *  @note   Deleted default constructor.
+    **/
+    constexpr
+	bit_ref() = delete;
+
+    /** @brief  Disable construct a null @c bit_ref
+     *  @param  __x  Just @c nullptr.
+    **/
+    constexpr
+	bit_ref(nullptr_t __x) = delete;
+
+    /** @brief  Construct from a @c bit_address
+     *  @param  __a  A @c bit_address.
+     *  @pre    @c __a shall not be null.
+     *  @throw  std::invalid_argument  If @c __a is null.
+    **/
+    constexpr
+	bit_ref(bit_address __a);
+
+    /** @brief  Copy constructor
+     *  @param  __x  Another @c bit_ref.
+    **/
+    constexpr
+	bit_ref(const bit_ref& __x) noexcept;
+
+    /** @brief   Get referred bit value
+     *  @return  Bit value.
+    **/
+    explicit
+	operator bool() const noexcept;
+
+    /** @brief   Get referred flipped bit value
+     *  @return  Bit value.
+    **/
+    bool
+	operator! () const noexcept;
+
+    /** @brief   Assign a bit value.
+     *  @param   __x  A bit value.
+     *  @return  Self.
+    **/
+    bit_ref&
+	operator = (bool __x) noexcept;
+
+    /** @brief   Assign a bit value from another @c bit_ref
+     *  @param   __x  Another @c bit_ref.
+     *  @return  Self.
+    **/
+    bit_ref&
+	operator = (const bit_ref& __x) noexcept;
+
+	explicit
+	operator bit_address() const noexcept;
+
+	bit_address
+	address() const noexcept;
+
+private:
+    bit_address _M_adr;
+};
+
+/** @brief   Input support for @c bit_ref
+ *  @param   __in  Input stream.
+ *  @param   __x   A @c bit_ref object.
+ *  @return  Input stream.
+**/
+std::istream&
+operator >> (std::istream& __in, bit_ref& __x);
+
+/** @brief   Output support for @c bit_ref
+ *  @param   __out  Output stream.
+ *  @param   __x    A @c bit_ref object.
+ *  @return  Output stream.
+**/
+std::ostream&
+operator << (std::ostream& __out, const bit_ref& __x);
+
+constexpr
+bit_address::
+bit_address() noexcept
+    : _M_ptr{}, _M_lev{}
+{ }
+
+constexpr
+bit_address::
+bit_address(nullptr_t) noexcept
+    : _M_ptr{nullptr}, _M_lev{}
+{ }
+
+constexpr
+bit_address::
+bit_address(void* __p, size_t __n) noexcept
+    : _M_ptr{static_cast<ubyte_t*>(__p) + __n / char_bit},
+        _M_lev{__n % char_bit}
+{ }
+
+constexpr
+bit_ptr::
+bit_ptr(nullptr_t) noexcept
+    : _M_adr{nullptr}
+{ }
+
+constexpr
+bit_ptr::
+bit_ptr(bit_address __a) noexcept
+    : _M_adr{__a}
+{ }
+
+constexpr
+bit_ref::
+bit_ref(bit_address __a)
+    : _M_adr{__a}
+{ expect(!__a.empty(), "invalid argument", "null bit address"); }
+
+constexpr
+bit_ref::
+bit_ref(const bit_ref& __a) noexcept
+    : _M_adr{__a._M_adr}
+{ }
+
+}
+
+#endif /* _POLLIB_BIT_MEMORY */

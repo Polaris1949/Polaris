@@ -1,0 +1,238 @@
+// Console support for linux-like system -*- C++ -*-
+
+// Copyright (C) 2004-2018 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file        console
+ *  @brief       Console support for linux-like system
+ *  @author      Polaris Zhao
+ *  @version     3.0
+ *  @deprecated  This library will be removed in a future version.
+ *               You should include @c <terminal> instead.
+ *  @warning     You should @b NOT use this on a non-linux-like system.
+ *
+ *  This is a Polaris C++ Library header.
+**/
+
+#ifndef _POLLIB_CONSOLE
+#define _POLLIB_CONSOLE 1
+
+#include <pol/version>
+#include <string>
+#include <iostream>
+
+namespace pol
+{
+
+/** @class  console_t
+ *  @brief  A class for controlling console attributes
+ *  @deprecated  This class is thought removed in a future version.
+ *               You should use @c terminal instead.
+**/
+class console_t
+{
+    std::string _M_data;
+
+    void _M_do() const
+    {
+        std::string __tmp = "\e[";
+        __tmp += _M_data;
+        std::cerr << __tmp;
+    }
+
+public:
+    /** @brief  Construct a default @c console_t and purge any attribute
+     *  @warning  You should @b NOT use this anywhere by yourself.
+    **/
+    console_t()
+        : _M_data()
+    {
+        purge();
+    }
+
+    /** @brief  Destroy a @c console_t and purge any attribute
+    **/
+    ~console_t() noexcept
+    {
+        purge();
+        clear();
+    }
+
+    /** @brief  Clear contained attributes
+    **/
+    void clear()
+    {
+        _M_data.clear();
+    }
+
+    /** @brief  Purge any attribute at once
+    **/
+    void purge()
+    {
+        _M_data = "0m";
+        _M_do();
+    }
+
+    /** @brief  Apply a highlight attribute
+    **/
+    void highlight()
+    {
+        _M_data = "1m";
+        _M_do();
+    }
+
+    /** @brief  Apply an underline attribute
+    **/
+    void underline()
+    {
+        _M_data = "4m";
+        _M_do();
+    }
+
+    /** @brief  Apply a coruscate attribute
+    **/
+    void coruscate()
+    {
+        _M_data = "5m";
+        _M_do();
+    }
+
+    /** @brief  Apply a reverse display attribute
+    **/
+    void reverse_display()
+    {
+        _M_data = "7m";
+        _M_do();
+    }
+
+    /** @brief  Apply a blank attribute
+    **/
+    void blank()
+    {
+        _M_data = "8m";
+        _M_do();
+    }
+
+    /** @brief  Clear screen at once
+    **/
+    void clear_screen()
+    {
+        _M_data = "2J";
+        _M_do();
+    }
+
+    /** @brief  Apply a foreground color attribute
+     *  @param  __x  Number of color from 0 to 7.
+     *  @note  It would return directly if @c __x was out of range.
+    **/
+    void foreground_color(int __x)
+    {
+        _M_data = "3_m";
+        _M_data[1] = char(__x + '0');
+        _M_do();
+    }
+
+    /** @brief  Apply a background color attribute
+     *  @param  __x  Number of color from 0 to 7.
+     *  @note  It would return directly if @c __x was out of range.
+    **/
+    void background_color(int __x)
+    {
+        _M_data = "4_m";
+        _M_data[1] = char(__x + '0');
+        _M_do();
+    }
+
+    /** @brief  Locate cursor
+     *  @param  __x  Line number.
+     *  @param  __y  Column number.
+    **/
+    void locate(int __x, int __y)
+    {
+        _M_data = "x;yH";
+        _M_data.replace(_M_data.find('x'), 1, std::to_string(++__x));
+        _M_data.replace(_M_data.find('y'), 1, std::to_string(++__y));
+        _M_do();
+    }
+
+    /** @brief  Clear line after cursor
+    **/
+    void clear_line_after()
+    {
+        _M_data = "K";
+        _M_do();
+    }
+
+    /** @brief  Save cursor location
+    **/
+    void save_cursor()
+    {
+        _M_data = "s";
+        _M_do();
+    }
+
+    /** @brief  Recover cursor location
+    **/
+    void recover_cursor()
+    {
+        _M_data = "u";
+        _M_do();
+    }
+
+    /** @brief  Show cursor
+    **/
+    void show_cursor()
+    {
+        _M_data = "?25h";
+        _M_do();
+    }
+
+    /** @brief  Hide cursor
+    **/
+    void hide_cursor()
+    {
+        _M_data = "?25l";
+        _M_do();
+    }
+
+    /** @brief  Resize the current screen
+     *  @param  __x  Number of lines.
+     *  @param  __y  Number of columns.
+    **/
+    void resize_screen(int __x, int __y)
+    {
+        _M_data = "8;x;yt";
+        _M_data.replace(_M_data.find('x'), 1, std::to_string(__x));
+        _M_data.replace(_M_data.find('y'), 1, std::to_string(__y));
+        _M_do();
+    }
+};
+
+/** @brief
+ *  @deprecated  This variable is thought removed in a future version.
+ *               You should use @c terminal instead.
+**/
+console_t console;
+
+}
+
+#endif /* _POLLIB_CONSOLE */

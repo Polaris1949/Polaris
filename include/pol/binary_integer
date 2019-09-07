@@ -1,0 +1,62 @@
+// Binary integer library -*- C++ -*-
+
+// Copyright (C) 1997-2017 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file     binary_integer
+ *  @brief    Binary integer library
+ *  @author   Polaris Zhao
+ *  @version  0.8.0
+ *  @todo     Incomplete.
+ *  @bug      Many bugs.
+ *
+ *  This is a Polaris C++ Library header.
+**/
+
+#ifndef _POLLIB_BINARY_INTEGER
+#define _POLLIB_BINARY_INTEGER 1
+
+#include <pol/version> // Version support
+#include <pol/type> // Type support
+#include <pol/boolean> // Boolean support
+#include <pol/exception> // Exception support
+#include <pol/utility> // Utility support
+#include <pol/type_traits> // Type traits support
+#include <pol/numeric>
+#include <pol/bits/intfwd.h> // Forward header
+#include <pol/bits/intexcept.h> // Integer exception
+#include <pol/bits/intalloc.h> // Integer allocation
+#include <pol/bits/intref.h> // Integer reference
+#include <pol/bits/intbase.h>
+#include <pol/bits/intgenbase.h>
+#include <pol/bits/intbinbase.h> // Integer class
+#include <pol/bits/intbin.h>
+#include <pol/bits/intfwd.tcc> // Forward header
+#include <pol/bits/intexcept.tcc> // Integer exception
+#include <pol/bits/intalloc.tcc> // Integer allocation
+#include <pol/bits/intref.tcc> // Integer reference
+#include <pol/bits/intbase.tcc>
+#include <pol/bits/intgenbase.tcc>
+#include <pol/bits/intbinbase.tcc> // Integer class
+#include <pol/bits/intbin.tcc>
+
+#endif /* _POLLIB_BINARY_INTEGER */

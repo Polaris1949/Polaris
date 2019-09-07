@@ -1,5 +1,5 @@
 #include <iostream>
-#include <polaris/version>
+#include <pol/version>
 
 int main()
 {

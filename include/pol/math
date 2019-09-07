@@ -1,0 +1,114 @@
+// Math library -*- C++ -*-
+
+// Copyright (C) 1997-2017 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file     math
+ *  @brief    Math library
+ *  @author   Polaris Zhao
+ *  @version  0.8.0
+ *
+ *  This is a Polaris C++ Library header.
+**/
+
+#ifndef _POLLIB_MATH
+#define _POLLIB_MATH 1
+
+#include <pol/version>
+#include <vector>
+#include <string>
+#include <sstream>
+
+namespace pol
+{
+
+template<typename _Tp>
+bool
+is_prime(_Tp __x)
+{
+    if (__x < 2) return false;
+
+    for (_Tp __i = 2; __i * __i <= __x; ++__i)
+        if (__x % __i == 0) return false;
+
+    return true;
+}
+
+template<typename _Tp>
+_Tp
+min_factor(_Tp __x)
+{
+    if (__x == 0) return 0;
+    if (__x < 2) return 1;
+
+    for (_Tp __i = 2; __i * __i <= __x; ++__i)
+        if (__x % __i == 0) return __i;
+
+    return 1;
+}
+
+template<typename _Tp>
+std::vector<std::pair<_Tp, size_t>>
+prime_factor(_Tp __x)
+{
+    std::vector<std::pair<_Tp, size_t>> __ret;
+    if (__x < 2) return __ret;
+
+    for (_Tp __i = 2; __i * __i <= __x; ++__i)
+    {
+        std::size_t __count = 0;
+
+        while (__x % __i == 0)
+        {
+            ++__count;
+            __x /= __i;
+        }
+
+        if (__count) __ret.push_back(std::pair(__i, __count));
+    }
+
+    if (__x) __ret.push_back(std::pair(__x, 1));
+    return __ret;
+}
+
+template<typename _Tp, typename _Data = std::pair<_Tp, std::size_t>,
+    typename _Cont = std::vector<_Data>>
+std::string
+prime_factor_string(const _Cont& __res)
+{
+    std::ostringstream __oss;
+
+    for (const _Data& __data : __res)
+    {
+        __oss << __data.first;
+        if (__data.second > 1) __oss << '^' << __data.second;
+        __oss << '*';
+    }
+
+    std::string __ret = __oss.str();
+    __ret.pop_back();
+    return std::move(__ret);
+}
+
+}
+
+#endif /* _POLLIB_MATH */

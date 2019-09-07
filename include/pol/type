@@ -1,0 +1,117 @@
+// Fundamental types -*- C++ -*-
+
+// Copyright (C) 1997-2017 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file     type
+ *  @brief    Fundamental types
+ *  @author   Polaris Zhao
+ *  @version  0.8.0
+ *
+ *  This is a Polaris C++ Library header.
+**/
+
+#ifndef _POLLIB_TYPE
+#define _POLLIB_TYPE 1
+
+#include <pol/version>
+#include <cstddef>
+#include <cstdint>
+
+namespace pol
+{
+
+using std::ptrdiff_t; ///< Pointer difference type
+using std::size_t; ///< Size type
+using std::max_align_t;
+using std::nullptr_t;
+
+using std::intmax_t;
+using std::uintmax_t;
+using std::int8_t;
+using std::uint8_t;
+using std::int16_t;
+using std::uint16_t;
+using std::int32_t;
+using std::uint32_t;
+using std::int64_t;
+using std::uint64_t;
+using std::intptr_t;
+using std::uintptr_t;
+
+/** @brief Bytes of @c char **/
+constexpr size_t char_byte = sizeof(char);
+
+/** @brief Bits of @c char **/
+constexpr size_t char_bit = __CHAR_BIT__ * char_byte;
+
+/** @brief @c npos for the library **/
+constexpr size_t npos = static_cast<size_t>(-1);
+
+using schar = signed char;
+using uchar = unsigned char;
+using ushort = unsigned short;
+using uint = unsigned int;
+using ulong = unsigned long;
+using llong = long long;
+using ullong = unsigned long long;
+
+using char_t = char;
+using byte_t = signed char;
+using ubyte_t = unsigned char;
+
+struct erased_t { }; ///< Erased type helper
+
+template<typename _Tp>
+inline constexpr size_t byteof() noexcept
+{ return sizeof(_Tp); }
+
+template<typename _Tp>
+inline constexpr size_t byteof(const _Tp& __x) noexcept
+{ return sizeof(__x); }
+
+template<typename _Tp>
+inline constexpr size_t bitof() noexcept
+{ return sizeof(_Tp) * char_bit; }
+
+template<typename _Tp>
+inline constexpr size_t bitof(const _Tp& __x) noexcept
+{ return sizeof(__x) * char_bit; }
+
+}
+
+#if POL_TYPE_KEYWORDS
+using pol::schar;
+using pol::uchar;
+using pol::ushort;
+using pol::uint;
+using pol::ulong;
+using pol::llong;
+using pol::ullong;
+#endif /* POL_TYPE_KEYWORDS */
+
+#if POL_FUNC_KEYWORDS
+using pol::byteof;
+using pol::bitof;
+#endif /* POL_FUNC_KEYWORDS */
+
+#endif /* _POLLIB_TYPE */

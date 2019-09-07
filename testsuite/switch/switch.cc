@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <polaris/switch>
+#include <pol/switch>
 
 int main()
 {

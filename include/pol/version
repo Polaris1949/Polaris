@@ -1,0 +1,83 @@
+// Library version and configurations -*- C++ -*-
+
+// Copyright (C) 2004-2019 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file     version
+ *  @brief    Library version and configurations
+ *  @author   Polaris Zhao
+ *  @version  0.8.0
+ *
+ *  This is a Polaris C++ Library header.
+**/
+
+#ifndef _POLLIB_VERSION
+#define _POLLIB_VERSION 1
+
+#define __POLLIB__ 0 ///< Major version
+#define __POLLIB_MINOR__ 8 ///< Minor version
+#define __POLLIB_PATCHLEVEL__ 0 ///< Patch level
+#define __POL_VERSION "0.8.0" ///< Version string
+
+// Version requiring marcos.
+#define __pol_cpp98 199711L
+#define __pol_cpp11 201103L
+#define __pol_cpp14 201402L
+#define __pol_cpp17 201703L
+#define __pol_cpp2a 201709L
+#define __pol_cppver(VER) __pol_cpp##VER
+#define POL_REQ_CPPVER(VER) (__cplusplus >= __pol_cppver(VER))
+
+#if !POL_REQ_CPPVER(11)
+#error polaris library generally need c++11 or later versions
+#endif
+
+// Check version support of C++ standard library
+#if __has_include(<version>)
+#include <version> // C++20
+#else
+#include <iosfwd> // Workaround
+#endif
+
+/** @namespace  pol
+ *  @brief      Library namespace
+**/
+namespace pol
+{
+
+/** @brief   Check version of the runtime library
+ *  @return  A version string.
+**/
+const char*
+version() noexcept;
+
+}
+
+#ifndef POL_COMPAT
+#define POL_COMPAT 1 ///< Compatibility configuration
+#endif
+
+#if POL_COMPAT
+#define polaris pol ///< Workaround for deprecated library namespace
+#endif
+
+#endif /* _POLLIB_VERSION */

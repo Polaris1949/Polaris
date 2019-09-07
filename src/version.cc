@@ -1,4 +1,4 @@
-#include <polaris/version>
+#include <pol/version>
 
 namespace pol
 {

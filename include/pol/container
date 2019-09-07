@@ -1,0 +1,76 @@
+// Container library -*- C++ -*-
+
+// Copyright (C) 1997-2017 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file     container
+ *  @brief    Container library
+ *  @author   Polaris Zhao
+ *  @version  3.0
+ *  @todo     Revision.
+ *
+ *  This is a Polaris C++ Library header.
+**/
+
+#ifndef _POLLIB_CONTAINER
+#define _POLLIB_CONTAINER 1
+
+// Support headers
+#include <pol/version>
+
+// Standard containers
+#if !POL_NO_STD_CONTAINER
+
+// Standard sequence containers
+#if !POL_NO_STD_SEQUENCE_CONTAINER
+#include <array>
+#include <deque>
+#include <forward_list>
+#include <list>
+#include <vector>
+#endif
+
+// Standard associative containers
+#if !POL_NO_STD_ASSOCIATIVE_CONTAINER
+#include <map>
+#include <set>
+#endif
+
+// Standard unordered containers
+#if !POL_NO_STD_UNORDERED_CONTAINER
+#include <unordered_map>
+#include <unordered_set>
+#endif
+
+// Standard container adaptors
+#if !POL_NO_STD_CONTAINER_ADAPTOR
+#include <queue>
+#include <stack>
+#endif
+
+#endif /* !POL_NO_STD_CONTAINER */
+
+// Library containers
+#include <pol/sequence>
+#include <pol/matrix>
+
+#endif /* _POLLIB_CONTAINER */

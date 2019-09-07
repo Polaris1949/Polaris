@@ -1,0 +1,105 @@
+// Universal error handling -*- C++ -*-
+
+// Copyright (C) 1997-2017 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file     error
+ *  @brief    Universal error handling
+ *  @author   Polaris Zhao
+ *  @version  0.8.0
+ *  @todo     Partial support.
+ *
+ *  This is a Polaris C++ Library header.
+**/
+
+#ifndef _POLLIB_ERROR
+#define _POLLIB_ERROR 1
+
+#include <pol/version>
+#include <pol/type>
+#include <pol/contract>
+// #include <pol/exception>
+#include <string>
+
+namespace pol
+{
+
+// Error handling method
+// 0 -> Contract
+// 1 -> Exception
+// 2 -> Log
+extern uint8_t __eh_method;
+
+std::string
+__err_pretty_type(const std::string& __e);
+
+template<typename _Ex>
+void
+error(const char* __mode, const char* __msg, uint8_t __level = 1,
+    srcloc_t __loc = srcloc_t::current());
+    
+}
+
+#include <pol/typeinfo>
+
+namespace pol
+{
+
+template<typename _Ex>
+void
+error(const char* __mode, const char* __msg,
+    uint8_t __level, srcloc_t __loc)
+{
+    switch (__eh_method)
+    {
+    case 0:
+    {
+        std::string __type{__err_pretty_type(check_type<_Ex>())};
+        __ctr_violate(contract{__mode, __level, false,
+            __type.data(), __msg, __loc});
+        break;
+    }
+    case 1:
+    {
+        std::string __what{__loc.function_name()};
+        __what += ": ";
+        __what += __msg;
+        __what += " (";
+        __what += __mode;
+        __what += ": ";
+        __what += std::to_string(__level);
+        __what += ')';
+        throw _Ex{__what.data()};
+        break;
+    }
+    case 2:
+        assert(false, "runtime error", "feature unimplemented");
+        break;
+    default:
+        assert(false, "runtime error", "bad error handling method");
+        break;
+    }
+}
+
+}
+
+#endif
