@@ -1,4 +1,4 @@
-// Console support for linux-like system -*- C++ -*-
+// Console support for unix-like system -*- C++ -*-
 
 // Copyright (C) 2004-2018 Free Software Foundation, Inc.
 //
@@ -23,12 +23,12 @@
 // <http://www.gnu.org/licenses/>.
 
 /** @file        console
- *  @brief       Console support for linux-like system
+ *  @brief       Console support for unix-like system
  *  @author      Polaris Zhao
- *  @version     3.0
+ *  @version     0.8.0
  *  @deprecated  This library will be removed in a future version.
  *               You should <code>@#include @<terminal@></code> instead.
- *  @warning     You should @b NOT use this on a non-linux-like system.
+ *  @warning     You should @b NOT use this on a non-unix-like system.
  *
  *  This is a Polaris C++ Library header.
 **/
@@ -45,8 +45,8 @@ namespace pol
 
 /** @class  console_t
  *  @brief  A class for controlling console attributes
- *  @deprecated  This class is thought removed in a future version.
- *               You should use @c terminal instead.
+ *  @deprecated  This class will be removed in a future version.
+ *               You should use @c pol::terminal instead.
 **/
 class console_t
 {
@@ -228,8 +228,8 @@ public:
 };
 
 /** @brief
- *  @deprecated  This variable is thought removed in a future version.
- *               You should use @c terminal instead.
+ *  @deprecated  This variable will be removed in a future version.
+ *               You should use @c pol::terminal instead.
 **/
 console_t console;
 
