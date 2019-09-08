@@ -40,6 +40,7 @@
 #if __has_include(<fmt/format.h>)
 #include <string>
 #include <utility>
+#include <mutex>
 #include <fmt/format.h>
 #include <fmt/color.h>
 #include <fmt/ostream.h>
@@ -47,15 +48,28 @@
 namespace pol
 {
 
+template<typename... _Args>
+[[nodiscard]] inline std::string
+format(_Args&&... __args)
+{ return fmt::format(std::forward<_Args&&>(__args)...); }
+
 namespace __format
 {
-// only support single thread
 extern std::string buffer;
+// multi-thread support
+// need lock and unlock by user
+extern std::mutex mutex;
 }
 
+void
+cfmt_lock();
+
+void
+cfmt_unlock();
+
 template<typename... _Args>
-[[nodiscard]] const char*
-format(_Args&&... __args)
+[[nodiscard]] inline const char*
+cformat(_Args&&... __args)
 {
     __format::buffer = fmt::format(std::forward<_Args&&>(__args)...);
     return __format::buffer.data();
@@ -63,7 +77,7 @@ format(_Args&&... __args)
 
 }
 #else
-#error required ibrary not found
+#error required library not found
 #endif
 
 #endif /* _POLLIB_FORMAT */

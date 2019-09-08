@@ -14,8 +14,12 @@ demangle(const char* __s)
     std::unique_ptr<char, decltype(__deleter)> __d
     {abi::__cxa_demangle(__s, nullptr, nullptr, &__status), __deleter};
     if (__status != 0)
+	{
+		cfmt_lock();
         error<std::runtime_error>("assert",
-            format("demangle abi error: {}", __status));
+            cformat("demangle abi error: {}", __status));
+		cfmt_unlock();
+	}
     return __d.get();
 }
 
