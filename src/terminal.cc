@@ -1,4 +1,5 @@
 #include <pol/terminal>
+#include <pol/contract>
 #include <iostream>
 #include <string>
 
@@ -183,6 +184,7 @@ terminal::overline()
 void
 terminal::color_fg(int __x)
 {
+	expect(__x >= 0 && __x < 16, "out of range", "bad color");
 	if (__x < 8)
 	{
 		std::string __s{"\e[3_m"};
@@ -206,6 +208,7 @@ terminal::color_fg_def()
 void
 terminal::color_bg(int __x)
 {
+	expect(__x >= 0 && __x < 16, "out of range", "bad color");
 	if (__x < 8)
 	{
 		std::string __s{"\e[4_m"};
