@@ -114,6 +114,7 @@ __switch_impl(_Tp&& __switch, _Up&& __default,
  *  @param   __current  A tuple including a case value, an invokable object
  *                      and another invokable object for yielding a value
  *                      with switch value as an argument.
+ *  @param   __case     A pack of other cases.
  *  @return  The result of invoked object.
  *  @note    An internal function.
 **/
@@ -131,6 +132,7 @@ __switch_impl(_Tp&& __switch, _Up&& __default,
  *  @param   __current  A tuple including a tuple of case values, an invokable
  *                      object and another invokable object for yielding a
  *                      value with switch value as an argument.
+ *  @param   __case     A pack of other cases.
  *  @return  The result of invoked object.
  *  @note    An internal function.
 **/

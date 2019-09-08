@@ -11,14 +11,10 @@ std::mutex mutex;
 
 void
 cfmt_lock()
-{
-	__format::mutex.lock();
-}
+{ __format::mutex.lock(); }
 
 void
 cfmt_unlock()
-{
-	__format::mutex.unlock();
-}
+{ __format::mutex.unlock(); }
 
 }

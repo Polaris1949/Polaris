@@ -27,7 +27,7 @@
  *  @author      Polaris Zhao
  *  @version     3.0
  *  @deprecated  This library will be removed in a future version.
- *               You should include @c <terminal> instead.
+ *               You should <code>@#include @<terminal@></code> instead.
  *  @warning     You should @b NOT use this on a non-linux-like system.
  *
  *  This is a Polaris C++ Library header.

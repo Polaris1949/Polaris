@@ -48,6 +48,9 @@
 namespace pol
 {
 
+/** @brief   Text formatter
+ *  @return  A @c std::string of formatted result.
+**/
 template<typename... _Args>
 [[nodiscard]] inline std::string
 format(_Args&&... __args)
@@ -55,18 +58,34 @@ format(_Args&&... __args)
 
 namespace __format
 {
+/** @brief  Global buffer for storing the result of @c cformat()
+**/
 extern std::string buffer;
-// multi-thread support
-// need lock and unlock by user
-extern std::mutex mutex;
+
+/** @brief  Global mutex for multi-thread support for @c cformat()
+ *  @note   You shall invoke @c cfmt_lock() and @c cfmt_unlock()
+ *          in order to control this mutex.
+**/
+extern std::mutex mutex; 
 }
 
+/** @brief  Lock global mutex for @c cformat()
+**/
 void
 cfmt_lock();
 
+/** @brief  Unlock global mutex for @c cformat()
+**/
 void
 cfmt_unlock();
 
+/** @brief   Text formatter (C-style)
+ *  @return  A C-style string of formatted result.
+ *  @note    This function itself only supports single thread.
+ *           In order to support multi-thread, you shall invoke
+ *           @c cfmt_lock() before and @c cfmt_unlock() after
+ *           invoking this function.
+**/
 template<typename... _Args>
 [[nodiscard]] inline const char*
 cformat(_Args&&... __args)
