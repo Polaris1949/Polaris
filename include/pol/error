@@ -74,8 +74,7 @@ error(const char* __mode, const char* __msg,
     case 0:
     {
         std::string __type{__err_pretty_type(check_type<_Ex>())};
-        __ctr_violate(contract{__mode, __level, false,
-            __type.data(), __msg, __loc});
+        __ctr_violate({__mode, __level, __type.data(), __msg, __loc});
         break;
     }
     case 1:
@@ -92,10 +91,10 @@ error(const char* __mode, const char* __msg,
         break;
     }
     case 2:
-        assert(false, "runtime error", "feature unimplemented");
+        __assert_violate("runtime error", "feature unimplemented");
         break;
     default:
-        assert(false, "runtime error", "bad error handling method");
+        __assert_violate("runtime error", "bad error handling method");
         break;
     }
 }

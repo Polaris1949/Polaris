@@ -352,7 +352,7 @@ constexpr
 bit_ref::
 bit_ref(bit_address __a)
     : _M_adr{__a}
-{ expect(!__a.empty(), "invalid argument", "null bit address"); }
+{ POL_EXPECT(!__a.empty(), "invalid argument", "null bit address"); }
 
 constexpr
 bit_ref::

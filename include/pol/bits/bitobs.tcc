@@ -59,7 +59,8 @@ bit_observer<_Tp>::
 at(size_type __pos) const
 {
     size_type __byte{__pos / char_bit};
-    if (__byte >= _S_len) throw std::out_of_range{"bit_observer::at()"};
+    if (__byte >= _S_len)
+        throw std::out_of_range{"bit_observer::at()"};
     return this->_M_impl._M_obs[__byte][__pos % char_bit];
 }
 

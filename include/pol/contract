@@ -86,7 +86,7 @@ public:
 	contract() = delete;
 
 	constexpr
-	contract(const char* __mode, uint8_t __level, bool __pred,
+	contract(const char* __mode, uint8_t __level,
 		const char* __type, const char* __msg, srcloc_t __loc) noexcept;
 
 	constexpr const char*
@@ -94,9 +94,6 @@ public:
 
 	constexpr uint8_t
 	level() const noexcept;
-
-	constexpr bool
-	predicate() const noexcept;
 
 	constexpr const char*
 	type() const noexcept;
@@ -121,21 +118,29 @@ public:
 
 private:
 	const char* _M_mode;
-    uint8_t _M_level;
-    bool _M_pred;
     const char* _M_type;
     const char* _M_msg;
     srcloc_t _M_loc;
+    uint8_t _M_level;
 };
 
 constexpr const char*
-__ctr_level_str(uint8_t __lev) noexcept;
-
-constexpr bool
-__ctr_check(contract&& __c);
+__ctr_level_string(uint8_t __lev) noexcept;
 
 void
 __ctr_violate(contract&& __c);
+
+void
+__assert_violate(const char* __type, const char* __msg,
+    uint8_t __level = 1, srcloc_t __loc = srcloc_t::current());
+
+void
+__expect_violate(const char* __type, const char* __msg,
+    uint8_t __level = 1, srcloc_t __loc = srcloc_t::current());
+
+void
+__ensure_violate(const char* __type, const char* __msg,
+    uint8_t __level = 1, srcloc_t __loc = srcloc_t::current());
 
 constexpr bool
 assert(bool __pred, const char* __type, const char* __msg,
@@ -151,10 +156,10 @@ ensure(bool __pred, const char* __type, const char* __msg,
 
 constexpr
 contract::
-contract(const char* __mode, uint8_t __level, bool __pred,
+contract(const char* __mode, uint8_t __level,
     const char* __type, const char* __msg, srcloc_t __loc) noexcept
-    : _M_mode{__mode ? __mode : "bad"}, _M_level{__level}, _M_pred{__pred},
-        _M_type{__type}, _M_msg{__msg}, _M_loc{__loc}
+    : _M_mode{__mode ? __mode : "bad"}, _M_type{__type},
+        _M_msg{__msg}, _M_loc{__loc}, _M_level{__level}
 { }
 
 constexpr const char*
@@ -166,11 +171,6 @@ constexpr uint8_t
 contract::
 level() const noexcept
 { return this->_M_level; }
-
-constexpr bool
-contract::
-predicate() const noexcept
-{ return this->_M_pred; }
 
 constexpr const char*
 contract::
@@ -207,16 +207,8 @@ contract::
 column() const noexcept
 { return this->_M_loc.column(); }
 
-constexpr bool
-__ctr_check(contract&& __c)
-{
-	bool __p{__c.predicate()};
-    if (!__p) __ctr_violate(std::move(__c));
-    return __p;
-}
-
 constexpr const char*
-__ctr_level_str(uint8_t __lev) noexcept
+__ctr_level_string(uint8_t __lev) noexcept
 {
     switch (__lev)
     {
@@ -231,27 +223,41 @@ __ctr_level_str(uint8_t __lev) noexcept
 constexpr bool
 assert(bool __pred, const char* __type, const char* __msg,
     uint8_t __level, srcloc_t __loc)
-{ return __ctr_check({"assert", __level, __pred, __type, __msg, __loc}); }
+{
+    if (!__pred) __assert_violate(__type, __msg, __level, __loc);
+    return __pred;
+}
 
 constexpr bool
 expect(bool __pred, const char* __type, const char* __msg,
     uint8_t __level, srcloc_t __loc)
-{ return __ctr_check({"expect", __level, __pred, __type, __msg, __loc}); }
+{
+    if (!__pred) __expect_violate(__type, __msg, __level, __loc);
+    return __pred;
+}
 
 constexpr bool
 ensure(bool __pred, const char* __type, const char* __msg,
     uint8_t __level, srcloc_t __loc)
-{ return __ctr_check({"ensure", __level, __pred, __type, __msg, __loc}); }
+{
+    if (!__pred) __ensure_violate(__type, __msg, __level, __loc);
+    return __pred;
+}
 
 }
 
-// Deprecated features
-#if __GNUC__ && defined(__PRETTY_FUNCTION__)
-#define POL_SRCLOC_CURRENT_NEW \
+// Pretty-print support
+#if __GNUC__
+#define __POL_SCP \
 	pol::srcloc_t::current(__FILE__, __PRETTY_FUNCTION__, __LINE__, 0)
-#define POL_ASSERT(P) pol::assert((P), 0, 0, 1, POL_SRCLOC_CURRENT_NEW)
-#define POL_EXPECT(P) pol::expect((P), 0, 0, 1, POL_SRCLOC_CURRENT_NEW)
-#define POL_ENSURE(P) pol::ensure((P), 0, 0, 1, POL_SRCLOC_CURRENT_NEW)
+#else
+#define __POL_SCP pol::srcloc_t::current()
 #endif
+#define POL_ASSERT(P, T, M)   pol::assert((P), (T), (M), 1, __POL_SCP)
+#define POL_EXPECT(P, T, M)   pol::expect((P), (T), (M), 1, __POL_SCP)
+#define POL_ENSURE(P, T, M)   pol::ensure((P), (T), (M), 1, __POL_SCP)
+#define POL_ASSERT_X(P, T, M) pol::assert((P), (T), (M), 2, __POL_SCP)
+#define POL_EXPECT_X(P, T, M) pol::expect((P), (T), (M), 2, __POL_SCP)
+#define POL_ENSURE_X(P, T, M) pol::ensure((P), (T), (M), 2, __POL_SCP)
 
 #endif /* _POLLIB_CONTRACT */
