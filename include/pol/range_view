@@ -1,0 +1,76 @@
+#ifndef _POLLIB_RANGE_VIEW
+#define _POLLIB_RANGE_VIEW 1
+
+#include <pol/version>
+
+namespace pol
+{
+
+template<typename _Tp>
+class range_view
+{
+public:
+    using value_type = _Tp;
+    using reference = _Tp&;
+    using const_reference = const _Tp&;
+    using iterator = _Tp*;
+    using const_iterator = const _Tp*;
+    using size_type = size_t;
+
+    constexpr
+    range_view() noexcept;
+
+    constexpr
+    range_view(iterator __left, iterator __right) noexcept;
+
+    iterator
+    begin();
+
+    const_iterator
+    begin() const;
+
+    const_iterator
+    cbegin() const;
+
+    iterator end();
+    const_iterator end() const;
+    const_iterator cend() const;
+
+    reference
+    at(size_type __pos);
+
+    const_reference
+    at(size_type __pos) const;
+
+    reference
+    operator[] (size_type __pos);
+
+    const_reference
+    operator[] (size_type __pos) const;
+
+private:
+    _Tp* _M_start;
+    _Tp* _M_finish;
+};
+
+template<typename _Tp>
+range_view<_Tp>::
+range_view()
+    : _M_start{nullptr}, _M_finish{nullptr}
+{ }
+
+template<typename _Tp>
+range_view<_Tp>::
+range_view(iterator __left, iterator __right)
+    : _M_start{__left}, _M_finish{__right}
+{ POL_EXPECT(__left <= __right, "invalid argument", "bad range"); }
+
+template<typename _Tp>
+_Tp*
+range_view<_Tp>::
+begin()
+{ return this->_M_start; }
+
+}
+
+#endif

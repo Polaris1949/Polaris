@@ -1,0 +1,138 @@
+#ifndef _POLLIB_RANGE_MAP
+#define _POLLIB_RANGE_MAP 1
+
+#include <pol/version>
+
+namespace pol
+{
+
+template<typename _Tp, typename _Cont, typename _Func>
+class range_map // range_accessor
+public:
+    using pos_type = _Tp;
+    using container_type = _Cont;
+    using value_type = _Cont::value_type;
+    using reference = _Cont::reference;
+    using const_reference = _Cont::const_reference;
+    using translator = _Func;
+
+    range_map() = default;
+
+    range_map(translator&& __f);
+
+    range_map(container_type&& __c, translator&& __f);
+
+    container_type&
+    container();
+
+    reference
+    at(pos_type __p);
+
+    const_reference
+    at(pos_type __p) const;
+
+    reference
+    operator[] (pos_type __p);
+
+    const_reference
+    operator[] (pos_type __p) const;
+
+private:
+    _Cont _M_cont;
+    _Func _M_func;
+};
+
+template<typename _Tp, typename _Cont, typename _Func>
+range_map<_Tp, _Cont, _Func>::
+range_map(translator&& __f)
+    : _M_cont{}, _M_func{std::move(__f)}
+{ }
+
+template<typename _Tp, typename _Cont, typename _Func>
+range_map<_Tp, _Cont, _Func>::
+range_map(container_type&& __c, translator&& __f)
+    : _M_cont{std::move(__c)}, _M_func{std::move(__f)}
+{ }
+
+template<typename _Tp, typename _Cont, typename _Func>
+_Cont&
+range_map<_Tp, _Cont, _Func>::
+container()
+{ return this->_M_cont; }
+
+template<typename _Tp, typename _Cont, typename _Func>
+_Cont::reference
+range_map<_Tp, _Cont, _Func>::
+at(pos_type __p)
+{ return this->_M_func.at(this->_M_cont, __p); }
+
+template<typename _Tp, typename _Cont, typename _Func>
+_Cont::const_reference
+range_map<_Tp, _Cont, _Func>::
+at(pos_type __p) const
+{ return this->_M_func.at(this->_M_cont, __p); }
+
+template<typename _Tp, typename _Cont, typename _Func>
+_Cont::reference
+range_map<_Tp, _Cont, _Func>::
+operator[] (pos_type __p)
+{ return this->_M_func.subscript(this->_M_cont, __p); }
+
+template<typename _Tp, typename _Cont, typename _Func>
+_Cont::const_reference
+range_map<_Tp, _Cont, _Func>::
+operator[] (pos_type __p) const
+{ return this->_M_func.subscript(this->_M_cont, __p); }
+
+template<typename _Cont>
+class rmf_1idx
+{
+public:
+    using container_type = _Cont;
+    using reference = _Cont::reference;
+    using const_reference = _Cont::const_reference;
+    using pos_type = size_t;
+
+    reference
+    at(_Cont& __c, pos_type __p) const;
+
+    const_reference
+    at(const _Cont& __c, pos_type __p) const;
+
+    reference
+    subscript(_Cont& __c, pos_type __p) const;
+
+    const_reference
+    subscript(const _Cont& __c, pos_type __p) const;
+};
+
+template<typename _Cont>
+_Cont::reference
+rmf_1idx<_Cont>::
+at(container_type& __c, pos_type __p) const
+{ return __c.at(__p - 1); }
+
+template<typename _Cont>
+_Cont::const_reference
+rmf_1idx<_Cont>::
+at(const container_type& __c, pos_type __p) const
+{ return __c.at(__p - 1); }
+
+template<typename _Cont>
+_Cont::reference
+rmf_1idx<_Cont>::
+subscript(container_type& __c, pos_type __p) const
+{ return __c[__p - 1]; }
+
+template<typename _Cont>
+_Cont::const_reference
+rmf_1idx<_Cont>::
+subscript(const container_type& __c, pos_type __p) const
+{ return __c[__p - 1]; }
+
+template<typename _Cont>
+using rm_1idx = range_map<size_t, _Cont, rmf_1idx<_Cont>>;
+
+}
+
+#endif
