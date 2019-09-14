@@ -38,7 +38,7 @@
 #define __POLLIB_PATCHLEVEL__ 0 ///< Patch level
 #define __POL_VERSION "0.8.0" ///< Version string
 
-// Version requiring marcos.
+// Version requirement marcos.
 #define __pol_cpp98 199711L
 #define __pol_cpp11 201103L
 #define __pol_cpp14 201402L
@@ -64,8 +64,8 @@
 namespace pol
 {
 
-/** @brief   Check version of the runtime library
- *  @return  A version string.
+/** @brief   Check version of runtime library
+ *  @return  A C-style version string.
 **/
 const char*
 version() noexcept;
@@ -74,6 +74,14 @@ version() noexcept;
 
 #ifndef POL_COMPAT
 #define POL_COMPAT 1 ///< Compatibility configuration
+#endif
+
+#ifndef POL_NDEBUG
+#ifdef NDEBUG
+#define POL_NDEBUG 1
+#else
+#define POL_NDEBUG 0
+#endif
 #endif
 
 #if POL_COMPAT
