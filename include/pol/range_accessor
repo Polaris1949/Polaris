@@ -1,5 +1,37 @@
-#ifndef _POLLIB_RANGE_MAP
-#define _POLLIB_RANGE_MAP 1
+// Range accessor components -*- C++ -*-
+
+// Copyright (C) 2004-2019 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file     range_accessor
+ *  @brief    Range accessor components
+ *  @author   Polaris Zhao
+ *  @version  0.8.0
+ *
+ *  This is a Polaris C++ Library header.
+**/
+
+#ifndef _POLLIB_RANGE_ACCESSOR
+#define _POLLIB_RANGE_ACCESSOR 1
 
 #include <pol/version>
 
@@ -7,7 +39,8 @@ namespace pol
 {
 
 template<typename _Tp, typename _Cont, typename _Func>
-class range_map // range_accessor
+class range_accessor
+{
 public:
     using pos_type = _Tp;
     using container_type = _Cont;
@@ -16,11 +49,11 @@ public:
     using const_reference = _Cont::const_reference;
     using translator = _Func;
 
-    range_map() = default;
+    range_accessor() = default;
 
-    range_map(translator&& __f);
+    range_accessor(translator&& __f);
 
-    range_map(container_type&& __c, translator&& __f);
+    range_accessor(container_type&& __c, translator&& __f);
 
     container_type&
     container();
@@ -43,49 +76,49 @@ private:
 };
 
 template<typename _Tp, typename _Cont, typename _Func>
-range_map<_Tp, _Cont, _Func>::
-range_map(translator&& __f)
+range_accessor<_Tp, _Cont, _Func>::
+range_accessor(translator&& __f)
     : _M_cont{}, _M_func{std::move(__f)}
 { }
 
 template<typename _Tp, typename _Cont, typename _Func>
-range_map<_Tp, _Cont, _Func>::
-range_map(container_type&& __c, translator&& __f)
+range_accessor<_Tp, _Cont, _Func>::
+range_accessor(container_type&& __c, translator&& __f)
     : _M_cont{std::move(__c)}, _M_func{std::move(__f)}
 { }
 
 template<typename _Tp, typename _Cont, typename _Func>
 _Cont&
-range_map<_Tp, _Cont, _Func>::
+range_accessor<_Tp, _Cont, _Func>::
 container()
 { return this->_M_cont; }
 
 template<typename _Tp, typename _Cont, typename _Func>
 _Cont::reference
-range_map<_Tp, _Cont, _Func>::
+range_accessor<_Tp, _Cont, _Func>::
 at(pos_type __p)
 { return this->_M_func.at(this->_M_cont, __p); }
 
 template<typename _Tp, typename _Cont, typename _Func>
 _Cont::const_reference
-range_map<_Tp, _Cont, _Func>::
+range_accessor<_Tp, _Cont, _Func>::
 at(pos_type __p) const
 { return this->_M_func.at(this->_M_cont, __p); }
 
 template<typename _Tp, typename _Cont, typename _Func>
 _Cont::reference
-range_map<_Tp, _Cont, _Func>::
+range_accessor<_Tp, _Cont, _Func>::
 operator[] (pos_type __p)
 { return this->_M_func.subscript(this->_M_cont, __p); }
 
 template<typename _Tp, typename _Cont, typename _Func>
 _Cont::const_reference
-range_map<_Tp, _Cont, _Func>::
+range_accessor<_Tp, _Cont, _Func>::
 operator[] (pos_type __p) const
 { return this->_M_func.subscript(this->_M_cont, __p); }
 
 template<typename _Cont>
-class rmf_1idx
+class raf_1idx
 {
 public:
     using container_type = _Cont;
@@ -94,45 +127,45 @@ public:
     using pos_type = size_t;
 
     reference
-    at(_Cont& __c, pos_type __p) const;
+    at(container_type& __c, pos_type __p) const;
 
     const_reference
-    at(const _Cont& __c, pos_type __p) const;
+    at(const container_type& __c, pos_type __p) const;
 
     reference
-    subscript(_Cont& __c, pos_type __p) const;
+    subscript(container_type& __c, pos_type __p) const;
 
     const_reference
-    subscript(const _Cont& __c, pos_type __p) const;
+    subscript(const container_type& __c, pos_type __p) const;
 };
 
 template<typename _Cont>
 _Cont::reference
-rmf_1idx<_Cont>::
+raf_1idx<_Cont>::
 at(container_type& __c, pos_type __p) const
 { return __c.at(__p - 1); }
 
 template<typename _Cont>
 _Cont::const_reference
-rmf_1idx<_Cont>::
+raf_1idx<_Cont>::
 at(const container_type& __c, pos_type __p) const
 { return __c.at(__p - 1); }
 
 template<typename _Cont>
 _Cont::reference
-rmf_1idx<_Cont>::
+raf_1idx<_Cont>::
 subscript(container_type& __c, pos_type __p) const
 { return __c[__p - 1]; }
 
 template<typename _Cont>
 _Cont::const_reference
-rmf_1idx<_Cont>::
+raf_1idx<_Cont>::
 subscript(const container_type& __c, pos_type __p) const
 { return __c[__p - 1]; }
 
 template<typename _Cont>
-using rm_1idx = range_map<size_t, _Cont, rmf_1idx<_Cont>>;
+using ra_1idx = range_accessor<size_t, _Cont, raf_1idx<_Cont>>;
 
 }
 
-#endif
+#endif /* _POLLIB_RANGE_ACCESSOR */

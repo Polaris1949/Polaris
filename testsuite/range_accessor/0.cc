@@ -1,10 +1,10 @@
 #include <iostream>
 #include <vector>
-#include <pol/range_map>
+#include <pol/range_accessor>
 
 int main()
 {
-    pol::rm_1idx<std::vector<int>> a;
+    pol::ra_1idx<std::vector<int>> a;
     std::vector<int>& v=a.container();
     v.push_back(1);
     v.push_back(2);

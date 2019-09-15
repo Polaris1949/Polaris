@@ -1,7 +1,40 @@
+// Range view components -*- C++ -*-
+
+// Copyright (C) 2004-2019 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file     range_view
+ *  @brief    Range view components
+ *  @author   Polaris Zhao
+ *  @version  0.8.0
+ *
+ *  This is a Polaris C++ Library header.
+**/
+
 #ifndef _POLLIB_RANGE_VIEW
 #define _POLLIB_RANGE_VIEW 1
 
 #include <pol/version>
+#include <pol/contract>
 
 namespace pol
 {
@@ -21,20 +54,28 @@ public:
     range_view() noexcept;
 
     constexpr
-    range_view(iterator __left, iterator __right) noexcept;
+    range_view(iterator __left, iterator __right);
+
+    void
+    assign(iterator __left, iterator __right);
 
     iterator
-    begin();
+    begin() noexcept;
 
     const_iterator
-    begin() const;
+    begin() const noexcept;
 
     const_iterator
-    cbegin() const;
+    cbegin() const noexcept;
 
-    iterator end();
-    const_iterator end() const;
-    const_iterator cend() const;
+    iterator
+    end() noexcept;
+
+    const_iterator
+    end() const noexcept;
+
+    const_iterator
+    cend() const noexcept;
 
     reference
     at(size_type __pos);
@@ -54,23 +95,97 @@ private:
 };
 
 template<typename _Tp>
+constexpr
 range_view<_Tp>::
-range_view()
+range_view() noexcept
     : _M_start{nullptr}, _M_finish{nullptr}
 { }
 
 template<typename _Tp>
+constexpr
 range_view<_Tp>::
 range_view(iterator __left, iterator __right)
     : _M_start{__left}, _M_finish{__right}
 { POL_EXPECT(__left <= __right, "invalid argument", "bad range"); }
 
 template<typename _Tp>
+void
+range_view<_Tp>::
+assign(iterator __left, iterator __right)
+{
+    POL_EXPECT(__left <= __right, "invalid argument", "bad range");
+    this->_M_start = __left;
+    this->_M_finish = __right;
+}
+
+template<typename _Tp>
 _Tp*
 range_view<_Tp>::
-begin()
+begin() noexcept
 { return this->_M_start; }
+
+template<typename _Tp>
+const _Tp*
+range_view<_Tp>::
+begin() const noexcept
+{ return this->_M_start; }
+
+template<typename _Tp>
+const _Tp*
+range_view<_Tp>::
+cbegin() const noexcept
+{ return this->_M_start; }
+
+template<typename _Tp>
+_Tp*
+range_view<_Tp>::
+end() noexcept
+{ return this->_M_finish; }
+
+template<typename _Tp>
+const _Tp*
+range_view<_Tp>::
+end() const noexcept
+{ return this->_M_finish; }
+
+template<typename _Tp>
+const _Tp*
+range_view<_Tp>::
+cend() const noexcept
+{ return this->_M_finish; }
+
+template<typename _Tp>
+_Tp&
+range_view<_Tp>::
+at(size_type __pos)
+{
+    iterator __it{this->_M_start + __pos};
+    POL_EXPECT(__it < this->_M_finish, "out of range", "bad position");
+    return *__it;
+}
+
+template<typename _Tp>
+const _Tp&
+range_view<_Tp>::
+at(size_type __pos) const
+{
+    const_iterator __it{this->_M_start + __pos};
+    POL_EXPECT(__it < this->_M_finish, "out of range", "bad position");
+    return *__it;
+}
+
+template<typename _Tp>
+_Tp&
+range_view<_Tp>::
+operator[] (size_type __pos)
+{ return *(this->_M_start + __pos); }
+
+template<typename _Tp>
+const _Tp&
+range_view<_Tp>::
+operator[] (size_type __pos) const
+{ return *(this->_M_start + __pos); }
 
 }
 
-#endif
+#endif /* _POLLIB_RANGE_VIEW */

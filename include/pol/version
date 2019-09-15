@@ -38,7 +38,7 @@
 #define __POLLIB_PATCHLEVEL__ 0 ///< Patch level
 #define __POL_VERSION "0.8.0" ///< Version string
 
-// Version requirement marcos.
+// Version requirement marcos. (Deprecated)
 #define __pol_cpp98 199711L
 #define __pol_cpp11 201103L
 #define __pol_cpp14 201402L
@@ -78,7 +78,7 @@ version() noexcept;
 
 #ifndef POL_NDEBUG
 #ifdef NDEBUG
-#define POL_NDEBUG 1
+#define POL_NDEBUG 1 ///< Library no-debug mode
 #else
 #define POL_NDEBUG 0
 #endif
