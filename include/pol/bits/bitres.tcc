@@ -4,35 +4,18 @@
 namespace pol
 {
 
-bitmem_ptr::
-bitmem_ptr(nullptr_t) noexcept
-    : _M_ptr{nullptr}, _M_size{0}
-{ }
-
-bitmem_ptr::
-bitmem_ptr(pointer __p, size_type __n) noexcept
-    : _M_ptr{__p}, _M_size{__n}
-{ }
-
-bitmem_ptr::
-operator bool() const noexcept
-{ return this->_M_ptr; }
-
-bit_ptr
-bitmem_ptr::
-ptr() const noexcept
-{ return this->_M_ptr; }
-
-size_t
-bitmem_ptr::
-size() const noexcept
-{ return this->_M_size; }
-
 template<typename _Tp>
 bit_resource<_Tp>::_Chunk::
 _Chunk(size_type __n)
-    : _M_data{new storage_type[__n]}, _M_size{__n}
+    : _M_data{new storage_type[__n / sizeof(_Tp)]},
+        _M_size{__n / sizeof(_Tp)}
 { }
+
+template<typename _Tp>
+bit_resource<_Tp>::_Chunk::
+_Chunk(_Chunk&& __c) noexcept
+    : _M_data{__c._M_data}, _M_size{__c._M_size}
+{ __c._M_data = nullptr; }
 
 template<typename _Tp>
 bit_resource<_Tp>::_Chunk::
@@ -48,13 +31,13 @@ size() const noexcept
 template<typename _Tp>
 basic_bit_storage<_Tp>*
 bit_resource<_Tp>::_Chunk::
-begin() noexcept
+begin() const noexcept
 { return this->_M_data; }
 
 template<typename _Tp>
 basic_bit_storage<_Tp>*
 bit_resource<_Tp>::_Chunk::
-end() noexcept
+end() const noexcept
 { return this->_M_data + this->_M_size; }
 
 template<typename _Tp>
@@ -75,6 +58,7 @@ allocate(size_type __n)
     }
     */
 
+    constexpr size_t __fsize{bitof<_Tp>()};
     iterator __iter{this->begin()};
     size_t __count;
     bit_ptr __p;
@@ -138,7 +122,7 @@ allocate(size_type __n)
         __as = __iter->size();
         if (__as != __es && __es >= __bs)
         {
-            __iter = this->_M_chunk.insert(__iter, std::move(_Chuck{__es}));
+            __iter = this->_M_chunk.insert(__iter, std::move(_Chunk{__es}));
             return __iter->allocate(__n); // ok, new chunk
         }
         if (__as >= __bs)
@@ -158,14 +142,18 @@ void
 bit_resource<_Tp>::
 deallocate(bitmem_ptr __p) noexcept
 {
+    throw; // unimplemented
     iterator __iter{this->_M_chunk.begin()};
     while (__iter != this->_M_chunk.end())
     {
-        if (__)
+        if (__p >= __iter->begin() && __p < __iter->end())
+        {
+            //;
+        }
     }
 }
 
-template<typename _Tp = unsigned int>
+template<typename _Tp = uint32_t>
 bit_resource<_Tp>*
 default_bit_resource()
 {

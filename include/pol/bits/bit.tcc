@@ -26,7 +26,7 @@ template<typename _Tp>
 basic_bit<_Tp>::
 basic_bit(bool __data)
 //    : _M_ptr{global_bit_resource<_Tp>()->allocate(_M_lev)}
-    : basic_bit{global_bit_resource<_Tp>()->allocate_v()}
+    : basic_bit{default_bit_resource<_Tp>()->allocate()}
 {}
 /*
 template<typename _Tp>
@@ -44,7 +44,7 @@ basic_bit(bit_view_type&& __v)
 template<typename _Tp>
 basic_bit<_Tp>::
 ~basic_bit() noexcept
-{ global_bit_resource<>()->deallocate(this); }
+{ default_bit_resource<>()->deallocate(this); }
 
 template<typename _Tp>
 basic_bit<_Tp>&

@@ -40,26 +40,6 @@
 namespace pol
 {
 
-class bitmem_ptr
-{
-public:
-    using pointer = bit_ptr;
-    using size_type = size_t;
-
-    bitmem_ptr() noexcept = default;
-    bitmem_ptr(nullptr_t) noexcept;
-    bitmem_ptr(pointer __p, size_type __n) noexcept;
-
-    pointer ptr() const noexcept;
-    size_type size() const noexcept;
-
-    explicit operator bool() const noexcept;
-
-private:
-    bit_ptr _M_ptr;
-    size_t _M_size;
-};
-
 template<typename _Tp>
 class bit_resource
 {
@@ -82,16 +62,20 @@ private:
         explicit
         _Chunk(size_type __n);
 
+        _Chunk(const _Chunk&) = delete;
+
+        _Chunk(_Chunk&& __c) noexcept;
+
         ~_Chunk() noexcept;
 
         size_type
         size() const noexcept;
 
         iterator
-        begin() noexcept;
+        begin() const noexcept;
 
         iterator
-        end() noexcept;
+        end() const noexcept;
 
         [[nodiscard]] bitmem_ptr
         allocate(size_type __n);
@@ -118,7 +102,7 @@ public:
     reallocate(pointer __p, size_type __n);
 };
 
-template<typename _Tp = unsigned int>
+template<typename _Tp = uint32_t>
 bit_resource<_Tp>* default_bit_resource();
 
 }

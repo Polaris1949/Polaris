@@ -166,4 +166,28 @@ operator << (std::ostream& __out, const bit_ref& __x)
 	return __out;
 }
 
+bitmem_ptr::
+bitmem_ptr(nullptr_t) noexcept
+    : _M_ptr{nullptr}, _M_size{0}
+{ }
+
+bitmem_ptr::
+bitmem_ptr(pointer __p, size_type __n) noexcept
+    : _M_ptr{__p}, _M_size{__n}
+{ }
+
+bitmem_ptr::
+operator bool() const noexcept
+{ return bool(this->_M_ptr); }
+
+bit_ptr
+bitmem_ptr::
+ptr() const noexcept
+{ return this->_M_ptr; }
+
+size_t
+bitmem_ptr::
+size() const noexcept
+{ return this->_M_size; }
+
 }

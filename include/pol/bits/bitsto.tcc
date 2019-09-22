@@ -38,6 +38,12 @@ namespace pol
 {
 
 template<typename _Tp>
+basic_bit_storage<_Tp>::
+basic_bit_storage() noexcept
+    : _M_count{}
+{ }
+
+template<typename _Tp>
 bool
 basic_bit_storage<_Tp>::
 empty() const noexcept
@@ -191,7 +197,7 @@ bool
 basic_bit_storage<_Tp>::
 in_range(bit_ptr __p) const noexcept
 {
-    void* __a{__p->byte_address()};
+    void* __a{__p.address().byte_address()};
     return __a >= this->begin() && __a < this->end();
 }
 

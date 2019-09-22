@@ -55,7 +55,7 @@ private:
     _Tp _M_count;
 
 public:
-    constexpr basic_bit_storage() noexcept = default;
+    basic_bit_storage() noexcept;
 
     bool empty() const noexcept;
     bool full() const noexcept;
