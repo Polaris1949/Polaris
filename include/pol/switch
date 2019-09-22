@@ -85,10 +85,10 @@ __switch_impl(_Tp&& __switch, _Up&& __default);
  *  @note    An internal function.
 **/
 template<typename _Tp, typename _Up, typename... _Vp,
-	typename _Ap, typename _Bp>
+    typename _Ap, typename _Bp>
 auto
 __switch_impl(_Tp&& __switch, _Up&& __default,
-	std::pair<_Ap, _Bp>&& __current, _Vp&&... __case);
+    std::pair<_Ap, _Bp>&& __current, _Vp&&... __case);
 
 /** @brief   Invoke object for a specific case,
  *           if switch value equals to one of case values
@@ -101,10 +101,10 @@ __switch_impl(_Tp&& __switch, _Up&& __default,
  *  @note    An internal function.
 **/
 template<typename _Tp, typename _Up, typename... _Vp,
-	typename... _Ap, typename _Bp>
+    typename... _Ap, typename _Bp>
 auto
 __switch_impl(_Tp&& __switch, _Up&& __default,
-	std::pair<std::tuple<_Ap...>, _Bp>&& __current, _Vp&&... __case);
+    std::pair<std::tuple<_Ap...>, _Bp>&& __current, _Vp&&... __case);
 
 /** @brief   Invoke object for a specific case,
  *           if the value yielded by invoking another object with switch value
@@ -119,10 +119,10 @@ __switch_impl(_Tp&& __switch, _Up&& __default,
  *  @note    An internal function.
 **/
 template<typename _Tp, typename _Up, typename... _Vp,
-	typename _Ap, typename _Bp, typename _Cp>
+    typename _Ap, typename _Bp, typename _Cp>
 auto
 __switch_impl(_Tp&& __switch, _Up&& __default,
-	std::tuple<_Ap, _Bp, _Cp>&& __current, _Vp&&... __case);
+    std::tuple<_Ap, _Bp, _Cp>&& __current, _Vp&&... __case);
 
 /** @brief   Invoke object for a specific case,
  *           if the value yielded by invoking another object with switch value
@@ -137,10 +137,10 @@ __switch_impl(_Tp&& __switch, _Up&& __default,
  *  @note    An internal function.
 **/
 template<typename _Tp, typename _Up, typename... _Vp,
-	typename... _Ap, typename _Bp, typename _Cp>
+    typename... _Ap, typename _Bp, typename _Cp>
 auto
 __switch_impl(_Tp&& __switch, _Up&& __default,
-	std::tuple<std::tuple<_Ap...>, _Bp, _Cp>&& __current, _Vp&&... __case);
+    std::tuple<std::tuple<_Ap...>, _Bp, _Cp>&& __current, _Vp&&... __case);
 
 /** @brief  Check whether a value is in a tuple
  *  @param  __value  A value.
@@ -155,7 +155,7 @@ one_of(_Tp&& __value, std::tuple<_Up...>&& __tuple);
  *  @param  __tuple  A tuple.
 **/
 template<std::size_t __i, typename _Tp, typename... _Up,
-	typename = std::enable_if_t<(__i < sizeof...(_Up))>>
+    typename = std::enable_if_t<(__i < sizeof...(_Up))>>
 bool
 __one_of_impl(_Tp&& __value, std::tuple<_Up...>&& __tuple);
 
@@ -164,8 +164,8 @@ __one_of_impl(_Tp&& __value, std::tuple<_Up...>&& __tuple);
  *  @param  __tuple  A tuple.
 **/
 template<std::size_t __i, typename _Tp, typename... _Up,
-	typename = std::enable_if_t<(__i >= sizeof...(_Up))>,
-	typename = void>
+    typename = std::enable_if_t<(__i >= sizeof...(_Up))>,
+    typename = void>
 bool
 __one_of_impl(_Tp&&, std::tuple<_Up...>&&);
 
@@ -173,8 +173,8 @@ template<typename _Tp, typename _Up, typename... _Vp>
 auto
 switch_case(_Tp&& __switch, _Up&& __default, _Vp&&... __case)
 {
-	return __switch_impl(std::forward<_Tp&&>(__switch),
-		std::forward<_Up&&>(__default), std::forward<_Vp&&>(__case)...);
+    return __switch_impl(std::forward<_Tp&&>(__switch),
+        std::forward<_Up&&>(__default), std::forward<_Vp&&>(__case)...);
 }
 
 template<typename _Tp, typename _Up>
@@ -183,84 +183,84 @@ __switch_impl(_Tp&&, _Up&& __default)
 { return __default(); }
 
 template<typename _Tp, typename _Up, typename... _Vp,
-	typename _Ap, typename _Bp>
+    typename _Ap, typename _Bp>
 auto
 __switch_impl(_Tp&& __switch, _Up&& __default,
-	std::pair<_Ap, _Bp>&& __current, _Vp&&... __case)
+    std::pair<_Ap, _Bp>&& __current, _Vp&&... __case)
 {
-	if (__switch == __current.first)
-		return __current.second();
-	else
-		return __switch_impl(std::forward<_Tp&&>(__switch),
-			std::forward<_Up&&>(__default), std::forward<_Vp&&>(__case)...);
+    if (__switch == __current.first)
+        return __current.second();
+    else
+        return __switch_impl(std::forward<_Tp&&>(__switch),
+            std::forward<_Up&&>(__default), std::forward<_Vp&&>(__case)...);
 }
 
 template<typename _Tp, typename _Up, typename... _Vp,
-	typename... _Ap, typename _Bp>
+    typename... _Ap, typename _Bp>
 auto
 __switch_impl(_Tp&& __switch, _Up&& __default,
-	std::pair<std::tuple<_Ap...>, _Bp>&& __current, _Vp&&... __case)
+    std::pair<std::tuple<_Ap...>, _Bp>&& __current, _Vp&&... __case)
 {
-	if (one_of(std::forward<_Tp&&>(__switch),
-			std::forward<std::tuple<_Ap...>&&>(__current.first)))
-		return __current.second();
-	else
-		return __switch_impl(std::forward<_Tp&&>(__switch),
-			std::forward<_Up&&>(__default), std::forward<_Vp&&>(__case)...);
+    if (one_of(std::forward<_Tp&&>(__switch),
+            std::forward<std::tuple<_Ap...>&&>(__current.first)))
+        return __current.second();
+    else
+        return __switch_impl(std::forward<_Tp&&>(__switch),
+            std::forward<_Up&&>(__default), std::forward<_Vp&&>(__case)...);
 }
 
 template<typename _Tp, typename _Up, typename... _Vp,
-	typename _Ap, typename _Bp, typename _Cp>
+    typename _Ap, typename _Bp, typename _Cp>
 auto
 __switch_impl(_Tp&& __switch, _Up&& __default,
-	std::tuple<_Ap, _Bp, _Cp>&& __current, _Vp&&... __case)
+    std::tuple<_Ap, _Bp, _Cp>&& __current, _Vp&&... __case)
 {
-	if (std::get<2>(__current)(__switch) == std::get<0>(__current))
-		return std::get<1>(__current)();
-	else
-		return __switch_impl(std::forward<_Tp&&>(__switch),
-			std::forward<_Up&&>(__default), std::forward<_Vp&&>(__case)...);
+    if (std::get<2>(__current)(__switch) == std::get<0>(__current))
+        return std::get<1>(__current)();
+    else
+        return __switch_impl(std::forward<_Tp&&>(__switch),
+            std::forward<_Up&&>(__default), std::forward<_Vp&&>(__case)...);
 }
 
 template<typename _Tp, typename _Up, typename... _Vp,
-	typename... _Ap, typename _Bp, typename _Cp>
+    typename... _Ap, typename _Bp, typename _Cp>
 auto
 __switch_impl(_Tp&& __switch, _Up&& __default,
-	std::tuple<std::tuple<_Ap...>, _Bp, _Cp>&& __current, _Vp&&... __case)
+    std::tuple<std::tuple<_Ap...>, _Bp, _Cp>&& __current, _Vp&&... __case)
 {
-	if (one_of(std::forward<_Cp&&>(std::get<2>(__current)(__switch)),
-			std::forward<std::tuple<_Ap...>&&>(std::get<0>(__current))))
-		return std::get<1>(__current)();
-	else
-		return __switch_impl(std::forward<_Tp&&>(__switch),
-			std::forward<_Up&&>(__default), std::forward<_Vp&&>(__case)...);
+    if (one_of(std::forward<_Cp&&>(std::get<2>(__current)(__switch)),
+            std::forward<std::tuple<_Ap...>&&>(std::get<0>(__current))))
+        return std::get<1>(__current)();
+    else
+        return __switch_impl(std::forward<_Tp&&>(__switch),
+            std::forward<_Up&&>(__default), std::forward<_Vp&&>(__case)...);
 }
 
 template<typename _Tp, typename... _Up>
 bool
 one_of(_Tp&& __value, std::tuple<_Up...>&& __tuple)
 {
-	return __one_of_impl<0>(std::forward<_Tp&&>(__value),
-		std::forward<std::tuple<_Up...>&&>(__tuple));
+    return __one_of_impl<0>(std::forward<_Tp&&>(__value),
+        std::forward<std::tuple<_Up...>&&>(__tuple));
 }
 
 template<std::size_t __i, typename _Tp, typename... _Up,
-	typename = std::enable_if_t<(__i < sizeof...(_Up))>>
+    typename = std::enable_if_t<(__i < sizeof...(_Up))>>
 bool
 __one_of_impl(_Tp&& __value, std::tuple<_Up...>&& __tuple)
 {
-	if constexpr (is_equality_comparable_with_v<_Tp,
-			std::tuple_element_t<__i, std::tuple<_Up...>>>)
-		if (__value == std::get<__i>(__tuple))
-			return true;
+    if constexpr (is_equality_comparable_with_v<_Tp,
+            std::tuple_element_t<__i, std::tuple<_Up...>>>)
+        if (__value == std::get<__i>(__tuple))
+            return true;
 
-	return __one_of_impl<__i + 1>(std::forward<_Tp&&>(__value),
-		std::forward<std::tuple<_Up...>&&>(__tuple));
+    return __one_of_impl<__i + 1>(std::forward<_Tp&&>(__value),
+        std::forward<std::tuple<_Up...>&&>(__tuple));
 }
 
 template<std::size_t __i, typename _Tp, typename... _Up,
-	typename = std::enable_if_t<(__i >= sizeof...(_Up))>,
-	typename = void>
+    typename = std::enable_if_t<(__i >= sizeof...(_Up))>,
+    typename = void>
 bool
 __one_of_impl(_Tp&&, std::tuple<_Up...>&&)
 { return false; }

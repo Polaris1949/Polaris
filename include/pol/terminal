@@ -43,42 +43,42 @@ namespace pol
 class terminal
 {
 public:
-	static void move_up(int __n = 1);
-	static void move_down(int __n = 1);
-	static void move_right(int __n = 1);
-	static void move_left(int __n = 1);
-	static void next_line(int __n = 1);
-	static void prev_line(int __n = 1);
-	static void locate_column(int __p = 0);
-	static void locate(int __x = 0, int __y = 0);
-	static void erase_screen(int __m = 0);
-	static void clear_screen();
-	static void erase_line(int __m = 0);
-	static void clear_line();
-	static void scroll_up(int __n = 1);
-	static void scroll_down(int __n = 1);
-	static void save_cursor();
-	static void restore_cursor();
-	static void reset();
+    static void move_up(int __n = 1);
+    static void move_down(int __n = 1);
+    static void move_right(int __n = 1);
+    static void move_left(int __n = 1);
+    static void next_line(int __n = 1);
+    static void prev_line(int __n = 1);
+    static void locate_column(int __p = 0);
+    static void locate(int __x = 0, int __y = 0);
+    static void erase_screen(int __m = 0);
+    static void clear_screen();
+    static void erase_line(int __m = 0);
+    static void clear_line();
+    static void scroll_up(int __n = 1);
+    static void scroll_down(int __n = 1);
+    static void save_cursor();
+    static void restore_cursor();
+    static void reset();
 
-	static void normal();
-	static void bold();
-	static void faint();
-	static void italic();
-	static void underline();
-	static void color_reverse();
-	static void crossline();
-	static void overline();
+    static void normal();
+    static void bold();
+    static void faint();
+    static void italic();
+    static void underline();
+    static void color_reverse();
+    static void crossline();
+    static void overline();
 
-	static void color_fg(int __x);
-	static void color_fg_def();
-	static void color_bg(int __x);
-	static void color_bg_def();
-	static void show_cursor();
-	static void hide_cursor();
-	static void resize_screen(int __n, int __m);
+    static void color_fg(int __x);
+    static void color_fg_def();
+    static void color_bg(int __x);
+    static void color_bg_def();
+    static void show_cursor();
+    static void hide_cursor();
+    static void resize_screen(int __n, int __m);
 
-	static void flush();
+    static void flush();
 };
 
 }

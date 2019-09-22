@@ -49,7 +49,7 @@
 #define c_assert(__e) ((void)0)
 #else
 #define c_assert(__e) ((__e) ? (void)0 : __assert_func (__FILE__, __LINE__, \
-						       __PRETTY_FUNCTION__, #__e))
+                               __PRETTY_FUNCTION__, #__e))
 #endif
 #endif
 
@@ -83,41 +83,41 @@ __ctr_get_level() noexcept;
 class contract
 {
 public:
-	contract() = delete;
+    contract() = delete;
 
-	constexpr
-	contract(const char* __mode, uint8_t __level,
-		const char* __type, const char* __msg, srcloc_t __loc) noexcept;
+    constexpr
+    contract(const char* __mode, uint8_t __level,
+        const char* __type, const char* __msg, srcloc_t __loc) noexcept;
 
-	constexpr const char*
-	mode() const noexcept;
+    constexpr const char*
+    mode() const noexcept;
 
-	constexpr uint8_t
-	level() const noexcept;
+    constexpr uint8_t
+    level() const noexcept;
 
-	constexpr const char*
-	type() const noexcept;
+    constexpr const char*
+    type() const noexcept;
 
-	constexpr const char*
-	message() const noexcept;
+    constexpr const char*
+    message() const noexcept;
 
-	constexpr srcloc_t
-	location() const noexcept;
+    constexpr srcloc_t
+    location() const noexcept;
 
-	constexpr const char*
-	file() const noexcept;
+    constexpr const char*
+    file() const noexcept;
 
-	constexpr const char*
-	function() const noexcept;
+    constexpr const char*
+    function() const noexcept;
 
-	constexpr uint32_t
-	line() const noexcept;
+    constexpr uint32_t
+    line() const noexcept;
 
-	constexpr uint32_t
-	column() const noexcept;
+    constexpr uint32_t
+    column() const noexcept;
 
 private:
-	const char* _M_mode;
+    const char* _M_mode;
     const char* _M_type;
     const char* _M_msg;
     srcloc_t _M_loc;
@@ -249,7 +249,7 @@ ensure(bool __pred, const char* __type, const char* __msg,
 // Pretty-print support
 #if __GNUC__
 #define __POL_SCP \
-	pol::srcloc_t::current(__FILE__, __PRETTY_FUNCTION__, __LINE__, 0)
+    pol::srcloc_t::current(__FILE__, __PRETTY_FUNCTION__, __LINE__, 0)
 #else
 #define __POL_SCP pol::srcloc_t::current()
 #endif

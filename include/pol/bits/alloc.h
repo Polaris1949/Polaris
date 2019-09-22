@@ -57,7 +57,7 @@ public:
     /** @brief    Allocate a memory block of fixed elements
      *  @param    __n  Number of elements.
      *  @return   Pointer to a memory block.
-	 *  @throw    std::bad_alloc  If allocation failed.
+     *  @throw    std::bad_alloc  If allocation failed.
      *  @warning  Return value shall not be discarded.
     **/
     [[nodiscard]] pointer
@@ -73,10 +73,10 @@ public:
      *  @param    __p  Old pointer to a memory block.
      *  @param    __n  Number of elements.
      *  @return   New pointer to a memory block.
-	 *  @throw    std::bad_alloc  If reallocation failed.
+     *  @throw    std::bad_alloc  If reallocation failed.
      *  @warning  Return value shall not be discarded.
-	 *  @bug      The old pointer would always be deallocated,
-	 *            even if reallocation failed.
+     *  @bug      The old pointer would always be deallocated,
+     *            even if reallocation failed.
     **/
     [[nodiscard]] pointer
     reallocate(pointer __p, size_type __n);
@@ -103,8 +103,8 @@ public:
      *  @param    __args  Parameters given to constructor.
      *  @return   New pointer to an object.
      *  @warning  Return value shall not be discarded.
-	 *  @bug      The old pointer would always be destroyed,
-	 *            even if recontruction failed.
+     *  @bug      The old pointer would always be destroyed,
+     *            even if recontruction failed.
     **/
     template<typename... _Args>
     [[nodiscard]] pointer
@@ -122,28 +122,29 @@ public:
     using pointer = void*;
     using size_type = size_t;
 
-	/** @brief  Allocate a memory block of fixed bytes.
-	 *  @param  __n  Number of bytes.
-	 *  @return   Pointer to a memory block.
-	 *  @throw    std::bad_alloc  If allocation failed.
+    /** @brief  Allocate a memory block of fixed bytes.
+     *  @param  __n  Number of bytes.
+     *  @return   Pointer to a memory block.
+     *  @throw    std::bad_alloc  If allocation failed.
      *  @warning  Return value shall not be discarded.
-	**/
+    **/
     [[nodiscard]] pointer
     allocate(size_type __n);
 
-	/** @brief  Deallocate a memory block of fixed bytes
+    /** @brief  Deallocate a memory block of fixed bytes
      *  @param  __p  Pointer to a memory block.
     **/
-    void deallocate(pointer __p) noexcept;
+    void
+    deallocate(pointer __p) noexcept;
 
-	/** @brief    Reallocate a memory block of fixed bytes
+    /** @brief    Reallocate a memory block of fixed bytes
      *  @param    __p  Old pointer to a memory block.
      *  @param    __n  Number of bytes.
      *  @return   New pointer to a memory block.
-	 *  @throw    std::bad_alloc  If reallocation failed.
+     *  @throw    std::bad_alloc  If reallocation failed.
      *  @warning  Return value shall not be discarded.
-	 *  @bug      The old pointer would always be deallocated,
-	 *            even if reallocation failed.
+     *  @bug      The old pointer would always be deallocated,
+     *            even if reallocation failed.
     **/
     [[nodiscard]] pointer
     reallocate(pointer __p, size_type __n);

@@ -34,11 +34,11 @@
 #ifndef _POLLIB_BIT
 #define _POLLIB_BIT 1
 
-#include <polaris/version>
-#include <polaris/utility>
+#include <pol/version>
+#include <pol/utility>
 #include <bit>
 #include <type_traits>
-#include <polaris/bit_memory>
+#include <pol/bit_memory>
 
 namespace pol
 {
@@ -62,11 +62,11 @@ class basic_bit_view;
 
 }
 
-#include <polaris/bits/bitsto.h>
-#include <polaris/bits/bitsto.tcc>
-#include <polaris/bits/bitres.h>
-#include <polaris/bits/bitres.tcc>
-#include <polaris/bits/bit.h>
-#include <polaris/bits/bit.tcc>
+#include <pol/bits/bitsto.h>
+#include <pol/bits/bitsto.tcc>
+#include <pol/bits/bitres.h>
+#include <pol/bits/bitres.tcc>
+#include <pol/bits/bit.h>
+#include <pol/bits/bit.tcc>
 
 #endif /* _POLLIB_BIT */

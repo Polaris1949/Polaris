@@ -63,69 +63,69 @@ class bit_ref;
 class bit_address
 {
 public:
-	/** @brief  Separator between byte address and bit level
-	**/
+    /** @brief  Separator between byte address and bit level
+    **/
     constexpr static const char separator{'@'};
 
-	/** @brief  Construct a null bit address
-	**/
+    /** @brief  Construct a null bit address
+    **/
     constexpr
-	bit_address() noexcept;
+    bit_address() noexcept;
 
-	/** @brief  Construct a null bit address
-	 *  @param  __x  Just @c nullptr.
-	**/
+    /** @brief  Construct a null bit address
+     *  @param  __x  Just @c nullptr.
+    **/
     constexpr
-	bit_address(nullptr_t __x) noexcept;
+    bit_address(nullptr_t __x) noexcept;
 
-	/** @brief  Construct a bit address from byte address and bit offset
-	 *  @param  __p  Byte address pointer.
-	 *  @param  __n  Bit offset.
-	 *  @note   Bit offset can not only be 0~7. For example, if @c __n is 8,
-	 *          byte address would be increased and bit level would be set
-	 *          to 0. This feature is very useful.
-	**/
+    /** @brief  Construct a bit address from byte address and bit offset
+     *  @param  __p  Byte address pointer.
+     *  @param  __n  Bit offset.
+     *  @note   Bit offset can not only be 0~7. For example, if @c __n is 8,
+     *          byte address would be increased and bit level would be set
+     *          to 0. This feature is very useful.
+    **/
     constexpr
-	bit_address(void* __p, size_t __n) noexcept;
+    bit_address(void* __p, size_t __n) noexcept;
 
-	/** @brief    Get byte address
+    /** @brief    Get byte address
      *  @return   Byte address pointer.
-	**/
+    **/
     void*
-	byte_address() const noexcept;
+    byte_address() const noexcept;
 
-	/** @brief    Get byte reference
+    /** @brief    Get byte reference
      *  @return   Byte address reference.
-	 *  @pre      Byte address shall not be null.
-	 *  @note     This function does not check null bit address.
-	 *            Null reference remains valid unless converts it.
-	**/
+     *  @pre      Byte address shall not be null.
+     *  @note     This function does not check null bit address.
+     *            Null reference remains valid unless converts it.
+    **/
     ubyte_t&
-	byte_reference() const noexcept;
+    byte_reference() const noexcept;
 
-	/** @brief    Get bit level
+    /** @brief    Get bit level
      *  @return   Bit level number.
-	 *  @post     Return value is always 0~7.
-	**/
+     *  @post     Return value is always 0~7.
+    **/
     size_t
-	bit_level() const noexcept;
+    bit_level() const noexcept;
 
-	/** @brief    Check null bit address
-	 *  @return   @c true if null bit address, @c false otherwise.
-	 *  @warning  Return value shall not be discarded.
-	**/
+    /** @brief    Check null bit address
+     *  @return   @c true if null bit address, @c false otherwise.
+     *  @warning  Return value shall not be discarded.
+    **/
     [[nodiscard]] bool
-	empty() const noexcept;
+    empty() const noexcept;
 
-	/** @brief  Assign a bit address from byte address and bit offset
-	 *  @param  __p  Byte address pointer.
-	 *  @param  __n  Bit offset.
-	 *  @note   Bit offset can not only be 0~7. For example, if @c __n is 8,
-	 *          byte address would be increased and bit level would be set
-	 *          to 0. This feature is very useful.
-	**/
+    /** @brief  Assign a bit address from byte address and bit offset
+     *  @param  __p  Byte address pointer.
+     *  @param  __n  Bit offset.
+     *  @note   Bit offset can not only be 0~7. For example, if @c __n is 8,
+     *          byte address would be increased and bit level would be set
+     *          to 0. This feature is very useful.
+    **/
     void
-	assign(void* __p, size_t __n) noexcept;
+    assign(void* __p, size_t __n) noexcept;
 
 private:
     void* _M_ptr;
@@ -153,65 +153,65 @@ operator << (std::ostream& __out, const bit_address& __x);
 class bit_ptr
 {
 public:
-	/** @brief  Construct a null bit pointer
-	 *  @note   Implicit default constructor.
-	**/
+    /** @brief  Construct a null bit pointer
+     *  @note   Implicit default constructor.
+    **/
     constexpr
-	bit_ptr() noexcept = default;
+    bit_ptr() noexcept = default;
 
-	/** @brief  Construct a null bit pointer
-	 *  @param  __x  Just @c nullptr.
-	**/
+    /** @brief  Construct a null bit pointer
+     *  @param  __x  Just @c nullptr.
+    **/
     constexpr
-	bit_ptr(nullptr_t __x) noexcept;
+    bit_ptr(nullptr_t __x) noexcept;
 
-	/** @brief  Construct from @c bit_address
-	 *  @param  __a  Bit address.
-	**/
+    /** @brief  Construct from @c bit_address
+     *  @param  __a  Bit address.
+    **/
     constexpr
-	bit_ptr(bit_address __a) noexcept;
+    bit_ptr(bit_address __a) noexcept;
 
-	/** @brief    Check null pointer
-	 *  @return   @c true if null pointer, @c false otherwise.
-	 *  @warning  Return value shall not be discarded.
-	**/
+    /** @brief    Check null pointer
+     *  @return   @c true if null pointer, @c false otherwise.
+     *  @warning  Return value shall not be discarded.
+    **/
     [[nodiscard]] bool
-	empty() const noexcept;
+    empty() const noexcept;
 
-	/** @brief    Check non-null pointer
-	 *  @return   @c true if non-null pointer, @c false otherwise.
-	**/
+    /** @brief    Check non-null pointer
+     *  @return   @c true if non-null pointer, @c false otherwise.
+    **/
     explicit
-	operator bool() const noexcept;
+    operator bool() const noexcept;
 
-	/** @brief    Check null pointer
-	 *  @return   @c true if null pointer, @c false otherwise.
-	**/
+    /** @brief    Check null pointer
+     *  @return   @c true if null pointer, @c false otherwise.
+    **/
     bool
-	operator! () const noexcept;
+    operator! () const noexcept;
 
-	/** @brief   Dereference pointer to get a @c bit_ref
-	 *  @return  Bit reference.
-	 *  @pre     Require non-null @c bit_ptr.
-	**/
+    /** @brief   Dereference pointer to get a @c bit_ref
+     *  @return  Bit reference.
+     *  @pre     Require non-null @c bit_ptr.
+    **/
     bit_ref
-	operator* ();
+    operator* ();
 
-	/** @brief   Dereference pointer to get a @c bool
-	 *  @return  Bit reference.
-	 *  @pre     Require non-null @c bit_ptr.
-	**/
+    /** @brief   Dereference pointer to get a @c bool
+     *  @return  Bit reference.
+     *  @pre     Require non-null @c bit_ptr.
+    **/
     bool
-	operator* () const;
+    operator* () const;
 
-	explicit
-	operator bit_address() const noexcept;
+    explicit
+    operator bit_address() const noexcept;
 
-	bit_address
-	address() const noexcept;
+    bit_address
+    address() const noexcept;
 
-	bit_ptr&
-	operator = (const bit_address& __a) noexcept;
+    bit_ptr&
+    operator = (const bit_address& __a) noexcept;
 
 private:
     bit_address _M_adr;
@@ -240,16 +240,16 @@ class bit_ref
 {
 public:
     /** @brief  Disable construct a null @c bit_ref
-	 *  @note   Deleted default constructor.
+     *  @note   Deleted default constructor.
     **/
     constexpr
-	bit_ref() = delete;
+    bit_ref() = delete;
 
     /** @brief  Disable construct a null @c bit_ref
      *  @param  __x  Just @c nullptr.
     **/
     constexpr
-	bit_ref(nullptr_t __x) = delete;
+    bit_ref(nullptr_t __x) = delete;
 
     /** @brief  Construct from a @c bit_address
      *  @param  __a  A @c bit_address.
@@ -257,45 +257,45 @@ public:
      *  @throw  std::invalid_argument  If @c __a is null.
     **/
     constexpr
-	bit_ref(bit_address __a);
+    bit_ref(bit_address __a);
 
     /** @brief  Copy constructor
      *  @param  __x  Another @c bit_ref.
     **/
     constexpr
-	bit_ref(const bit_ref& __x) noexcept;
+    bit_ref(const bit_ref& __x) noexcept;
 
     /** @brief   Get referred bit value
      *  @return  Bit value.
     **/
     explicit
-	operator bool() const noexcept;
+    operator bool() const noexcept;
 
     /** @brief   Get referred flipped bit value
      *  @return  Bit value.
     **/
     bool
-	operator! () const noexcept;
+    operator! () const noexcept;
 
     /** @brief   Assign a bit value.
      *  @param   __x  A bit value.
      *  @return  Self.
     **/
     bit_ref&
-	operator = (bool __x) noexcept;
+    operator = (bool __x) noexcept;
 
     /** @brief   Assign a bit value from another @c bit_ref
      *  @param   __x  Another @c bit_ref.
      *  @return  Self.
     **/
     bit_ref&
-	operator = (const bit_ref& __x) noexcept;
+    operator = (const bit_ref& __x) noexcept;
 
-	explicit
-	operator bit_address() const noexcept;
+    explicit
+    operator bit_address() const noexcept;
 
-	bit_address
-	address() const noexcept;
+    bit_address
+    address() const noexcept;
 
 private:
     bit_address _M_adr;
@@ -316,6 +316,26 @@ operator >> (std::istream& __in, bit_ref& __x);
 **/
 std::ostream&
 operator << (std::ostream& __out, const bit_ref& __x);
+
+class bitmem_ptr
+{
+public:
+    using pointer = bit_ptr;
+    using size_type = size_t;
+
+    bitmem_ptr() noexcept = default;
+    bitmem_ptr(nullptr_t) noexcept;
+    bitmem_ptr(pointer __p, size_type __n) noexcept;
+
+    pointer ptr() const noexcept;
+    size_type size() const noexcept;
+
+    explicit operator bool() const noexcept;
+
+private:
+    bit_ptr _M_ptr;
+    size_t _M_size;
+};
 
 constexpr
 bit_address::
