@@ -27,7 +27,7 @@
  *  Do not attempt to use it directly. @headername{bitmask}
  */
 
-// Written by Jingyu Zhao.
+// Written by Polaris Zhao.
 
 #ifndef _POL_BMASK_H
 #define _POL_BMASK_H 1
@@ -41,42 +41,43 @@ bitmask operator & (const bitmask& __x, const bitmask& __y);
 bitmask operator | (const bitmask& __x, const bitmask& __y);
 bitmask operator ^ (const bitmask& __x, const bitmask& __y);
 
+template<size_t _Num>
 class bitmask
 {
-	typedef std::vector<bool> _Cont;
-	
+	typedef std::bitset<_Num> _Cont;
+
 public:
 	typedef _Cont                   container_type;
 	typedef _Cont::size_type        size_type;
 	typedef _Cont::value_type       value_type;
 	typedef _Cont::reference        reference;
 	typedef _Cont::const_reference  const_reference;
-	
-private:
-	_Cont _M_b;
-	
+
 public:
 	bitmask() = default;
 	bitmask(const std::string& __x);
 	bitmask(const container_type& __x);
 	~bitmask() noexcept = default;
-	
-	container_type& raw();
-	const container_type& raw() const;
-	
+
+	[[deprecated]] container_type& raw();
+	[[deprecated]] const container_type& raw() const;
+
 	reference operator[] (size_type __n);
 	const_reference operator[] (size_type __n) const;
-	
+
 	bitmask& flip();
 	bitmask operator~ ();
-	
+
 	bitmask& operator &= (const bitmask& __x);
 	bitmask& operator |= (const bitmask& __x);
 	bitmask& operator ^= (const bitmask& __x);
-	
+
 	friend bitmask operator & (const bitmask& __x, const bitmask& __y);
 	friend bitmask operator | (const bitmask& __x, const bitmask& __y);
 	friend bitmask operator ^ (const bitmask& __x, const bitmask& __y);
+
+private:
+	_Cont _M_b;
 };
 
 }

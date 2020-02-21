@@ -32,7 +32,7 @@
 #ifndef _POL_INTBASE_H
 #define _POL_INTBASE_H 1
 
-namespace polaris
+namespace pol
 {
 
 struct _Int_base
@@ -56,7 +56,7 @@ public:
     _Int_allocator get_allocator() const noexcept;
 
     _Int_base();
-    _Int_base(size_t __n);
+    explicit _Int_base(size_t __n);
     _Int_base(const _Int_base& __x);
     _Int_base(_Int_base&& __x);
     ~_Int_base() noexcept;

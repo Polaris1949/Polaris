@@ -2,6 +2,7 @@
 
 int main()
 {
-    pol::__ctr_set_conti(true);
-    constexpr auto x = pol::assert(0, "runtime error", "test");
+    constexpr auto x = pol::assert(false, "runtime error", "test");
+    constexpr auto y = pol::expect(false, "logic error", "test");
+    constexpr auto z = pol::ensure(false, "system error", "test");
 }

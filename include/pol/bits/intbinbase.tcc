@@ -1,14 +1,17 @@
 #ifndef _POL_INTBINBASE_TCC
 #define _POL_INTBINBASE_TCC 1
 
-namespace polaris
+namespace pol
 {
 
 template<typename _Tp>
-std::enable_if_t<std::is_integral_v<_Tp>>
+void
 basic_binary_integer::
 _M_initialize(_Tp __x)
 {
+    static_assert(std::is_integral_v<_Tp>,
+        "require an integral type");
+    
     _Int_data __tmp;
     _Int_data* __begin;
 
@@ -65,13 +68,13 @@ basic_binary_integer(unsigned long long __x)
 {
     _M_initialize(__x);
 }
-
+/*
 basic_binary_integer::
 basic_binary_integer(size_tag_t, size_type __n)
     : _Int_genbase(__n)
 {
 }
-
+*/
 template<typename _Func>
 basic_binary_integer&
 basic_binary_integer::
@@ -167,7 +170,7 @@ flip()
     _Int_data* __ptr = this->_M_impl._M_start;
 
     while (__ptr < this->_M_impl._M_finish)
-        polaris::flip(*__ptr++);
+        pol::flip(*__ptr++);
 
     return *this;
 }
@@ -268,6 +271,23 @@ operator -= (const basic_binary_integer& __x)
 {
     return this->_M_basic_minus(__x);
 }
+
+void
+basic_binary_integer::
+resize(size_type __s)
+{
+    this->_Int_genbase::_M_reallocate(__s);
+}
+
+_Int_data*
+basic_binary_integer::
+begin() noexcept
+{ return this->_M_impl._M_start; }
+
+_Int_data*
+basic_binary_integer::
+end() noexcept
+{ return this->_M_impl._M_finish; }
 
 }
 

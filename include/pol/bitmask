@@ -34,10 +34,10 @@
 #ifndef _POLLIB_BITMASK
 #define _POLLIB_BITMASK 1
 
-#pragma GCC system_header
-
+#include <pol/version>
 #include <vector>
 #include <string>
+#include <bitset>
 #include <polaris/bits/wbmask.h>
 #include <polaris/bits/wbmask.tcc>
 #include <polaris/bits/bmask.h>

@@ -1,6 +1,6 @@
-#include <polaris/contract>
+#include <pol/contract>
 
 int main()
 {
-    pol::expect(false);
+    pol::expect(false, "runtime error", "test");
 }

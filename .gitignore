@@ -41,3 +41,10 @@ doc
 *.log
 *.cache
 *.stackdump
+
+# Media files
+*.png
+*.jpg
+*.gif
+*.mp3
+*.mp4

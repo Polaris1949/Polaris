@@ -27,12 +27,12 @@
  *  Do not attempt to use it directly. @headername{bitmask}
  */
 
-// Written by Jingyu Zhao.
+// Written by Polaris Zhao.
 
 #ifndef _POL_BMASK_TCC
 #define _POL_BMASK_TCC 1
 
-namespace polaris
+namespace pol
 {
 
 

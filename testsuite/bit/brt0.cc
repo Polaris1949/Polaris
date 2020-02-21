@@ -1,5 +1,6 @@
 #include <iostream>
 #include <list>
+#define GOOD 1
 
 struct chunk
 {
@@ -11,9 +12,11 @@ struct chunk
             size{__n / sizeof(uint32_t)}
     { }
 
+#if GOOD
     chunk(chunk&& __c)
         : data(__c.data), size(__c.size)
     { __c.data = nullptr; }
+#endif
 
     ~chunk() noexcept
     { if (this->data) delete[] this->data; }

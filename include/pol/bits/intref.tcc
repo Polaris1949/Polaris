@@ -18,12 +18,6 @@ _Int_reference(_Int_base* __ptr, size_t __n)
 {
 }
 
-inline
-_Int_reference::
-~_Int_reference()
-{
-}
-
 inline bool
 _Int_reference::
 empty() const

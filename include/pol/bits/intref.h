@@ -10,9 +10,10 @@ struct _Int_reference
 	
 	_Int_reference();
 	
-	_Int_reference(_Int_base* __ptr, size_t __n);
+    explicit
+	_Int_reference(_Int_base* __ptr, size_t __n = 0);
 	
-	~_Int_reference();
+	~_Int_reference() noexcept = default;
 	
 	bool empty() const;
 	

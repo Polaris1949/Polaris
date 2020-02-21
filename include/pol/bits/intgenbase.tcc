@@ -37,14 +37,16 @@ bool
 _Int_genbase::
 _M_set_element(size_t __pos, _Int_data __x)
 {
-	if (__pos >= capacity() && __x)
+    if (!__x) return true;
+
+	if (__pos >= capacity())
 	{
 		this->_M_reallocate(__pos + 1);
 		this->_M_impl._M_start[__pos] = __x;
 		return false;
 	}
 
-	if (__pos >= size() && __x)
+	if (__pos >= size())
 	{
 		this->_M_impl._M_finish = this->_M_impl._M_start + __pos + 1;
 		this->_M_impl._M_start[__pos] = __x;

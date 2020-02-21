@@ -1,7 +1,7 @@
 #ifndef _POL_INTBINBASE_H
 #define _POL_INTBINBASE_H 1
 
-namespace polaris
+namespace pol
 {
 
 class basic_binary_integer
@@ -13,7 +13,7 @@ public:
 
 protected:
     template<typename _Tp>
-    std::enable_if_t<std::is_integral_v<_Tp>>
+    void
     _M_initialize(_Tp __x);
 
     template<typename _Func>
@@ -44,7 +44,7 @@ public:
 
     basic_binary_integer(unsigned long long __x);
 
-    basic_binary_integer(size_tag_t, size_type __n);
+    //basic_binary_integer(size_tag_t, size_type __n);
 
     size_type size() const;
 
@@ -87,6 +87,15 @@ public:
 
     basic_binary_integer&
     operator -= (const basic_binary_integer& __x);
+    
+    void
+    resize(size_type __s);
+    
+    data_type*
+    begin() noexcept;
+    
+    data_type*
+    end() noexcept;
 };
 
 using basic_bint = basic_binary_integer;

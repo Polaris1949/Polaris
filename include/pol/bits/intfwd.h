@@ -18,6 +18,7 @@ using exdata_type = uint16_t;
 using data_type = uint32_t;
 using exdata_type = uint64_t;
 #endif
+#endif
 
 using radix_type = size_t;
 
@@ -89,6 +90,9 @@ template<int _Tag>
 template<int _Tag, class _ModT = allocated_integer<_Tag> >
     class allocated_modular_integer;
 */
+
+using _Int_ptr = _Int_pointer;
+using _Int_ref = _Int_reference;
 
 }
 
