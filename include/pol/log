@@ -1,0 +1,95 @@
+#ifndef _POLLIB_LOG
+#define _POLLIB_LOG 1
+
+#include <pol/version>
+#include <iosfwd>
+#include <string>
+#include <pol/file>
+#include <pol/format>
+
+#if __has_include(<source_location>)
+#include <source_location> // C++20
+namespace pol { using srcloc_t = std::source_location; }
+#elif __has_include(<experimental/source_location>)
+#include <experimental/source_location> // LFTS
+namespace pol { using srcloc_t = std::experimental::source_location; }
+#else
+#error missing support
+#endif
+
+namespace pol
+{
+
+namespace __log
+{
+extern c_file_t* device;
+extern uint8_t flag;
+
+extern std::string file_path;
+}
+
+void
+__log_set_device(c_file_t* __d) noexcept;
+
+c_file_t*
+__log_get_device() noexcept;
+
+void
+__log_set_flag(uint8_t __f) noexcept;
+
+uint8_t
+__log_get_flag() noexcept;
+
+void
+error_easy(const std::string& __s);
+
+void
+warning_easy(const std::string& __s);
+
+void
+note_easy(const std::string& __s);
+
+void
+log_easy(const std::string& __s);
+
+using log_fun_t = int(*)(const char*);
+extern log_fun_t __log_fun;
+
+void
+set_log_fun(log_fun_t f);
+
+log_fun_t
+get_log_fun();
+
+enum class log_priority { error, warning, note, info, verbose, debug, event };
+
+const char*
+log_prio_name(log_priority n);
+
+std::string
+__log_head(log_priority prio, const std::string& mod, int code);
+
+std::string
+log_srcloc(srcloc_t loc = srcloc_t::current());
+
+template<typename... _Args>
+int
+log(log_priority prio, const std::string& mod, int code,
+    const std::string& loc, const std::string& fmt, _Args&&... __args)
+{
+    std::string s = __log_head(prio, mod, code);
+    s += loc;
+    s += fmt::format(fmt, std::forward<_Args&&>(__args)...);
+    log_fun_t fun = get_log_fun();
+    return (*fun)(s.data());
+}
+
+int
+logm_cerr(const char* s);
+
+int
+logm_file(const char* s);
+
+}
+
+#endif /* _POLLIB_LOG */
