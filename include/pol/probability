@@ -33,8 +33,8 @@
 #ifndef _POLLIB_PROBABILITY
 #define _POLLIB_PROBABILITY 1
 
-#include <polaris/version>
-#include <polaris/bits/prob.h>
-#include <polaris/bits/prob.tcc>
+#include <pol/version>
+#include <pol/bits/probpool.h>
+#include <pol/bits/probpool.tcc>
 
 #endif /* _POLLIB_PROBABILITY */
