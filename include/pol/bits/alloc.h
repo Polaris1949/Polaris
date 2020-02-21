@@ -39,7 +39,6 @@ namespace pol
 
 /** @brief       General allocator
  *  @tparam      _Tp  Type for dynamic memory management.
- *  @headerfile  allocator <pol/allocator>
  *
  *  This is a general allocator for dynamic memory management of a type.
  *  It supports not only low level memory management, including @c allocate(),
@@ -88,13 +87,13 @@ public:
      *  @warning  Return value shall not be discarded.
     **/
     template<typename... _Args>
-    [[nodiscard]] pointer
+    [[deprecated]] [[nodiscard]] pointer
     construct(_Args&&... __args);
 
     /** @brief  Destroy an object
      *  @param  __p  Pointer to an object.
     **/
-    void
+    [[deprecated]] void
     destroy(pointer __p) noexcept;
 
     /** @brief    Reconstruct an object
@@ -107,7 +106,7 @@ public:
      *            even if recontruction failed.
     **/
     template<typename... _Args>
-    [[nodiscard]] pointer
+    [[deprecated]] [[nodiscard]] pointer
     reconstruct(pointer __p, _Args&&... __args);
 };
 
@@ -148,6 +147,24 @@ public:
     **/
     [[nodiscard]] pointer
     reallocate(pointer __p, size_type __n);
+};
+
+template<typename _Tp>
+class nt_allocator
+{
+public:
+    using value_type = _Tp;
+    using pointer = _Tp*;
+    using size_type = size_t;
+
+    [[nodiscard]] pointer
+    allocate(size_type __n) noexcept;
+
+    void
+    deallocate(pointer __p) noexcept;
+
+    [[nodiscard]] pointer
+    reallocate(pointer __p, size_type __n) noexcept;
 };
 
 }

@@ -41,7 +41,7 @@ template<typename _Tp>
 _Tp*
 allocator<_Tp>::
 allocate(size_type __n)
-{ return static_cast<_Tp*>(::operator new (sizeof(_Tp) * __n)); }
+{ return static_cast<_Tp*>(::operator new (__n)); }
 
 template<typename _Tp>
 void
@@ -79,6 +79,46 @@ reconstruct(pointer __p, _Args&&... __args)
 {
     this->destroy(__p);
     return this->construct(__args...);
+}
+
+inline void*
+allocator<void>::
+allocate(size_type __n)
+{ return ::operator new (__n); }
+
+inline void
+allocator<void>::
+deallocate(pointer __p) noexcept
+{ ::operator delete (__p); }
+
+inline void*
+allocator<void>::
+reallocate(pointer __p, size_type __n)
+{
+    this->deallocate(__p);
+    return this->allocate(__n);
+}
+
+template<typename _Tp>
+_Tp*
+nt_allocator<_Tp>::
+allocate(size_type __n) noexcept
+{ return static_cast<_Tp*>(::operator new (__n, std::nothrow)); }
+
+template<typename _Tp>
+void
+nt_allocator<_Tp>::
+deallocate(pointer __p) noexcept
+{ ::operator delete (static_cast<void*>(__p)); }
+
+template<typename _Tp>
+_Tp*
+nt_allocator<_Tp>::
+reallocate(pointer __p, size_type __n) noexcept
+{
+    _Tp* __tmp{this->allocate(__n)};
+    if (__tmp) this->deallocate(__p);
+    return __tmp;
 }
 
 }
