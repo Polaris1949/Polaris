@@ -9,6 +9,8 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
+    - name: prepare
+      run: chmod +x ./configure
     - name: configure
       run: ./configure
     - name: make
