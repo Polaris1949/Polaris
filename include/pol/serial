@@ -1,0 +1,99 @@
+// Simple serialization and deserialization -*- C++ -*-
+
+// Copyright (C) 2004-2019 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file     serial
+ *  @brief    Simple serialization and deserialization
+ *  @author   Polaris Zhao
+ *  @version  0.8.0
+ *  @todo     Revision.
+ *
+ *  This is a Polaris C++ Library header.
+**/
+
+#ifndef _POLLIB_SERIAL
+#define _POLLIB_SERIAL 1
+
+#include <pol/version>
+#include <algorithm>
+#include <memory>
+#include <vector>
+
+namespace pol
+{
+
+using memory_buffer = std::vector<char>;
+
+template<typename _Tp>
+[[nodiscard]] memory_buffer
+serialize(const _Tp& __x)
+{
+    memory_buffer __buf(sizeof(_Tp));
+    std::copy_n(reinterpret_cast<const char*>(&__x),
+        sizeof(_Tp), __buf.begin());
+    return __buf;
+}
+
+template<typename _Tp>
+[[nodiscard]] char*
+serialize_raw(const _Tp& __x)
+{
+    char* __ret = new char[sizeof(_Tp)];
+    std::copy_n(reinterpret_cast<const char*>(&__x),
+        sizeof(_Tp), __ret);
+    return __ret;
+    // delete[] __ret;
+}
+
+template<typename _Tp>
+[[nodiscard]] _Tp
+deserialize(const memory_buffer& __x)
+{
+    struct _Helper { char data[sizeof(_Tp)]; } __ret;
+#if POL_DEBUG
+    if (__x.size() < sizeof(_Tp))
+    {
+# if POL_EXCEPTIONS
+        throw std::runtime_errror("pol::deserialize");
+# else
+        pol::error_easy("pol::deserialize");
+        std::terminate();
+# endif
+    }
+#endif
+    std::copy_n(__x.begin(), sizeof(_Tp), __ret.data);
+    return *reinterpret_cast<_Tp*>(&__ret);
+}
+
+template<typename _Tp>
+[[nodiscard]] _Tp
+deserialize_raw(const char* __x)
+{
+    struct _Helper { char data[sizeof(_Tp)]; } __ret;
+    std::copy_n(__x, sizeof(_Tp), __ret.data);
+    return *reinterpret_cast<_Tp*>(&__ret);
+}
+
+}
+
+#endif /* _POLLIB_SERIAL */
