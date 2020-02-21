@@ -36,12 +36,17 @@
 
 #include <pol/version>
 #include <pol/type>
+#include <string>
 #include <utility> // for std::move
 
-#if __has_include(<experimental/source_location>)
-#include <experimental/source_location>
+#if __has_include(<source_location>)
+#include <source_location>              // C++ 20
+namespace pol { using srcloc_t = std::source_location; }
+#elif __has_include(<experimental/source_location>)
+#include <experimental/source_location> // LF TS v2
+namespace pol { using srcloc_t = std::experimental::source_location; }
 #else
-#error std::experimental::source_location support not found
+#error source_location support not found
 #endif
 
 #if POL_COMPAT
@@ -64,8 +69,6 @@
 namespace pol
 {
 
-using srcloc_t = std::experimental::source_location;
-
 extern uint8_t __ctr_flag;
 
 void
@@ -80,49 +83,66 @@ __ctr_set_level(uint8_t) noexcept;
 uint8_t
 __ctr_get_level() noexcept;
 
+// TODO: Make APIs take std::string as an argument
+// Keep constexpr functions, but not a constexpr class
+
 class contract
 {
 public:
     contract() = delete;
 
-    constexpr
-    contract(const char* __mode, uint8_t __level,
-        const char* __type, const char* __msg, srcloc_t __loc) noexcept;
+    inline
+    contract(uint8_t __mode, uint8_t __level, uint16_t __code,
+        const std::string& __type, const std::string& __msg,
+        srcloc_t __loc) noexcept;
 
-    constexpr const char*
+    inline uint8_t
+    mode_n() const noexcept;
+
+    inline const char*
     mode() const noexcept;
 
-    constexpr uint8_t
+    inline uint8_t
+    level_n() const noexcept;
+
+    inline const char*
     level() const noexcept;
 
-    constexpr const char*
+    inline uint16_t
+    code() const noexcept;
+
+    inline std::string
     type() const noexcept;
 
-    constexpr const char*
+    inline std::string
     message() const noexcept;
 
-    constexpr srcloc_t
+    [[deprecated]] inline srcloc_t
     location() const noexcept;
 
-    constexpr const char*
+    inline const char*
     file() const noexcept;
 
-    constexpr const char*
+    inline const char*
     function() const noexcept;
 
-    constexpr uint32_t
+    inline uint32_t
     line() const noexcept;
 
-    constexpr uint32_t
+    inline uint32_t
     column() const noexcept;
 
 private:
-    const char* _M_mode;
-    const char* _M_type;
-    const char* _M_msg;
+    std::string _M_type;
+    std::string _M_msg;
     srcloc_t _M_loc;
+    uint8_t _M_mode;
     uint8_t _M_level;
+    uint16_t _M_code;
 };
+
+constexpr const char*
+__ctr_mode_string(uint8_t __mode) noexcept;
 
 constexpr const char*
 __ctr_level_string(uint8_t __lev) noexcept;
@@ -130,82 +150,138 @@ __ctr_level_string(uint8_t __lev) noexcept;
 void
 __ctr_violate(contract&& __c);
 
-void
-__assert_violate(const char* __type, const char* __msg,
-    uint8_t __level = 1, srcloc_t __loc = srcloc_t::current());
+using __ctr_handler_t = void(*)(contract&&);
 
 void
-__expect_violate(const char* __type, const char* __msg,
-    uint8_t __level = 1, srcloc_t __loc = srcloc_t::current());
+__ctr_set_handler(__ctr_handler_t __h) noexcept;
+
+__ctr_handler_t
+__ctr_get_handler() noexcept;
 
 void
-__ensure_violate(const char* __type, const char* __msg,
-    uint8_t __level = 1, srcloc_t __loc = srcloc_t::current());
+__assert_violate(const std::string& __type, const std::string& __msg,
+    uint16_t __code = 0, uint8_t __level = 1,
+    srcloc_t __loc = srcloc_t::current());
+
+void
+__expect_violate(const std::string& __type, const std::string& __msg,
+    uint16_t __code = 0, uint8_t __level = 1,
+    srcloc_t __loc = srcloc_t::current());
+
+void
+__ensure_violate(const std::string& __type, const std::string& __msg,
+    uint16_t __code = 0, uint8_t __level = 1,
+    srcloc_t __loc = srcloc_t::current());
 
 constexpr bool
 assert(bool __pred, const char* __type, const char* __msg,
-    uint8_t __level = 1, srcloc_t __loc = srcloc_t::current());
+    uint16_t __code = 0, uint8_t __level = 1,
+    srcloc_t __loc = srcloc_t::current());
+
+inline void
+assert(bool __pred, const std::string& __type, const std::string& __msg,
+    uint16_t __code = 0, uint8_t __level = 1,
+    srcloc_t __loc = srcloc_t::current());
 
 constexpr bool
 expect(bool __pred, const char* __type, const char* __msg,
-    uint8_t __level = 1, srcloc_t __loc = srcloc_t::current());
+    uint16_t __code = 0, uint8_t __level = 1,
+    srcloc_t __loc = srcloc_t::current());
+
+inline void
+expect(bool __pred, const std::string& __type, const std::string& __msg,
+    uint16_t __code = 0, uint8_t __level = 1,
+    srcloc_t __loc = srcloc_t::current());
 
 constexpr bool
 ensure(bool __pred, const char* __type, const char* __msg,
-    uint8_t __level = 1, srcloc_t __loc = srcloc_t::current());
+    uint16_t __code = 0, uint8_t __level = 1,
+    srcloc_t __loc = srcloc_t::current());
 
-constexpr
+inline void
+ensure(bool __pred, const std::string& __type, const std::string& __msg,
+    uint16_t __code = 0, uint8_t __level = 1,
+    srcloc_t __loc = srcloc_t::current());
+
 contract::
-contract(const char* __mode, uint8_t __level,
-    const char* __type, const char* __msg, srcloc_t __loc) noexcept
-    : _M_mode{__mode ? __mode : "bad"}, _M_type{__type},
-        _M_msg{__msg}, _M_loc{__loc}, _M_level{__level}
+contract(uint8_t __mode, uint8_t __level, uint16_t __code,
+    const std::string& __type, const std::string& __msg,
+    srcloc_t __loc) noexcept
+    : _M_type{__type}, _M_msg{__msg}, _M_loc{__loc},
+        _M_mode{__mode}, _M_level{__level}, _M_code{__code}
 { }
 
-constexpr const char*
+uint8_t
 contract::
-mode() const noexcept
+mode_n() const noexcept
 { return this->_M_mode; }
 
-constexpr uint8_t
+const char*
 contract::
-level() const noexcept
+mode() const noexcept
+{ return __ctr_mode_string(this->_M_mode); }
+
+uint8_t
+contract::
+level_n() const noexcept
 { return this->_M_level; }
 
-constexpr const char*
+const char*
+contract::
+level() const noexcept
+{ return __ctr_level_string(this->_M_level); }
+
+uint16_t
+contract::
+code() const noexcept
+{ return this->_M_code; }
+
+std::string
 contract::
 type() const noexcept
 { return this->_M_type; }
 
-constexpr const char*
+std::string
 contract::
 message() const noexcept
 { return this->_M_msg; }
 
-constexpr srcloc_t
+srcloc_t
 contract::
 location() const noexcept
 { return this->_M_loc; }
 
-constexpr const char*
+const char*
 contract::
 file() const noexcept
 { return this->_M_loc.file_name(); }
 
-constexpr const char*
+const char*
 contract::
 function() const noexcept
 { return this->_M_loc.function_name(); }
 
-constexpr uint32_t
+uint32_t
 contract::
 line() const noexcept
 { return this->_M_loc.line(); }
 
-constexpr uint32_t
+uint32_t
 contract::
 column() const noexcept
 { return this->_M_loc.column(); }
+
+constexpr const char*
+__ctr_mode_string(uint8_t __mode) noexcept
+{
+    switch (__mode)
+    {
+        case 0: return "assert";
+        case 1: return "expect";
+        case 2: return "ensure";
+        default: return "bad";
+    }
+}
 
 constexpr const char*
 __ctr_level_string(uint8_t __lev) noexcept
@@ -222,26 +298,53 @@ __ctr_level_string(uint8_t __lev) noexcept
 
 constexpr bool
 assert(bool __pred, const char* __type, const char* __msg,
-    uint8_t __level, srcloc_t __loc)
+    uint16_t __code, uint8_t __level, srcloc_t __loc)
 {
-    if (!__pred) __assert_violate(__type, __msg, __level, __loc);
+    if (!__pred)
+        __assert_violate(__type, __msg, __code, __level, __loc);
     return __pred;
+}
+
+inline void
+assert(bool __pred, const std::string& __type, const std::string& __msg,
+    uint16_t __code, uint8_t __level, srcloc_t __loc)
+{
+    if (!__pred)
+        __assert_violate(__type, __msg, __code, __level, __loc);
 }
 
 constexpr bool
 expect(bool __pred, const char* __type, const char* __msg,
-    uint8_t __level, srcloc_t __loc)
+    uint16_t __code, uint8_t __level, srcloc_t __loc)
 {
-    if (!__pred) __expect_violate(__type, __msg, __level, __loc);
+    if (!__pred)
+        __expect_violate(__type, __msg, __code, __level, __loc);
     return __pred;
+}
+
+inline void
+expect(bool __pred, const std::string& __type, const std::string& __msg,
+    uint16_t __code, uint8_t __level, srcloc_t __loc)
+{
+    if (!__pred)
+        __expect_violate(__type, __msg, __code, __level, __loc);
 }
 
 constexpr bool
 ensure(bool __pred, const char* __type, const char* __msg,
-    uint8_t __level, srcloc_t __loc)
+    uint16_t __code, uint8_t __level, srcloc_t __loc)
 {
-    if (!__pred) __ensure_violate(__type, __msg, __level, __loc);
+    if (!__pred)
+        __ensure_violate(__type, __msg, __code, __level, __loc);
     return __pred;
+}
+
+inline void
+ensure(bool __pred, const std::string& __type, const std::string& __msg,
+    uint16_t __code, uint8_t __level, srcloc_t __loc)
+{
+    if (!__pred)
+        __ensure_violate(__type, __msg, __code, __level, __loc);
 }
 
 }
@@ -253,11 +356,11 @@ ensure(bool __pred, const char* __type, const char* __msg,
 #else
 #define __POL_SCP pol::srcloc_t::current()
 #endif
-#define POL_ASSERT(P, T, M)   pol::assert((P), (T), (M), 1, __POL_SCP)
-#define POL_EXPECT(P, T, M)   pol::expect((P), (T), (M), 1, __POL_SCP)
-#define POL_ENSURE(P, T, M)   pol::ensure((P), (T), (M), 1, __POL_SCP)
-#define POL_ASSERT_X(P, T, M) pol::assert((P), (T), (M), 2, __POL_SCP)
-#define POL_EXPECT_X(P, T, M) pol::expect((P), (T), (M), 2, __POL_SCP)
-#define POL_ENSURE_X(P, T, M) pol::ensure((P), (T), (M), 2, __POL_SCP)
+#define POL_ASSERT(P, T, M, C)   pol::assert((P), (T), (M), (C), 1, __POL_SCP)
+#define POL_EXPECT(P, T, M, C)   pol::expect((P), (T), (M), (C), 1, __POL_SCP)
+#define POL_ENSURE(P, T, M, C)   pol::ensure((P), (T), (M), (C), 1, __POL_SCP)
+#define POL_ASSERT_X(P, T, M, C) pol::assert((P), (T), (M), (C), 2, __POL_SCP)
+#define POL_EXPECT_X(P, T, M, C) pol::expect((P), (T), (M), (C), 2, __POL_SCP)
+#define POL_ENSURE_X(P, T, M, C) pol::ensure((P), (T), (M), (C), 2, __POL_SCP)
 
 #endif /* _POLLIB_CONTRACT */

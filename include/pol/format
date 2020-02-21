@@ -56,27 +56,55 @@ template<typename... _Args>
 format(_Args&&... __args)
 { return fmt::format(std::forward<_Args&&>(__args)...); }
 
+class ftext
+{
+public:
+    ftext() = default;
+
+    template<typename... _Args>
+    ftext(fmt::text_style __s, _Args&&... __args);
+
+    friend std::ostream&
+    operator << (std::ostream& __out, const ftext& __x);
+
+    friend std::ofstream&
+    operator << (std::ofstream& __out, const ftext& __x);
+
+private:
+    fmt::text_style _M_style;
+    std::string _M_text;
+};
+
+template<typename... _Args>
+ftext::
+ftext(fmt::text_style __s, _Args&&... __args)
+    : _M_style{__s}, _M_text{format(std::forward<_Args&&>(__args)...)}
+{ }
+
 namespace __format
 {
 /** @brief  Global buffer for storing the result of @c cformat()
 **/
 extern std::string buffer;
 
+#if POL_DEPRECATED
 /** @brief  Global mutex for multi-thread support for @c cformat()
  *  @note   You shall invoke @c cfmt_lock() and @c cfmt_unlock()
  *          in order to control this mutex.
 **/
-extern std::mutex mutex; 
+[[deprecated]] extern std::mutex mutex; 
+#endif
 }
 
+#if POL_DEPRECATED
 /** @brief  Lock global mutex for @c cformat()
 **/
-void
+[[deprecated]] void
 cfmt_lock();
 
 /** @brief  Unlock global mutex for @c cformat()
 **/
-void
+[[deprecated]] void
 cfmt_unlock();
 
 /** @brief   Text formatter (C-style)
@@ -87,12 +115,13 @@ cfmt_unlock();
  *           invoking this function.
 **/
 template<typename... _Args>
-[[nodiscard]] inline const char*
+[[deprecated]] [[nodiscard]] inline const char*
 cformat(_Args&&... __args)
 {
     __format::buffer = fmt::format(std::forward<_Args&&>(__args)...);
     return __format::buffer.data();
 }
+#endif
 
 }
 #else

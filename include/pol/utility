@@ -48,6 +48,34 @@ bit_cast(_From& __x) noexcept
     return *reinterpret_cast<_To*>(std::addressof(__x));
 }
 
+template<typename _Tp>
+inline constexpr bool
+signbit(_Tp __x)
+{
+    static_assert(std::is_integral_v<_Tp>, "require an integral type");
+    if constexpr (std::is_signed_v<_Tp>)
+    {
+        using _Unsigned_t = std::make_unsigned_t<_Tp>;
+        return static_cast<_Unsigned_t>(__x)
+            >> (std::numeric_limits<_Tp>::bits() - 1);
+    }
+    else return 0;
+}
+
+template<typename _Tp>
+inline constexpr _Tp&
+flip(_Tp& __x)
+{ return __x = ~__x; }
+
+template<typename _Tp>
+inline _Tp
+from_string(std::string_view __s) = delete;
+
+template<>
+inline std::string
+from_string(std::string_view __s)
+{ return std::string(__s.data(), __s.size()); }
+
 }
 
 #endif /* _POLLIB_UTILITY */

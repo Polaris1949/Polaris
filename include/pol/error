@@ -40,6 +40,8 @@
 // #include <pol/exception>
 #include <string>
 
+#warning not implemented
+
 namespace pol
 {
 
@@ -56,7 +58,7 @@ template<typename _Ex>
 void
 error(const char* __mode, const char* __msg, uint8_t __level = 1,
     srcloc_t __loc = srcloc_t::current());
-    
+
 }
 
 #include <pol/typeinfo>

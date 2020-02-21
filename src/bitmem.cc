@@ -4,25 +4,10 @@
 namespace pol
 {
 
-void*
-bit_address::
-byte_address() const noexcept
-{ return this->_M_ptr; }
-
 ubyte_t&
 bit_address::
 byte_reference() const noexcept
 { return *static_cast<ubyte_t*>(this->byte_address()); }
-
-size_t
-bit_address::
-bit_level() const noexcept
-{ return this->_M_lev; }
-
-bool
-bit_address::
-empty() const noexcept
-{ return this->_M_ptr == nullptr; }
 
 void
 bit_address::
@@ -52,11 +37,6 @@ operator << (std::ostream& __out, const bit_address& __x)
     __out << __x.byte_address() << bit_address::separator << __x.bit_level();
     return __out;
 }
-
-bool
-bit_ptr::
-empty() const noexcept
-{ return this->_M_adr.empty(); }
 
 bit_ptr::
 operator bool() const noexcept

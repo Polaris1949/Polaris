@@ -51,6 +51,8 @@
 #endif
 // }
 
+// TODO: Add constexpr as more as possible
+
 namespace pol
 {
 
@@ -91,7 +93,7 @@ public:
     /** @brief    Get byte address
      *  @return   Byte address pointer.
     **/
-    void*
+    constexpr void*
     byte_address() const noexcept;
 
     /** @brief    Get byte reference
@@ -107,14 +109,14 @@ public:
      *  @return   Bit level number.
      *  @post     Return value is always 0~7.
     **/
-    size_t
+    constexpr size_t
     bit_level() const noexcept;
 
     /** @brief    Check null bit address
      *  @return   @c true if null bit address, @c false otherwise.
      *  @warning  Return value shall not be discarded.
     **/
-    [[nodiscard]] bool
+    [[nodiscard]] constexpr bool
     empty() const noexcept;
 
     /** @brief  Assign a bit address from byte address and bit offset
@@ -134,7 +136,7 @@ private:
 
 /** @brief   Input support for @c bit_address
  *  @param   __in  Input stream.
- *  @param   __x   @c bit_address object.
+ *  @param   __x   A @c bit_address object.
  *  @return  Input stream.
 **/
 std::istream&
@@ -142,7 +144,7 @@ operator >> (std::istream& __in, bit_address& __x);
 
 /** @brief   Output support for @c bit_address
  *  @param   __out  Output stream.
- *  @param   __x    @c bit_address object.
+ *  @param   __x    A @c bit_address object.
  *  @return  Output stream.
 **/
 std::ostream&
@@ -175,7 +177,7 @@ public:
      *  @return   @c true if null pointer, @c false otherwise.
      *  @warning  Return value shall not be discarded.
     **/
-    [[nodiscard]] bool
+    [[nodiscard]] constexpr bool
     empty() const noexcept;
 
     /** @brief    Check non-null pointer
@@ -356,6 +358,21 @@ bit_address(void* __p, size_t __n) noexcept
         _M_lev{__n % char_bit}
 { }
 
+constexpr void*
+bit_address::
+byte_address() const noexcept
+{ return this->_M_ptr; }
+
+constexpr size_t
+bit_address::
+bit_level() const noexcept
+{ return this->_M_lev; }
+
+constexpr bool
+bit_address::
+empty() const noexcept
+{ return this->_M_ptr == nullptr; }
+
 constexpr
 bit_ptr::
 bit_ptr(nullptr_t) noexcept
@@ -368,11 +385,16 @@ bit_ptr(bit_address __a) noexcept
     : _M_adr{__a}
 { }
 
+constexpr bool
+bit_ptr::
+empty() const noexcept
+{ return this->_M_adr.empty(); }
+
 constexpr
 bit_ref::
 bit_ref(bit_address __a)
     : _M_adr{__a}
-{ POL_EXPECT(!__a.empty(), "invalid argument", "null bit address"); }
+{ expect(!__a.empty(), "invalid argument", "null bit address"); }
 
 constexpr
 bit_ref::

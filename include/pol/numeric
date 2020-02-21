@@ -3,9 +3,9 @@
 
 #pragma GCC system_header
 
-namespace polaris
+namespace pol
 {
-
+/*
 template<typename _Tp>
 class integer_base
 {
@@ -26,7 +26,7 @@ public:
     virtual _Tp& operator /= (const _Tp& __x) = 0;
     virtual _Tp& operator %= (const _Tp& __x) = 0;
 };
-
+*/
 }
 
 #endif /* _POLLIB_NUMERIC */

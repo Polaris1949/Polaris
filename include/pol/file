@@ -1,0 +1,18 @@
+#ifndef _POLLIB_FILE
+#define _POLLIB_FILE 1
+
+#include <fstream>
+
+namespace pol
+{
+
+using c_file_t = std::FILE;
+
+c_file_t* c_file(const std::istream& __f);
+c_file_t* c_file(const std::ostream& __f);
+c_file_t* c_file(const std::ifstream& __f);
+c_file_t* c_file(const std::ofstream& __f);
+
+}
+
+#endif

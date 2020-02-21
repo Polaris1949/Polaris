@@ -361,6 +361,9 @@ check_type()
 std::string
 demangle(const char* __s);
 
+std::string
+demangle(const std::string& __s);
+
 } // namespace pol
 
 #define POL_POL_CHECK_TYPE(T) pol::check_type<T>()

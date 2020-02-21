@@ -249,6 +249,7 @@ template<std::size_t __i, typename _Tp, typename... _Up,
 bool
 __one_of_impl(_Tp&& __value, std::tuple<_Up...>&& __tuple)
 {
+    // bad condition
     if constexpr (is_equality_comparable_with_v<_Tp,
             std::tuple_element_t<__i, std::tuple<_Up...>>>)
         if (__value == std::get<__i>(__tuple))

@@ -39,6 +39,8 @@
 #include <stdexcept>
 #include <string>
 
+#warning not implemented
+
 namespace pol
 {
 
@@ -67,7 +69,7 @@ private:
 template<typename _Ex>
 exception::
 exception(_Ex __e)
-    : _M_eptr{std::make_exception_ptr(__e)}, _M_name{move(check_type<_Ex>())}
+    : _M_eptr{std::make_exception_ptr(__e)}, _M_name{std::move(check_type<_Ex>())}
 { static_assert(std::is_base_of_v<std::exception, _Ex>, "bad exception"); }
 
 class std_exception
