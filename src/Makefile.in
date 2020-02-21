@@ -131,9 +131,8 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libp_la_DEPENDENCIES =
-am_libp_la_OBJECTS = allocator.lo bitmem.lo bitobs.lo contract.lo \
-	error.lo exception.lo format.lo terminal.lo typeinfo.lo \
-	version.lo
+am_libp_la_OBJECTS = bitmem.lo bitobs.lo contract.lo file.lo format.lo \
+	log.lo terminal.lo typeinfo.lo version.lo
 libp_la_OBJECTS = $(am_libp_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -320,14 +319,13 @@ AUTOMAKE_OPTIONS = foreign
 LIBVER = 0:8:0
 lib_LTLIBRARIES = libp.la
 libp_la_SOURCES = \
-    allocator.cc \
-	bitmem.cc \
-	bitobs.cc \
+    bitmem.cc \
+    bitobs.cc \
     contract.cc \
-    error.cc \
-    exception.cc \
+    file.cc \
     format.cc \
-	terminal.cc \
+    log.cc \
+    terminal.cc \
     typeinfo.cc \
     version.cc
 

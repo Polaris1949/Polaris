@@ -3,14 +3,13 @@ LIBVER = 0:8:0
 
 lib_LTLIBRARIES = libp.la
 libp_la_SOURCES = \
-    allocator.cc \
-	bitmem.cc \
-	bitobs.cc \
+    bitmem.cc \
+    bitobs.cc \
     contract.cc \
-    error.cc \
-    exception.cc \
+    file.cc \
     format.cc \
-	terminal.cc \
+    log.cc \
+    terminal.cc \
     typeinfo.cc \
     version.cc
 libp_la_LDFLAGS = -version-info $(LIBVER) -no-undefined
