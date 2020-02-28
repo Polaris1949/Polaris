@@ -26,7 +26,7 @@
  *  @headerfile  byte
  *  @brief       Byte classes implementation
  *  @author      Polaris Zhao
- *  @version     3.0
+ *  @version     0.8
  *
  *  This is an internal header file, included by other library headers.
  *  Do not attempt to use it directly.
@@ -39,40 +39,40 @@
 #include <utility>
 #include <limits>
 
-namespace polaris
+namespace pol
 {
 
 template<typename _Sig>
-byte<_Sig>::
-byte(const value_type& __x) noexcept
+basic_byte<_Sig>::
+basic_byte(const value_type& __x) noexcept
 	: _M_data{__x}
 {}
 
 template<typename _Sig>
-byte<_Sig>::
-byte(value_type&& __x) noexcept
+basic_byte<_Sig>::
+basic_byte(value_type&& __x) noexcept
 { this->swap(__x); }
 
 template<typename _Sig>
-byte<_Sig>::
-byte(const exbyte<sign_type>& __x) noexcept
+basic_byte<_Sig>::
+basic_byte(const exbyte<sign_type>& __x) noexcept
 	: _M_data{static_cast<value_type>(__x)}
 {}
 
 template<typename _Sig>
 void
-byte<_Sig>::
+basic_byte<_Sig>::
 swap(value_type& __x) noexcept
 { std::swap(this->_M_data, __x); }
 
 template<typename _Sig>
 void
-byte<_Sig>::
+basic_byte<_Sig>::
 swap(self_type& __x) noexcept
 { std::swap(this->_M_data, __x._M_data); }
 
 template<typename _Sig>
-byte<_Sig>::
+basic_byte<_Sig>::
 operator value_type() const noexcept
 { return this->_M_data; }
 
@@ -81,8 +81,8 @@ operator value_type() const noexcept
 
 #define POL_DEF_BYTE_OPERATOR_UNARY_PLACEHOLDER_true(__op, __ref) \
 	template<typename _Sig> \
-	byte<_Sig> POL_DEF_REF_##__ref \
-	byte<_Sig>:: \
+	basic_byte<_Sig> POL_DEF_REF_##__ref \
+	basic_byte<_Sig>:: \
 	operator __op (int) noexcept \
 	{ \
 		this->_M_data __op; \
@@ -91,8 +91,8 @@ operator value_type() const noexcept
 
 #define POL_DEF_BYTE_OPERATOR_UNARY_PLACEHOLDER_false(__op, __ref) \
 	template<typename _Sig> \
-	byte<_Sig> POL_DEF_REF_##__ref \
-	byte<_Sig>:: \
+	basic_byte<_Sig> POL_DEF_REF_##__ref \
+	basic_byte<_Sig>:: \
 	operator __op () noexcept \
 	{ \
 		__op this->_M_data; \
@@ -104,8 +104,8 @@ operator value_type() const noexcept
 
 #define POL_DEF_BYTE_OPERATOR_BINARY_SIZE_true(__op, __ref, __gen) \
 	template<typename _Sig> \
-	byte<_Sig> POL_DEF_REF_##__ref \
-	byte<_Sig>:: \
+	basic_byte<_Sig> POL_DEF_REF_##__ref \
+	basic_byte<_Sig>:: \
 	operator __op (size_type __n) noexcept \
 	{ \
 		this->_M_data __op __n; \
@@ -114,32 +114,32 @@ operator value_type() const noexcept
 
 #define POL_DEF_BYTE_OPERATOR_BINARY_GENERATE_true(__op, __ref) \
 	template<typename _Sig> \
-	byte<_Sig> POL_DEF_REF_##__ref \
-	byte<_Sig>:: \
+	basic_byte<_Sig> POL_DEF_REF_##__ref \
+	basic_byte<_Sig>:: \
 	operator __op (const value_type& __x) noexcept \
 	{ \
 		return self_type(this->_M_data __op __x); \
 	} \
 	\
 	template<typename _Sig> \
-	byte<_Sig> POL_DEF_REF_##__ref \
-	byte<_Sig>:: \
+	basic_byte<_Sig> POL_DEF_REF_##__ref \
+	basic_byte<_Sig>:: \
 	operator __op (const self_type& __x) noexcept \
 	{ \
 		return self_type(this->_M_data __op __x._M_data); \
 	} \
 	\
 	template<typename _Sig> \
-	byte<_Sig> POL_DEF_REF_##__ref \
-	byte<_Sig>:: \
+	basic_byte<_Sig> POL_DEF_REF_##__ref \
+	basic_byte<_Sig>:: \
 	operator __op (value_type&& __x) noexcept \
 	{ \
 		return self_type(this->_M_data __op __x); \
 	} \
 	\
 	template<typename _Sig> \
-	byte<_Sig> POL_DEF_REF_##__ref \
-	byte<_Sig>:: \
+	basic_byte<_Sig> POL_DEF_REF_##__ref \
+	basic_byte<_Sig>:: \
 	operator __op (self_type&& __x) noexcept \
 	{ \
 		return self_type(this->_M_data __op __x._M_data); \
@@ -147,8 +147,8 @@ operator value_type() const noexcept
 
 #define POL_DEF_BYTE_OPERATOR_BINARY_GENERATE_false(__op, __ref) \
 	template<typename _Sig> \
-	byte<_Sig> POL_DEF_REF_##__ref \
-	byte<_Sig>:: \
+	basic_byte<_Sig> POL_DEF_REF_##__ref \
+	basic_byte<_Sig>:: \
 	operator __op (const value_type& __x) noexcept \
 	{ \
 		this->_M_data __op __x; \
@@ -156,8 +156,8 @@ operator value_type() const noexcept
 	} \
 	\
 	template<typename _Sig> \
-	byte<_Sig> POL_DEF_REF_##__ref \
-	byte<_Sig>:: \
+	basic_byte<_Sig> POL_DEF_REF_##__ref \
+	basic_byte<_Sig>:: \
 	operator __op (const self_type& __x) noexcept \
 	{ \
 		this->_M_data __op __x._M_data; \
@@ -165,8 +165,8 @@ operator value_type() const noexcept
 	} \
 	\
 	template<typename _Sig> \
-	byte<_Sig> POL_DEF_REF_##__ref \
-	byte<_Sig>:: \
+	basic_byte<_Sig> POL_DEF_REF_##__ref \
+	basic_byte<_Sig>:: \
 	operator __op (value_type&& __x) noexcept \
 	{ \
 		this->_M_data __op __x; \
@@ -174,8 +174,8 @@ operator value_type() const noexcept
 	} \
 	\
 	template<typename _Sig> \
-	byte<_Sig> POL_DEF_REF_##__ref \
-	byte<_Sig>:: \
+	basic_byte<_Sig> POL_DEF_REF_##__ref \
+	basic_byte<_Sig>:: \
 	operator __op (self_type&& __x) noexcept \
 	{ \
 		this->_M_data __op __x._M_data; \
@@ -188,7 +188,7 @@ operator value_type() const noexcept
 #define POL_DEF_BYTE_OPERATOR_BINARY_BOOL_true(__op, __ref, __size, __gen) \
 	template<typename _Sig> \
 	bool \
-	byte<_Sig>:: \
+	basic_byte<_Sig>:: \
 	operator __op (const value_type& __x) noexcept \
 	{ \
 		return this->_M_data __op __x; \
@@ -196,7 +196,7 @@ operator value_type() const noexcept
 	\
 	template<typename _Sig> \
 	bool \
-	byte<_Sig>:: \
+	basic_byte<_Sig>:: \
 	operator __op (const self_type& __x) noexcept \
 	{ \
 		return this->_M_data __op __x._M_data; \
@@ -204,7 +204,7 @@ operator value_type() const noexcept
 	\
 	template<typename _Sig> \
 	bool \
-	byte<_Sig>:: \
+	basic_byte<_Sig>:: \
 	operator __op (value_type&& __x) noexcept \
 	{ \
 		return this->_M_data __op __x; \
@@ -212,7 +212,7 @@ operator value_type() const noexcept
 	\
 	template<typename _Sig> \
 	bool \
-	byte<_Sig>:: \
+	basic_byte<_Sig>:: \
 	operator __op (self_type&& __x) noexcept \
 	{ \
 		return this->_M_data __op __x._M_data; \
@@ -274,7 +274,7 @@ operator value_type() const noexcept
 
 template<typename _SigT>
 std::istream&
-operator >> (std::istream& __in, byte<_SigT>& __x)
+operator >> (std::istream& __in, basic_byte<_SigT>& __x)
 {
 	typename byte_helper<_SigT>::io_type temp;
 	__in >> temp;
@@ -302,7 +302,7 @@ operator >> (std::istream& __in, byte<_SigT>& __x)
 
 template<typename _SigT>
 std::ostream&
-operator << (std::ostream& __out, const byte<_SigT>& __x)
+operator << (std::ostream& __out, const basic_byte<_SigT>& __x)
 {
 	__out << typename byte_helper<_SigT>::io_type(__x._M_data);
 	return __out;
@@ -316,7 +316,7 @@ exbyte(value_type&& __x) noexcept
 
 template<typename _Tp>
 exbyte<_Tp>::
-exbyte(const byte<sign_type>& __x) noexcept
+exbyte(const basic_byte<sign_type>& __x) noexcept
 	: _M_num{static_cast<value_type>(__x)}
 {}
 

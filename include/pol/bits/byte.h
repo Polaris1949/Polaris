@@ -26,7 +26,7 @@
  *  @headerfile  byte
  *  @brief       Byte classes
  *  @author      Polaris Zhao
- *  @version     3.0
+ *  @version     0.8
  *
  *  This is an internal header file, included by other library headers.
  *  Do not attempt to use it directly.
@@ -35,45 +35,52 @@
 #ifndef _POL_BYTE_H
 #define _POL_BYTE_H 1
 
-namespace polaris
+namespace pol
 {
 
-template<typename>
-class byte;
-
-typedef byte<signed_type>    signed_byte;
-typedef byte<unsigned_type>  unsigned_byte;
+struct signed_tag {};
+struct unsigned_tag {};
 
 template<typename>
-union exbyte;
+class basic_byte;
 
-typedef exbyte<signed_type>    signed_exbyte;
-typedef exbyte<unsigned_type>  unsigned_exbyte;
+typedef basic_byte<signed_tag>    signed_byte;
+typedef basic_byte<unsigned_tag>  unsigned_byte;
+
+using sbyte = signed_byte;
+using ubyte = unsigned_byte;
+using byte = unsigned_byte;
+
+template<typename>
+union [[deprecated]] exbyte;
+
+typedef exbyte<signed_tag>    signed_exbyte;
+typedef exbyte<unsigned_tag>  unsigned_exbyte;
 
 template<typename>
 struct byte_helper;
 
 template<>
-struct byte_helper<signed_type>
+struct byte_helper<signed_tag>
 {
-	typedef signed char   type;
-	typedef signed short  io_type;
+    using type = signed char;
+    using io_type = signed int;
 };
 
 template<>
-struct byte_helper<unsigned_type>
+struct byte_helper<unsigned_tag>
 {
-	typedef unsigned char   type;
-	typedef unsigned short  io_type;
+    using type = unsigned char;
+    using io_type = unsigned int;
 };
 
 template<typename _SigT>
 std::istream&
-operator >> (std::istream& __in, byte<_SigT>& __x);
+operator >> (std::istream& __in, basic_byte<_SigT>& __x);
 
 template<typename _SigT>
 std::ostream&
-operator << (std::ostream& __out, const byte<_SigT>& __x);
+operator << (std::ostream& __out, const basic_byte<_SigT>& __x);
 
 template<typename _T>
 std::istream&
@@ -84,11 +91,11 @@ std::ostream&
 operator << (std::ostream& __out, const exbyte<_T>& __x);
 
 template<typename _Sig>
-class byte
+class basic_byte
 {
 public:
 	typedef _Sig                              sign_type;
-	typedef byte<_Sig>                        self_type;
+	typedef basic_byte<_Sig>                        self_type;
 	typedef typename byte_helper<_Sig>::type  value_type;
 	typedef size_t                            size_type;
 
@@ -96,19 +103,19 @@ private:
 	typename byte_helper<_Sig>::type _M_data;
 
 public:
-	byte() noexcept = default;
+	basic_byte() noexcept = default;
 
-	byte(const value_type& __x) noexcept;
+	basic_byte(const value_type& __x) noexcept;
 
-	byte(value_type&& __x) noexcept;
+	basic_byte(value_type&& __x) noexcept;
 
-	byte(const self_type& __x) noexcept = default;
+	basic_byte(const self_type& __x) noexcept = default;
 
-	byte(self_type&& __x) noexcept = default;
+	basic_byte(self_type&& __x) noexcept = default;
 
-	byte(const exbyte<sign_type>& __x) noexcept;
+	basic_byte(const exbyte<sign_type>& __x) noexcept;
 
-	~byte() noexcept = default;
+	~basic_byte() noexcept = default;
 
 	void
 	swap(value_type& __x) noexcept;
@@ -212,11 +219,11 @@ public:
 
 	template<typename _SigT>
 	friend std::istream&
-	operator >> (std::istream& __in, byte<_SigT>& __x);
+	operator >> (std::istream& __in, basic_byte<_SigT>& __x);
 
 	template<typename _SigT>
 	friend std::ostream&
-	operator << (std::ostream& __out, const byte<_SigT>& __x);
+	operator << (std::ostream& __out, const basic_byte<_SigT>& __x);
 };
 
 template<typename _Tp>
@@ -251,7 +258,7 @@ private:
 public:
 	exbyte() = default;
 	exbyte(value_type&& __x) noexcept;
-	exbyte(const byte<sign_type>& __x) noexcept;
+	exbyte(const basic_byte<sign_type>& __x) noexcept;
 
 	explicit
 	operator value_type() const noexcept;
