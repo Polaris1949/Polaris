@@ -4,24 +4,8 @@
 #include <limits>
 #define __ASSERT_SIZE(X) static_assert((X) <= std::numeric_limits<size_t>::max())
 
-using ullong = unsigned long long int;
-constexpr size_t carry = 1024;
-
-constexpr size_t
-operator""_B (ullong num)
-{ return num; }
-
-constexpr size_t
-operator""_KB (ullong num)
-{ return operator""_B(num) * carry; }
-
-constexpr size_t
-operator""_MB (ullong num)
-{ return operator""_KB(num) * carry; }
-
-constexpr size_t
-operator""_GB (ullong num)
-{ return operator""_MB(num) * carry; }
+#include <pol/type>
+using namespace pol::size_literals;
 
 struct foo
 {
