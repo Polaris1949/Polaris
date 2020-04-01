@@ -35,64 +35,46 @@
 #define _POLLIB_SERIAL 1
 
 #include <pol/version>
+#include <pol/type>
+#include <pol/memory>
 #include <algorithm>
-#include <memory>
 #include <vector>
 
 namespace pol
 {
-
-using memory_buffer = std::vector<char>;
 
 template<typename _Tp>
 [[nodiscard]] memory_buffer
 serialize(const _Tp& __x)
 {
     memory_buffer __buf(sizeof(_Tp));
-    std::copy_n(reinterpret_cast<const char*>(&__x),
-        sizeof(_Tp), __buf.begin());
+    std::copy_n(reinterpret_cast<const mbyte*>(std::addressof(__x)),
+        sizeof(_Tp), __buf.data());
     return __buf;
 }
 
 template<typename _Tp>
-[[nodiscard]] char*
+[[nodiscard]] inline mbyte*
 serialize_raw(const _Tp& __x)
-{
-    char* __ret = new char[sizeof(_Tp)];
-    std::copy_n(reinterpret_cast<const char*>(&__x),
-        sizeof(_Tp), __ret);
-    return __ret;
-    // delete[] __ret;
-}
+{ return serialize(__x).release(); }
 
 template<typename _Tp>
 [[nodiscard]] _Tp
-deserialize(const memory_buffer& __x)
+deserialize(memory_view __x)
 {
-    struct _Helper { char data[sizeof(_Tp)]; } __ret;
+    local_buffer_for_t<_Tp> __ret;
 #if POL_DEBUG
     if (__x.size() < sizeof(_Tp))
-    {
-# if POL_EXCEPTIONS
         throw std::runtime_errror("pol::deserialize");
-# else
-        pol::error_easy("pol::deserialize");
-        std::terminate();
-# endif
-    }
 #endif
-    std::copy_n(__x.begin(), sizeof(_Tp), __ret.data);
+    std::copy_n(__x.data(), sizeof(_Tp), __ret.data);
     return *reinterpret_cast<_Tp*>(&__ret);
 }
 
 template<typename _Tp>
-[[nodiscard]] _Tp
-deserialize_raw(const char* __x)
-{
-    struct _Helper { char data[sizeof(_Tp)]; } __ret;
-    std::copy_n(__x, sizeof(_Tp), __ret.data);
-    return *reinterpret_cast<_Tp*>(&__ret);
-}
+[[nodiscard]] inline _Tp
+deserialize_raw(const mbyte* __x)
+{ return deserialize<_Tp>(memory_view(__x, npos)); }
 
 }
 
