@@ -33,18 +33,143 @@
 #ifndef _POLLIB_MEMORY
 #define _POLLIB_MEMORY 1
 
-#include <polaris/version>
-#include <polaris/allocator>
+#include <pol/version>
+#include <pol/allocator>
 #include <memory>
 #include <experimental/memory>
 
 namespace pol
 {
 
+#ifdef POL_USING_STD
 using std::unique_ptr;
 using std::shared_ptr;
 using std::weak_ptr;
 using std::experimental::observer_ptr;
+#endif
+
+using mbyte = unsigned char;
+
+template<size_t _Num>
+struct local_buffer
+{ mbyte data[_Num]; };
+
+// Helper for allocating a local buffer with the same size of a type.
+template<typename _Tp>
+using local_buffer_for_t = local_buffer<sizeof(_Tp)>;
+
+class memory_buffer
+{
+public:
+    memory_buffer() noexcept;
+    memory_buffer(size_t);
+    memory_buffer(const memory_buffer&) = delete;
+    memory_buffer(memory_buffer&&) noexcept;
+    ~memory_buffer() noexcept;
+
+    mbyte* release();
+    mbyte* data() const;
+    size_t size() const;
+
+private:
+    mbyte* _M_ptr;
+    size_t _M_size;
+};
+
+memory_buffer::
+memory_buffer() noexcept
+    : _M_ptr(), _M_size()
+{ }
+
+memory_buffer::
+memory_buffer(size_t __n)
+    : _M_ptr(), _M_size()
+{
+    if (__n)
+    {
+        void* __p = std::malloc(__n);
+        if (!__p)
+            throw std::bad_alloc();
+        this->_M_ptr = static_cast<mbyte*>(__p);
+        this->_M_size = __n;
+    }
+}
+
+memory_buffer::
+memory_buffer(memory_buffer&& __o) noexcept
+    : _M_ptr(__o._M_ptr), _M_size(__o._M_size)
+{ __o._M_ptr = nullptr; __o._M_size = 0; }
+
+memory_buffer::
+~memory_buffer() noexcept
+{
+    if (this->_M_ptr) std::free(this->_M_ptr);
+}
+
+mbyte*
+memory_buffer::
+release()
+{
+    mbyte* __ret = this->_M_ptr;
+    this->_M_ptr = nullptr;
+    this->_M_size = 0;
+    return __ret;
+}
+
+mbyte*
+memory_buffer::
+data() const
+{ return this->_M_ptr; }
+
+size_t
+memory_buffer::
+size() const
+{ return this->_M_size; }
+
+class memory_view
+{
+public:
+    memory_view() noexcept;
+    memory_view(const mbyte* __p, size_t __n) noexcept;
+    memory_view(const memory_buffer& __m) noexcept;
+
+    template<typename _Tp>
+    explicit memory_view(const _Tp& __x) noexcept
+        : _M_ptr(std::addressof(__x)), _M_size(sizeof(__x))
+    { }
+
+    const mbyte* data() const;
+    size_t size() const;
+
+private:
+    const mbyte* _M_ptr;
+    size_t _M_size;
+};
+
+memory_view::
+memory_view() noexcept
+    : _M_ptr(), _M_size()
+{ }
+
+memory_view::
+memory_view(const mbyte* __p, size_t __n) noexcept
+    : _M_ptr(__p), _M_size(__n)
+{ }
+
+memory_view::
+memory_view(const memory_buffer& __m) noexcept
+    : _M_ptr(__m.data()), _M_size(__m.size())
+{ }
+
+const mbyte*
+memory_view::
+data() const
+{ return this->_M_ptr; }
+
+size_t
+memory_view::
+size() const
+{ return this->_M_size; }
 
 }
 
