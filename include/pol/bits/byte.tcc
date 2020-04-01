@@ -23,13 +23,12 @@
 // <http://www.gnu.org/licenses/>.
 
 /** @file        bits/byte.tcc
- *  @headerfile  byte
  *  @brief       Byte classes implementation
  *  @author      Polaris Zhao
- *  @version     0.8
+ *  @version     0.8.0
  *
  *  This is an internal header file, included by other library headers.
- *  Do not attempt to use it directly.
+ *  Do not attempt to use it directly. @headername{byte}
 **/
 
 #ifndef _POL_BYTE_TCC
@@ -52,12 +51,6 @@ template<typename _Sig>
 basic_byte<_Sig>::
 basic_byte(value_type&& __x) noexcept
 { this->swap(__x); }
-
-template<typename _Sig>
-basic_byte<_Sig>::
-basic_byte(const exbyte<sign_type>& __x) noexcept
-	: _M_data{static_cast<value_type>(__x)}
-{}
 
 template<typename _Sig>
 void
@@ -305,79 +298,6 @@ std::ostream&
 operator << (std::ostream& __out, const basic_byte<_SigT>& __x)
 {
 	__out << typename byte_helper<_SigT>::io_type(__x._M_data);
-	return __out;
-}
-
-template<typename _Tp>
-exbyte<_Tp>::
-exbyte(value_type&& __x) noexcept
-	: _M_num{std::move(__x)}
-{}
-
-template<typename _Tp>
-exbyte<_Tp>::
-exbyte(const basic_byte<sign_type>& __x) noexcept
-	: _M_num{static_cast<value_type>(__x)}
-{}
-
-template<typename _Tp>
-exbyte<_Tp>::
-operator value_type() const noexcept
-{ return this->_M_num; }
-
-template<typename _Tp>
-bool
-exbyte<_Tp>::_Bit::
-operator[] (size_t __pos) const noexcept
-{
-	switch (__pos)
-	{
-		case 0: return b0;
-		case 1: return b1;
-		case 2: return b2;
-		case 3: return b3;
-		case 4: return b4;
-		case 5: return b5;
-		case 6: return b6;
-		case 7: return b7;
-		default: return false;
-	}
-}
-
-template<typename _Tp>
-bool
-exbyte<_Tp>::
-operator[] (size_t __pos) const noexcept
-{
-	return _M_bit[__pos];
-}
-
-template<typename _T>
-std::istream&
-operator >> (std::istream& __in, exbyte<_T>& __x)
-{
-	int s{};
-	for (int i=7; i>=0; --i)
-	{
-		char ch;
-		__in >> ch;
-		if (!(ch=='0'||ch=='1'))
-		{
-			__in.setstate(std::ios_base::failbit);
-			return __in;
-		}
-		s+=int(ch-'0')*(1<<i);
-	}
-	__x._M_num = s;
-	return __in;
-}
-
-template<typename _T>
-std::ostream&
-operator << (std::ostream& __out, const exbyte<_T>& __x)
-{
-	for (int i=7; i>=0; --i)
-		__out<<__x[i];
 	return __out;
 }
 

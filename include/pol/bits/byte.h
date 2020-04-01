@@ -23,17 +23,18 @@
 // <http://www.gnu.org/licenses/>.
 
 /** @file        bits/byte.h
- *  @headerfile  byte
  *  @brief       Byte classes
  *  @author      Polaris Zhao
- *  @version     0.8
+ *  @version     0.8.0
  *
  *  This is an internal header file, included by other library headers.
- *  Do not attempt to use it directly.
+ *  Do not attempt to use it directly. @headername{byte}
 **/
 
 #ifndef _POL_BYTE_H
 #define _POL_BYTE_H 1
+
+#include <iosfwd>
 
 namespace pol
 {
@@ -50,12 +51,6 @@ typedef basic_byte<unsigned_tag>  unsigned_byte;
 using sbyte = signed_byte;
 using ubyte = unsigned_byte;
 using byte = unsigned_byte;
-
-template<typename>
-union [[deprecated]] exbyte;
-
-typedef exbyte<signed_tag>    signed_exbyte;
-typedef exbyte<unsigned_tag>  unsigned_exbyte;
 
 template<typename>
 struct byte_helper;
@@ -82,25 +77,14 @@ template<typename _SigT>
 std::ostream&
 operator << (std::ostream& __out, const basic_byte<_SigT>& __x);
 
-template<typename _T>
-std::istream&
-operator >> (std::istream& __in, exbyte<_T>& __x);
-
-template<typename _T>
-std::ostream&
-operator << (std::ostream& __out, const exbyte<_T>& __x);
-
 template<typename _Sig>
 class basic_byte
 {
 public:
-	typedef _Sig                              sign_type;
-	typedef basic_byte<_Sig>                        self_type;
-	typedef typename byte_helper<_Sig>::type  value_type;
-	typedef size_t                            size_type;
-
-private:
-	typename byte_helper<_Sig>::type _M_data;
+    using sign_type = _Sig;
+    using self_type = basic_byte<_Sig>;
+    using value_type = byte_helper<_Sig>::type;
+    using size_type = size_t;
 
 public:
 	basic_byte() noexcept = default;
@@ -112,8 +96,6 @@ public:
 	basic_byte(const self_type& __x) noexcept = default;
 
 	basic_byte(self_type&& __x) noexcept = default;
-
-	basic_byte(const exbyte<sign_type>& __x) noexcept;
 
 	~basic_byte() noexcept = default;
 
@@ -224,55 +206,9 @@ public:
 	template<typename _SigT>
 	friend std::ostream&
 	operator << (std::ostream& __out, const basic_byte<_SigT>& __x);
-};
-
-template<typename _Tp>
-union exbyte
-{
-public:
-	typedef _Tp                              sign_type;
-	typedef exbyte<_Tp>                      self_type;
-	typedef typename byte_helper<_Tp>::type  value_type;
-	typedef size_t                           size_type;
-
+    
 private:
-    unsigned char _M_num;
-
-    struct _Bit
-    {
-        bool b0 : 1;
-        bool b1 : 1;
-        bool b2 : 1;
-        bool b3 : 1;
-        bool b4 : 1;
-        bool b5 : 1;
-        bool b6 : 1;
-        bool b7 : 1;
-
-    	bool
-		operator[] (size_t __pos) const noexcept;
-    };
-
-    _Bit _M_bit;
-
-public:
-	exbyte() = default;
-	exbyte(value_type&& __x) noexcept;
-	exbyte(const basic_byte<sign_type>& __x) noexcept;
-
-	explicit
-	operator value_type() const noexcept;
-
-    bool
-	operator[] (size_t __pos) const noexcept;
-
-	template<typename _T>
-    friend std::istream&
-	operator >> (std::istream& __in, exbyte<_T>& __x);
-
-	template<typename _T>
-    friend std::ostream&
-	operator << (std::ostream& __out, const exbyte<_T>& __x);
+	value_type _M_data;
 };
 
 }
