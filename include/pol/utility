@@ -36,6 +36,7 @@
 #include <pol/version>
 #include <utility>
 #include <memory> // for std::addressof
+#include <string_view>
 
 namespace pol
 {
@@ -59,7 +60,7 @@ signbit(_Tp __x)
         return static_cast<_Unsigned_t>(__x)
             >> (std::numeric_limits<_Tp>::bits() - 1);
     }
-    else return 0;
+    else return false;
 }
 
 template<typename _Tp>
@@ -67,6 +68,7 @@ inline constexpr _Tp&
 flip(_Tp& __x)
 { return __x = ~__x; }
 
+// TODO: deprecated
 template<typename _Tp>
 inline _Tp
 from_string(std::string_view __s) = delete;
