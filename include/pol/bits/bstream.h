@@ -66,7 +66,7 @@ public:
 	 *  @attention  You should @b NOT use @c __stream after this.
 	 *              So you should @b NOT use this on standard streams.
 	**/
-	binary_stream(_Tp&& __stream);
+	binary_stream(stream_type&& __stream);
 
 	/** @brief  Move construct a @c binary_stream from another @c binary_stream
 	 *  @param  __stream  The stream object.
