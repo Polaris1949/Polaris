@@ -1,0 +1,250 @@
+#ifndef _POLLIB_SERIAL_STREAM
+#define _POLLIB_SERIAL_STREAM 1
+
+#include <pol/memory>
+#include <iosfwd>
+#include <string>
+
+namespace pol
+{
+
+template<typename>
+class serial_stream;
+
+using serial_istream = serial_stream<std::istream>;
+using serial_ostream = serial_stream<std::ostream>;
+using serial_iostream = serial_stream<std::iostream>;
+
+template<typename _Tp>
+class serial_stream
+{
+public:
+    using stream_type = _Tp;
+    using self_type = serial_stream<_Tp>;
+
+public:
+    serial_stream() noexcept;
+
+    serial_stream(stream_type&);
+
+    serial_stream(serial_stream&&) = default;
+
+    ~serial_stream() noexcept = default;
+
+    stream_type* stream() const;
+
+    bool empty() const;
+
+    void clear();
+
+    void assign(stream_type&);
+
+#define POL_DECL_SSFIO(_FundT) \
+    const self_type& operator >> (_FundT&) const; \
+    \
+    const self_type& operator << (const _FundT&) const;
+
+POL_DECL_SSFIO(bool)
+POL_DECL_SSFIO(char)
+POL_DECL_SSFIO(signed char)
+POL_DECL_SSFIO(unsigned char)
+POL_DECL_SSFIO(wchar_t)
+#if __cplusplus > 201703L
+POL_DECL_SSFIO(char8_t)
+#endif
+POL_DECL_SSFIO(char16_t)
+POL_DECL_SSFIO(char32_t)
+POL_DECL_SSFIO(short)
+POL_DECL_SSFIO(unsigned short)
+POL_DECL_SSFIO(int)
+POL_DECL_SSFIO(unsigned int)
+POL_DECL_SSFIO(long)
+POL_DECL_SSFIO(unsigned long)
+POL_DECL_SSFIO(long long)
+POL_DECL_SSFIO(unsigned long long)
+POL_DECL_SSFIO(float)
+POL_DECL_SSFIO(double)
+POL_DECL_SSFIO(long double)
+
+#undef POL_DECL_SSFIO
+
+    const self_type& operator >> (char*) const;
+    const self_type& operator << (const char*) const;
+    
+    const self_type& operator >> (std::string&) const;
+    const self_type& operator << (const std::string&) const;
+
+private:
+    stream_type* _M_ptr;
+};
+
+template<typename _Tp>
+serial_stream<_Tp>::
+serial_stream() noexcept
+    : _M_ptr(nullptr)
+{ }
+
+template<typename _Tp>
+serial_stream<_Tp>::
+serial_stream(stream_type& __s)
+    : _M_ptr(std::addressof(__s))
+{ }
+
+template<typename _Tp>
+_Tp*
+serial_stream<_Tp>::
+stream() const
+{
+    if (this->_M_ptr == nullptr)
+        throw std::runtime_error("serial_stream: null reference");
+    return this->_M_ptr;
+}
+
+template<typename _Tp>
+bool
+serial_stream<_Tp>::
+empty() const
+{ return (this->_M_ptr == nullptr); }
+
+template<typename _Tp>
+void
+serial_stream<_Tp>::
+clear()
+{ this->_M_ptr = nullptr; }
+
+template<typename _Tp>
+void
+serial_stream<_Tp>::
+assign(stream_type& __s)
+{ this->_M_ptr = std::addressof(__s); }
+
+#define POL_DEFN_SSBIO(_ByteT) \
+template<typename _Tp> \
+const serial_stream<_Tp>& \
+serial_stream<_Tp>:: \
+operator >> (_ByteT& __x) const \
+{ \
+    char& __c = reinterpret_cast<char&>(__x); \
+    this->stream()->get(__c); \
+    return *this; \
+} \
+\
+template<typename _Tp> \
+const serial_stream<_Tp>& \
+serial_stream<_Tp>:: \
+operator << (const _ByteT& __x) const \
+{ \
+    const char& __c = reinterpret_cast<const char&>(__x); \
+    this->stream()->put(__c); \
+    return *this; \
+}
+
+#define POL_DEFN_SSFIO(_FundT) \
+template<typename _Tp> \
+const serial_stream<_Tp>& \
+serial_stream<_Tp>:: \
+operator >> (_FundT& __x) const \
+{ \
+    char* __c = reinterpret_cast<char*>(&__x); \
+    this->stream()->read(__c, sizeof(_FundT)); \
+    return *this; \
+} \
+\
+template<typename _Tp> \
+const serial_stream<_Tp>& \
+serial_stream<_Tp>:: \
+operator << (const _FundT& __x) const \
+{ \
+    const char* __c = reinterpret_cast<const char*>(&__x); \
+    this->stream()->write(__c, sizeof(_FundT)); \
+    return *this; \
+}
+
+POL_DEFN_SSBIO(bool)
+POL_DEFN_SSBIO(char)
+POL_DEFN_SSBIO(signed char)
+POL_DEFN_SSBIO(unsigned char)
+POL_DEFN_SSFIO(wchar_t)
+#if __cplusplus > 201703L
+POL_DEFN_SSFIO(char8_t)
+#endif
+POL_DEFN_SSFIO(char16_t)
+POL_DEFN_SSFIO(char32_t)
+POL_DEFN_SSFIO(short)
+POL_DEFN_SSFIO(unsigned short)
+POL_DEFN_SSFIO(int)
+POL_DEFN_SSFIO(unsigned int)
+POL_DEFN_SSFIO(long)
+POL_DEFN_SSFIO(unsigned long)
+POL_DEFN_SSFIO(long long)
+POL_DEFN_SSFIO(unsigned long long)
+POL_DEFN_SSFIO(float)
+POL_DEFN_SSFIO(double)
+POL_DEFN_SSFIO(long double)
+
+#undef POL_DEFN_SSBIO
+#undef POL_DEFN_SSFIO
+
+template<typename _Tp>
+const serial_stream<_Tp>&
+serial_stream<_Tp>::
+operator >> (char* __x) const
+{
+    char __ch;
+    while (this->stream()->get(__ch))
+    {
+        *__x++ = __ch;
+        if (__ch == '\0') break;
+    }
+    return *this;
+}
+
+template<typename _Tp>
+const serial_stream<_Tp>&
+serial_stream<_Tp>::
+operator << (const char* __x) const
+{
+    while (*__x)
+        this->stream()->put(*__x++);
+    this->stream()->put('\0');
+    return *this;
+}
+
+template<typename _Tp>
+const serial_stream<_Tp>&
+serial_stream<_Tp>::
+operator >> (std::string& __x) const
+{
+    size_t __num;
+    *this >> __num;
+    memory_buffer __buf(__num + 1);
+    mbyte* __beg = __buf.data();
+    mbyte* __end = __beg + __num;
+
+    while (__beg < __end)
+        this->stream()->get(*reinterpret_cast<char*>(__beg++));
+    *__end = '\0';
+
+    __x = reinterpret_cast<const char*>(__buf.data());
+    return *this;
+}
+
+template<typename _Tp>
+const serial_stream<_Tp>&
+serial_stream<_Tp>::
+operator << (const std::string& __x) const
+{
+    size_t __num = __x.size();
+    *this << __num;
+    const mbyte* __beg = reinterpret_cast<const mbyte*>(__x.data());
+    const mbyte* __end = __beg + __num;
+
+    while (__beg < __end)
+        this->stream()->put(*__beg++);
+
+    return *this;
+}
+
+}
+
+#endif
