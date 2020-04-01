@@ -58,10 +58,10 @@ using std::uint64_t;
 using std::intptr_t;
 using std::uintptr_t;
 
-/** @brief Bytes of @c char **/
+/** @brief Bytes of a @c char **/
 constexpr size_t char_byte = sizeof(char);
 
-/** @brief Bits of @c char **/
+/** @brief Bits of a @c char **/
 constexpr size_t char_bit = __CHAR_BIT__ * char_byte;
 
 /** @brief @c npos for the library **/
@@ -96,6 +96,33 @@ inline constexpr size_t bitof() noexcept
 template<typename _Tp>
 inline constexpr size_t bitof(const _Tp& __x) noexcept
 { return sizeof(__x) * char_bit; }
+
+namespace size_literals
+{
+
+inline constexpr ullong __carry = 1024;
+
+inline constexpr ullong
+operator""_B (ullong num) noexcept
+{ return num; }
+
+inline constexpr ullong
+operator""_KB (ullong __num) noexcept
+{ return operator""_B(__num) * __carry; }
+
+inline constexpr ullong
+operator""_MB (ullong __num) noexcept
+{ return operator""_KB(__num) * __carry; }
+
+inline constexpr ullong
+operator""_GB (ullong __num) noexcept
+{ return operator""_MB(__num) * __carry; }
+
+inline constexpr ullong
+operator""_TB (ullong __num) noexcept
+{ return operator""_GB(__num) * __carry; }
+
+}
 
 }
 
