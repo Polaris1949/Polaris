@@ -35,16 +35,11 @@
 
 #include <pol/version>
 #include <pol/type>
-
-namespace pol
-{
-
-template<typename _Tp = void>
-class allocator;
-
-}
-
+#include <pol/concepts> // for has_reallocate
 #include <new> // for ::operator new and ::operator delete
+#include <utility> // for std::forward
+#include <cstdlib> // for malloc, free and realloc
+#include <type_traits> // for std::bool_constant
 #include <pol/bits/alloc.h>
 #include <pol/bits/alloc.tcc>
 
