@@ -1,53 +1,57 @@
-#include <polaris/segment_tree>
-#include <iostream>
 #include <vector>
-#include <ctime>
-#include <cstdlib>
+#include <iostream>
+#include <algorithm>
+#include <pol/segment_tree>
 
-struct df
+using llong = long long;
+
+struct fsum_t
 {
-	int operator() (int x, int y) const
-	{
-		return max(x, y);
-	}
+    llong operator() (llong x, llong y) const
+    { return x+y; }
 };
 
-struct mf
+struct fmod_t
 {
-	void operator() (segment_tree_node<int, void>* r, int x) const
-	{
-		r->data()=x;
-	}
+    using node_type = pol::segment_tree_node<llong, llong>;
+
+    void operator() (node_type* root, llong x) const
+    {
+        root->data() += root->segment()*x;
+        root->mark() += x;
+    }
 };
 
-segment_tree<int, void, df> st;
-
-void dfs(segment_tree_node<int, void>* r)
-{
-	cout<<'['<<r->begin()<<", "<<r->end()<<"): "<<r->data()<<endl;
-	if (r->left()) dfs(r->left());
-	if (r->right()) dfs(r->right());
-}
+llong n, m;
+std::vector<llong> v;
+pol::segment_tree<llong, llong, fsum_t> stree;
 
 int main()
 {
-	vector<int> v;
-	srand((unsigned)time(nullptr));
+    llong i, x, y, k, f;
+    std::cin >> n >> m;
+    v.resize(n);
 
-	for (int i=0; i<20; ++i)
-		v.push_back((rand()+rand())%rand());
+    for (i=0; i<n; ++i)
+        std::cin >> v[i];
 
-	st.construct(0, v.size(), v);
+    stree.construct(0, n, v);
 
-	dfs(st.root());
+    for (i=0; i<m; ++i)
+    {
+        std::cin >> f;
 
-	for (int i=0; i<20; ++i)
-	{
-		int x=rand();
-		int y=i+rand()%20;
-		st.modify(x, y, rand(), mf());
-	}
+        if (f==1)
+        {
+            std::cin >> x >> y >> k;
+            stree.modify(--x, y, k, fmod_t(), fmod_t());
+        }
+        else
+        {
+            std::cin >> x >> y;
+            std::cout << stree.search(--x, y, fmod_t()) << '\n';
+        }
+    }
 
-	dfs(st.root());
-	return 0;
+    return 0;
 }
