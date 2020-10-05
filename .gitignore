@@ -42,6 +42,9 @@ doc
 *.cache
 *.stackdump
 
+# Settings
+.vscode
+
 # Media files
 *.png
 *.jpg
