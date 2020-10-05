@@ -1,4 +1,4 @@
-// Link-cut tree classes -*- C++ -*-
+// Link-cut tree -*- C++ -*-
 
 // Copyright (C) 1997-2017 Free Software Foundation, Inc.
 //
@@ -23,19 +23,18 @@
 // <http://www.gnu.org/licenses/>.
 
 /** @file        bits/lctree.h
- *  @headerfile  link_cut_tree
- *  @brief       Link-cut tree classes
+ *  @brief       Link-cut tree
  *  @author      Polaris Zhao
- *  @version     3.0
+ *  @version     0.8.0
  *
  *  This is an internal header file, included by other library headers.
- *  Do not attempt to use it directly.
+ *  Do not attempt to use it directly. @headername{link_cut_tree}
 **/
 
 #ifndef _POL_LCTREE_H
 #define _POL_LCTREE_H 1
 
-namespace polaris
+namespace pol
 {
 
 template<typename _Tp>
@@ -67,7 +66,8 @@ public:
     bool&
     mark();
 
-    const bool&
+    // TODO: Fundamental types should not have const& qualifiers
+    bool
     mark() const;
 
     void reverse();

@@ -23,7 +23,7 @@
 // <http://www.gnu.org/licenses/>.
 
 /** @file        bits/byte.tcc
- *  @brief       Byte classes implementation
+ *  @brief       Byte implementation
  *  @author      Polaris Zhao
  *  @version     0.8.0
  *

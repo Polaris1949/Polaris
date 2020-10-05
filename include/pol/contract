@@ -356,11 +356,16 @@ ensure(bool __pred, const std::string& __type, const std::string& __msg,
 #else
 #define __POL_SCP pol::srcloc_t::current()
 #endif
-#define POL_ASSERT(P, T, M, C)   pol::assert((P), (T), (M), (C), 1, __POL_SCP)
-#define POL_EXPECT(P, T, M, C)   pol::expect((P), (T), (M), (C), 1, __POL_SCP)
-#define POL_ENSURE(P, T, M, C)   pol::ensure((P), (T), (M), (C), 1, __POL_SCP)
-#define POL_ASSERT_X(P, T, M, C) pol::assert((P), (T), (M), (C), 2, __POL_SCP)
-#define POL_EXPECT_X(P, T, M, C) pol::expect((P), (T), (M), (C), 2, __POL_SCP)
-#define POL_ENSURE_X(P, T, M, C) pol::ensure((P), (T), (M), (C), 2, __POL_SCP)
+
+// Contract macros
+#define POL_ASSERT(P, T, M, C) pol::assert(P, T, M, C, 1, __POL_SCP)
+#define POL_EXPECT(P, T, M, C) pol::expect(P, T, M, C, 1, __POL_SCP)
+#define POL_ENSURE(P, T, M, C) pol::ensure(P, T, M, C, 1, __POL_SCP)
+#define POL_ASSERT_X(P, T, M, C) pol::assert(P, T, M, C, 2, __POL_SCP)
+#define POL_EXPECT_X(P, T, M, C) pol::expect(P, T, M, C, 2, __POL_SCP)
+#define POL_ENSURE_X(P, T, M, C) pol::ensure(P, T, M, C, 2, __POL_SCP)
+#define POL_ASSERT_E(P, M) pol::assert(P, "assert " #P " failure", M, 0, 1, __POL_SCP)
+#define POL_EXPECT_E(P, M) pol::expect(P, "expect " #P " failure", M, 0, 1, __POL_SCP)
+#define POL_ENSURE_E(P, M) pol::ensure(P, "ensure " #P " failure", M, 0, 1, __POL_SCP)
 
 #endif /* _POLLIB_CONTRACT */

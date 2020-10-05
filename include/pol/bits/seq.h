@@ -27,15 +27,15 @@
  *  Do not attempt to use it directly. @headername{sequence}
  */
 
-// Written by Jingyu Zhao.
+// Written by Polaris Zhao.
 
 #ifndef _POL_SEQ_H
 #define _POL_SEQ_H 1
 
 #include <deque>
-#include <polaris/type_traits>
+#include <pol/type_traits>
 
-namespace polaris
+namespace pol
 {
 
 // TODO: Move to <concepts>?

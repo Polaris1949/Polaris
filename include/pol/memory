@@ -41,11 +41,13 @@
 namespace pol
 {
 
-#ifdef POL_USING_STD
+#if POL_USING_STD
 using std::unique_ptr;
 using std::shared_ptr;
 using std::weak_ptr;
+#if POL_DEPRECATED
 using std::experimental::observer_ptr;
+#endif
 #endif
 
 using mbyte = unsigned char;
@@ -54,7 +56,7 @@ template<size_t _Num>
 struct local_buffer
 { mbyte data[_Num]; };
 
-// Helper for allocating a local buffer with the same size of a type.
+// Helper for allocating a local buffer on stack with the same size of a type.
 template<typename _Tp>
 using local_buffer_for_t = local_buffer<sizeof(_Tp)>;
 
@@ -67,6 +69,10 @@ public:
     memory_buffer(memory_buffer&&) noexcept;
     ~memory_buffer() noexcept;
 
+    memory_buffer& operator = (const memory_buffer&) = delete;
+    memory_buffer& operator = (memory_buffer&&) noexcept;
+
+    void swap(memory_buffer&) noexcept;
     mbyte* release();
     mbyte* data() const;
     size_t size() const;
@@ -102,8 +108,19 @@ memory_buffer(memory_buffer&& __o) noexcept
 
 memory_buffer::
 ~memory_buffer() noexcept
+{ if (this->_M_ptr) std::free(this->_M_ptr); }
+
+memory_buffer&
+memory_buffer::
+operator = (memory_buffer&& __o) noexcept
+{ this->swap(__o); return *this; }
+
+void
+memory_buffer::
+swap(memory_buffer& __o) noexcept
 {
-    if (this->_M_ptr) std::free(this->_M_ptr);
+    std::swap(this->_M_ptr, __o._M_ptr);
+    std::swap(this->_M_size, __o._M_size);
 }
 
 mbyte*

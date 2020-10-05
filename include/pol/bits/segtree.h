@@ -1,4 +1,4 @@
-// Segment tree classes -*- C++ -*-
+// Segment tree -*- C++ -*-
 
 // Copyright (C) 1997-2017 Free Software Foundation, Inc.
 //
@@ -23,21 +23,40 @@
 // <http://www.gnu.org/licenses/>.
 
 /** @file        bits/segtree.h
- *  @headerfile  segment_tree
- *  @brief       Segment tree classes
+ *  @brief       Segment tree
  *  @author      Polaris Zhao
- *  @version     3.0
+ *  @version     0.8.0
  *  @todo        Revision.
  *
  *  This is an internal header file, included by other library headers.
- *  Do not attempt to use it directly.
+ *  Do not attempt to use it directly. @headername{segment_tree}
 **/
 
 #ifndef _POL_SEGTREE_H
 #define _POL_SEGTREE_H 1
 
-namespace polaris
+// TODO: Dynamic segment tree
+
+namespace pol
 {
+
+// @segment_tree_node_data
+template<typename _Tp, typename _MarkT>
+struct segment_tree_node_data
+{
+	using data_type = _Tp;
+	using mark_type = _MarkT;
+	_Tp data;
+	_MarkT mark;
+};
+
+template<typename _Tp>
+struct segment_tree_node_data<_Tp, void>
+{
+	using data_type = _Tp;
+	using mark_type = void;
+	_Tp data;
+};
 
 // @segment_tree_node
 template<typename _Tp, typename _MarkT>
@@ -68,51 +87,57 @@ public:
 	construct(size_type __begin, size_type __end);
 
 	node_type&
-	destroy();
+	destroy() noexcept;
 
 	node_type*&
-	left();
+	left() noexcept;
 
 	const node_type*&
-	left() const;
+	left() const noexcept;
 
 	node_type*&
-	right();
+	left_d();
+
+	node_type*&
+	right() noexcept;
 
 	const node_type*&
-	right() const;
+	right() const noexcept;
+
+	node_type*&
+	right_d();
 
 	value_type&
-	data();
+	data() noexcept;
 
 	const value_type&
-	data() const;
+	data() const noexcept;
 
 	mark_type&
-	mark();
+	mark() noexcept;
 
 	const mark_type&
-	mark() const;
+	mark() const noexcept;
 
 	size_type
-	begin() const;
+	begin() const noexcept;
 
 	size_type
-	end() const;
+	end() const noexcept;
 
 	size_type
-	middle() const;
+	middle() const noexcept;
 
 	size_type
-	segment() const;
+	segment() const noexcept;
 
 	bool
-	is_leaf() const;
+	is_leaf() const noexcept;
 
 private:
 	void _M_construct(size_type __begin, size_type __end);
 
-	void _M_destroy();
+	void _M_destroy() noexcept;
 };
 
 // @segment_tree_node<_Tp, void>
@@ -208,7 +233,7 @@ template<typename _Tp, typename _MarkT, typename _Func>
 class segment_tree
 {
 public:
-	typedef _Tp                               value_type; // TODO: Compability
+	typedef _Tp                               value_type; // TODO: Compatibility
 	typedef _MarkT                            mark_type;
 	typedef _Func                             data_func;
 	typedef std::size_t                       size_type;
@@ -219,16 +244,21 @@ public:
 
 private:
 	node_type* _M_root;
-	value_type _M_inf;
+	value_type _M_inf; // FIXME: What is this? Do we need it?
 	data_func _M_func;
 
 public:
 	segment_tree();
 
+	segment_tree(size_type __beg, size_type __end);
+
 	template<typename _Sequence>
 	segment_tree(size_type __begin, size_type __end, const _Sequence& __data);
 
 	~segment_tree() noexcept;
+
+	tree_type&
+	construct(size_type __begin, size_type __end);
 
 	template<typename _Sequence>
 	tree_type&
@@ -279,6 +309,11 @@ public:
 	modify(size_type __begin, size_type __end, const value_type& __x,
 		const _ModifyFunc& __func, const _MarkFunc& __mark);
 
+	template<typename _ModifyFunc, typename _MarkFunc>
+	tree_type&
+	modify_d(size_type __begin, size_type __end, const value_type& __x,
+		const _ModifyFunc& __func, const _MarkFunc& __mark);
+
 private:
 	template<typename _Sequence>
 	void
@@ -300,6 +335,12 @@ private:
 	template<typename _ModifyFunc, typename _MarkFunc>
 	void
 	_M_modify(node_type* __root, size_type __begin, size_type __end,
+		const value_type& __x, const _ModifyFunc& __func,
+		const _MarkFunc& __mark);
+
+	template<typename _ModifyFunc, typename _MarkFunc>
+	void
+	_M_modify_d(node_type* __root, size_type __begin, size_type __end,
 		const value_type& __x, const _ModifyFunc& __func,
 		const _MarkFunc& __mark);
 };

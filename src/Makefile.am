@@ -6,8 +6,8 @@ libp_la_SOURCES = \
     bitmem.cc \
     bitobs.cc \
     contract.cc \
+    exception.cc \
     file.cc \
-    format.cc \
     log.cc \
     terminal.cc \
     typeinfo.cc \

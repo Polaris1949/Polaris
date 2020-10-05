@@ -36,6 +36,7 @@
 #include <pol/version>
 #include <pol/type>
 #include <pol/concepts> // for has_reallocate
+#include <pol/format> // for println
 #include <new> // for ::operator new and ::operator delete
 #include <utility> // for std::forward
 #include <cstdlib> // for malloc, free and realloc

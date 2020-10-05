@@ -1,4 +1,4 @@
-// Bitmask library -*- C++ -*-
+// Variable wrapper -*- C++ -*-
 
 // Copyright (C) 1997-2017 Free Software Foundation, Inc.
 //
@@ -22,25 +22,19 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file     bitmask
- *  @brief    Bitmask library
+/** @file     var_wrapper
+ *  @brief    Variable wrapper
  *  @author   Polaris Zhao
  *  @version  0.8.0
- *  @todo     This library is incompelete.
  *
  *  This is a Polaris C++ Library header.
 **/
 
-#ifndef _POLLIB_BITMASK
-#define _POLLIB_BITMASK 1
+#ifndef _POLLIB_VAR_WRAPPER
+#define _POLLIB_VAR_WRAPPER 1
 
 #include <pol/version>
-#include <vector>
-#include <string>
-#include <bitset>
-#include <pol/bits/wbmask.h>
-#include <pol/bits/wbmask.tcc>
-#include <pol/bits/bmask.h>
-#include <pol/bits/bmask.tcc>
+#include <pol/bits/vwrap.h>
+#include <pol/bits/vwrap.tcc>
 
-#endif /* _POLLIB_BITMASK */
+#endif /* _POLLIB_VAR_WRAPPER */

@@ -4,6 +4,7 @@
 namespace polaris
 {
 
+// TODO: Update this due to pol::allocator's break change
 template<typename _Tp>
 class bit_allocator
     : public allocator<_Tp>

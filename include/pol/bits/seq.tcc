@@ -27,20 +27,19 @@
  *  Do not attempt to use it directly. @headername{sequence}
  */
 
-// Written by Jingyu Zhao.
+// Written by Polaris Zhao.
 
 #ifndef _POL_SEQ_TCC
 #define _POL_SEQ_TCC 1
 
-namespace polaris
+namespace pol
 {
 
 template<typename _Tp, typename _Seq>
 sequence<_Tp, _Seq>::
 sequence()
 	: _M_storage()
-{
-}
+{ }
 
 template<typename _Tp, typename _Seq>
 size_t

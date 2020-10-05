@@ -1,6 +1,40 @@
+// Stream wrappers for serialization and deserialization -*- C++ -*-
+
+// Copyright (C) 2004-2019 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file     serial_stream
+ *  @brief    Stream wrappers for serialization and deserialization
+ *  @author   Polaris Zhao
+ *  @version  0.8.0
+ *  @todo     Revision.
+ *
+ *  This is a Polaris C++ Library header.
+**/
+
 #ifndef _POLLIB_SERIAL_STREAM
 #define _POLLIB_SERIAL_STREAM 1
 
+#include <pol/version>
 #include <pol/memory>
 #include <iosfwd>
 #include <string>
@@ -14,6 +48,12 @@ class serial_stream;
 using serial_istream = serial_stream<std::istream>;
 using serial_ostream = serial_stream<std::ostream>;
 using serial_iostream = serial_stream<std::iostream>;
+using serial_ifstream = serial_stream<std::ifstream>;
+using serial_ofstream = serial_stream<std::ofstream>;
+using serial_fstream = serial_stream<std::fstream>;
+using serial_istringstream = serial_stream<std::istringstream>;
+using serial_ostringstream = serial_stream<std::ostringstream>;
+using serial_stringstream = serial_stream<std::stringstream>;
 
 template<typename _Tp>
 class serial_stream
@@ -39,6 +79,7 @@ public:
 
     void assign(stream_type&);
 
+// Declarations for fundamental types.
 #define POL_DECL_SSFIO(_FundT) \
     const self_type& operator >> (_FundT&) const; \
     \
@@ -118,6 +159,8 @@ serial_stream<_Tp>::
 assign(stream_type& __s)
 { this->_M_ptr = std::addressof(__s); }
 
+// Definitions for fundamental types.
+// Special optimization for 1-byte types.
 #define POL_DEFN_SSBIO(_ByteT) \
 template<typename _Tp> \
 const serial_stream<_Tp>& \
@@ -247,4 +290,4 @@ operator << (const std::string& __x) const
 
 }
 
-#endif
+#endif /* _POLLIB_SERIAL_STREAM */

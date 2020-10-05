@@ -98,6 +98,7 @@ protected:
         const tree_base_iterator& __rhs);
 
     base_type* _M_root;
+    // TODO: Replace this with std::list<base_type*>::iterator
     std::stack<base_type*> _M_st;
 };
 
@@ -115,7 +116,9 @@ public:
 
     node_iterator& operator++ ();
     node_iterator& operator-- ();
+    value_type& operator* ();
     value_type operator* () const;
+    value_type* operator-> () const;
     base_type* base_ptr() const;
     node_type* node_ptr() const;
 

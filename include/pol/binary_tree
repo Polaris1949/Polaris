@@ -36,6 +36,9 @@
 #define _POLLIB_BINARY_TREE 1
 
 #include <pol/version>
+#include <pol/type>
+#include <stdexcept> // for std::out_of_range
+#include <utility> // for std::move
 #include <pol/bits/bintree.h>
 #include <pol/bits/bintree.tcc>
 

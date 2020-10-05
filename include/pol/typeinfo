@@ -206,7 +206,7 @@ struct check
     output out_;
     check(const output& out) : out_(out)
     {
-#   if defined(__GNUC__)
+#if defined(__GNUC__)
         const char* typeid_name = typeid(T).name();
         auto deleter = [](char* p)
         {
@@ -217,9 +217,9 @@ struct check
             abi::__cxa_demangle(typeid_name, nullptr, nullptr, nullptr), deleter
         };
         out_(real_name ? real_name.get() : typeid_name);
-#   else
+#else
         out_(typeid(T).name());
-#   endif
+#endif
     }
 };
 

@@ -25,7 +25,7 @@
 /** @file     integer
  *  @brief    Infinite precision integer library
  *  @author   Polaris Zhao
- *  @version  3.0
+ *  @version  0.8.0
  *
  *  This is a Polaris C++ Library header.
 **/
@@ -33,40 +33,38 @@
 #ifndef _POLLIB_INTEGER
 #define _POLLIB_INTEGER 1
 
-#pragma GCC system_header
-
 #if !_POL_NEWLIB
 #define _Int_stdbase _Int_base
 #endif
 
-#include <polaris/version> // Version support
-#include <polaris/boolean> // Boolean support
-#include <polaris/exception> // Exception support
-#include <polaris/utility> // Utility support
-#include <polaris/bits/intfwd.h> // Forward header
-#include <polaris/bits/intexcept.h> // Integer exception
-#include <polaris/bits/intalloc.h> // Integer allocation
-#include <polaris/bits/intref.h> // Integer reference
+#include <pol/version> // Version support
+#include <pol/boolean> // Boolean support
+#include <pol/exception> // Exception support
+#include <pol/utility> // Utility support
+#include <pol/bits/intfwd.h> // Forward header
+#include <pol/bits/intexcept.h> // Integer exception
+#include <pol/bits/intalloc.h> // Integer allocation
+#include <pol/bits/intref.h> // Integer reference
 #if _POL_NEWLIB
-#include <polaris/bits/intbase.h>
-#include <polaris/bits/intgenbase.h>
+#include <pol/bits/intbase.h>
+#include <pol/bits/intgenbase.h>
 #endif
 #if !_POL_DEPRECATED
-#include <polaris/bits/intstdbase.h> // Integer standard base type
+#include <pol/bits/intstdbase.h> // Integer standard base type
 #endif
 //#include <polaris/bits/integer.h> // Integer class
-#include <polaris/bits/intfwd.tcc> // Forward header
-#include <polaris/bits/intexcept.tcc> // Integer exception
-#include <polaris/bits/intalloc.tcc> // Integer allocation
-#include <polaris/bits/intref.tcc> // Integer reference
+#include <pol/bits/intfwd.tcc> // Forward header
+#include <pol/bits/intexcept.tcc> // Integer exception
+#include <pol/bits/intalloc.tcc> // Integer allocation
+#include <pol/bits/intref.tcc> // Integer reference
 #if _POL_NEWLIB
-#include <polaris/bits/intbase.tcc>
-#include <polaris/bits/intgenbase.tcc>
+#include <pol/bits/intbase.tcc>
+#include <pol/bits/intgenbase.tcc>
 #endif
 #if !_POL_DEPRECATED
-#include <polaris/bits/intstdbase.tcc> // Integer standard base type
+#include <pol/bits/intstdbase.tcc> // Integer standard base type
 #endif
-//#include <polaris/bits/integer.tcc> // Integer class
+//#include <pol/bits/integer.tcc> // Integer class
 
 #if !_POL_NEWLIB && !_POL_DEBUG
 // Also: #if !(_POL_NEWLIB || _POL_DEBUG)

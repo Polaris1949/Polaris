@@ -106,7 +106,7 @@ prime_factor_string(const _Cont& __res)
 
     std::string __ret = __oss.str();
     __ret.pop_back();
-    return std::move(__ret);
+    return __ret;
 }
 
 }

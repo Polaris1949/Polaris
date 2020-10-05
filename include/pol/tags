@@ -33,12 +33,10 @@
 #ifndef _POLLIB_TAGS
 #define _POLLIB_TAGS 1
 
-#include <polaris/version>
+#include <pol/version>
 #include <tuple>
 
-#pragma GCC system_header
-
-namespace polaris
+namespace pol
 {
 
 /** @brief A blank tag struct **/

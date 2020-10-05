@@ -1,12 +1,7 @@
 #ifndef _POL_TYPE_TCC
 #define _POL_TYPE_TCC 1
 
-#pragma GCC system_header
-
-#include <polaris/version>
-#include <polaris/bits/type.h>
-
-namespace polaris
+namespace pol
 {
 
 template<typename _Tp>

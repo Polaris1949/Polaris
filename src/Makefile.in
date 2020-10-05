@@ -131,8 +131,8 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libp_la_DEPENDENCIES =
-am_libp_la_OBJECTS = bitmem.lo bitobs.lo contract.lo file.lo format.lo \
-	log.lo terminal.lo typeinfo.lo version.lo
+am_libp_la_OBJECTS = bitmem.lo bitobs.lo contract.lo exception.lo \
+	file.lo log.lo terminal.lo typeinfo.lo version.lo
 libp_la_OBJECTS = $(am_libp_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -322,8 +322,8 @@ libp_la_SOURCES = \
     bitmem.cc \
     bitobs.cc \
     contract.cc \
+    exception.cc \
     file.cc \
-    format.cc \
     log.cc \
     terminal.cc \
     typeinfo.cc \

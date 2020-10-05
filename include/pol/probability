@@ -34,6 +34,10 @@
 #define _POLLIB_PROBABILITY 1
 
 #include <pol/version>
+#include <pol/type>
+#include <random>
+#include <vector>
+#include <algorithm> // for std::upper_bound
 #include <pol/bits/probpool.h>
 #include <pol/bits/probpool.tcc>
 

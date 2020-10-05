@@ -25,7 +25,7 @@
 /** @file     bitfield
  *  @brief    Bitfield library
  *  @author   Polaris Zhao
- *  @version  3.0
+ *  @version  0.8.0
  *  @todo     This library is partially supported.
  *
  *  This is a Polaris C++ Library header.

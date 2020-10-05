@@ -33,9 +33,10 @@
 #ifndef _POLLIB_TIMER
 #define _POLLIB_TIMER 1
 
+#include <pol/version>
 #include <chrono>
 
-namespace polaris
+namespace pol
 {
 
 /** @class  timer
@@ -69,42 +70,32 @@ public:
 timer::
 timer()
     : _M_start{}, _M_finish{}
-{}
+{ }
 
 std::chrono::steady_clock::time_point&
 timer::
 clock_begin()
-{
-    return this->_M_start = clock::now();
-}
+{ return this->_M_start = clock::now(); }
 
 std::chrono::steady_clock::time_point&
 timer::
 clock_end()
-{
-    return this->_M_finish = clock::now();
-}
+{ return this->_M_finish = clock::now(); }
 
 std::chrono::steady_clock::time_point
 timer::
 begin() const
-{
-    return this->_M_start;
-}
+{ return this->_M_start; }
 
 std::chrono::steady_clock::time_point
 timer::
 end() const
-{
-    return this->_M_finish;
-}
+{ return this->_M_finish; }
 
 std::chrono::steady_clock::duration
 timer::
 distance() const
-{
-    return this->_M_finish - this->_M_start;
-}
+{ return this->_M_finish - this->_M_start; }
 
 double
 timer::

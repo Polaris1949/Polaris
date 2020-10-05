@@ -1,4 +1,4 @@
-// Link-cut tree implementation -*- C++ -*-
+// Link-cut tree -*- C++ -*-
 
 // Copyright (C) 1997-2017 Free Software Foundation, Inc.
 //
@@ -23,19 +23,18 @@
 // <http://www.gnu.org/licenses/>.
 
 /** @file        bits/lctree.tcc
- *  @headerfile  link_cut_tree
- *  @brief       Link-cut tree implementation
+ *  @brief       Link-cut tree
  *  @author      Polaris Zhao
- *  @version     3.0
+ *  @version     0.8.0
  *
  *  This is an internal header file, included by other library headers.
- *  Do not attempt to use it directly.
+ *  Do not attempt to use it directly. @headername{link_cut_tree}
 **/
 
 #ifndef _POL_LCTREE_TCC
 #define _POL_LCTREE_TCC 1
 
-namespace polaris
+namespace pol
 {
 
 template<typename _Tp>
@@ -63,7 +62,7 @@ mark()
 { return this->_M_mark; }
 
 template<typename _Tp>
-inline const bool&
+inline bool
 link_cut_tree_node<_Tp>::
 mark() const
 { return this->_M_mark; }

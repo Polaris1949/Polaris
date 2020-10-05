@@ -23,20 +23,19 @@
 // <http://www.gnu.org/licenses/>.
 
 /** @file        bits/segtree.tcc
- *  @headerfile  segment_tree
  *  @brief       Segment tree implementation
  *  @author      Polaris Zhao
- *  @version     3.0
+ *  @version     0.8.0
  *  @todo        Revision.
  *
  *  This is an internal header file, included by other library headers.
- *  Do not attempt to use it directly.
+ *  Do not attempt to use it directly. @headername{segment_tree}
 **/
 
 #ifndef _POL_SEGTREE_TCC
 #define _POL_SEGTREE_TCC 1
 
-namespace polaris
+namespace pol
 {
 
 // @segment_tree_node
@@ -45,7 +44,7 @@ template<typename _Tp, typename _MarkT>
 inline
 segment_tree_node<_Tp, _MarkT>::
 segment_tree_node()
-	: _M_begin(), _M_end(), _M_left(), _M_right(), _M_data(), _M_mark()
+	: _M_left(), _M_right(), _M_begin(), _M_end(), _M_data(), _M_mark()
 {
 }
 
@@ -53,8 +52,7 @@ template<typename _Tp, typename _MarkT>
 inline
 segment_tree_node<_Tp, _MarkT>::
 segment_tree_node(size_type __begin, size_type __end)
-	: _M_begin(__begin), _M_end(__end), _M_left(), _M_right(), _M_data(),
-		_M_mark()
+	: _M_left(), _M_right(), _M_begin(__begin), _M_end(__end), _M_data(), _M_mark()
 {
 }
 
@@ -82,13 +80,14 @@ construct(size_type __begin, size_type __end)
 template<typename _Tp, typename _MarkT>
 inline segment_tree_node<_Tp, _MarkT>&
 segment_tree_node<_Tp, _MarkT>::
-destroy()
+destroy() noexcept
 {
 	_M_destroy();
 	_M_left = 0;
 	_M_right = 0;
 	_M_begin = size_type();
 	_M_end = size_type();
+	// TODO: Should these break noexcept?
 	_M_data = value_type();
 	_M_mark = mark_type();
 	return *this;
@@ -97,106 +96,100 @@ destroy()
 template<typename _Tp, typename _MarkT>
 inline segment_tree_node<_Tp, _MarkT>*&
 segment_tree_node<_Tp, _MarkT>::
-left()
-{
-	return _M_left;
-}
+left() noexcept
+{ return _M_left; }
 
 template<typename _Tp, typename _MarkT>
 inline const segment_tree_node<_Tp, _MarkT>*&
 segment_tree_node<_Tp, _MarkT>::
-left() const
+left() const noexcept
+{ return _M_left; }
+
+template<typename _Tp, typename _MarkT>
+inline segment_tree_node<_Tp, _MarkT>*&
+segment_tree_node<_Tp, _MarkT>::
+left_d()
 {
+	if (!_M_left)
+		_M_left = new node_type(begin(), middle());
 	return _M_left;
 }
 
 template<typename _Tp, typename _MarkT>
 inline segment_tree_node<_Tp, _MarkT>*&
 segment_tree_node<_Tp, _MarkT>::
-right()
-{
-	return _M_right;
-}
+right() noexcept
+{ return _M_right; }
 
 template<typename _Tp, typename _MarkT>
 inline const segment_tree_node<_Tp, _MarkT>*&
 segment_tree_node<_Tp, _MarkT>::
-right() const
+right() const noexcept
+{ return _M_right; }
+
+template<typename _Tp, typename _MarkT>
+inline segment_tree_node<_Tp, _MarkT>*&
+segment_tree_node<_Tp, _MarkT>::
+right_d()
 {
+	if (!_M_right)
+		_M_right = new node_type(middle(), end());
 	return _M_right;
 }
 
 template<typename _Tp, typename _MarkT>
 inline _Tp&
 segment_tree_node<_Tp, _MarkT>::
-data()
-{
-	return _M_data;
-}
+data() noexcept
+{ return _M_data; }
 
 template<typename _Tp, typename _MarkT>
 inline const _Tp&
 segment_tree_node<_Tp, _MarkT>::
-data() const
-{
-	return _M_data;
-}
+data() const noexcept
+{ return _M_data; }
 
 template<typename _Tp, typename _MarkT>
 inline _MarkT&
 segment_tree_node<_Tp, _MarkT>::
-mark()
-{
-	return _M_mark;
-}
+mark() noexcept
+{ return _M_mark; }
 
 template<typename _Tp, typename _MarkT>
 inline const _MarkT&
 segment_tree_node<_Tp, _MarkT>::
-mark() const
-{
-	return _M_mark;
-}
+mark() const noexcept
+{ return _M_mark; }
 
 template<typename _Tp, typename _MarkT>
 inline std::size_t
 segment_tree_node<_Tp, _MarkT>::
-begin() const
-{
-	return _M_begin;
-}
+begin() const noexcept
+{ return _M_begin; }
 
 template<typename _Tp, typename _MarkT>
 inline std::size_t
 segment_tree_node<_Tp, _MarkT>::
-end() const
-{
-	return _M_end;
-}
+end() const noexcept
+{ return _M_end; }
 
 template<typename _Tp, typename _MarkT>
 inline std::size_t
 segment_tree_node<_Tp, _MarkT>::
-middle() const
-{
-	return (_M_begin + _M_end) >> size_type(1);
-}
+middle() const noexcept
+{ return (_M_begin + _M_end) >> size_type(1); }
 
 template<typename _Tp, typename _MarkT>
 inline std::size_t
 segment_tree_node<_Tp, _MarkT>::
-segment() const
-{
-	return _M_end - _M_begin;
-}
+segment() const noexcept
+{ return _M_end - _M_begin; }
 
 template<typename _Tp, typename _MarkT>
 inline bool
 segment_tree_node<_Tp, _MarkT>::
-is_leaf() const
-{
-	return _M_begin + size_type(1) == _M_end;
-}
+is_leaf() const noexcept
+{ return _M_begin + size_type(1) == _M_end; }
 
 template<typename _Tp, typename _MarkT>
 inline void
@@ -210,7 +203,7 @@ _M_construct(size_type __begin, size_type __end)
 template<typename _Tp, typename _MarkT>
 inline void
 segment_tree_node<_Tp, _MarkT>::
-_M_destroy()
+_M_destroy() noexcept
 {
 	delete _M_left;
 	delete _M_right;
@@ -224,15 +217,14 @@ template<typename _Tp>
 inline
 segment_tree_node<_Tp, void>::
 segment_tree_node()
-	: _M_begin(), _M_end(), _M_left(), _M_right(), _M_data()
-{
-}
+	: _M_left(), _M_right(), _M_begin(), _M_end(), _M_data()
+{ }
 
 template<typename _Tp>
 inline
 segment_tree_node<_Tp, void>::
 segment_tree_node(size_type __begin, size_type __end)
-	: _M_begin(__begin), _M_end(__end), _M_left(), _M_right(), _M_data()
+	: _M_left(), _M_right(), _M_begin(__begin), _M_end(__end), _M_data()
 {
 }
 
@@ -390,6 +382,14 @@ segment_tree()
 }
 
 template<typename _Tp, typename _MarkT, typename _Func>
+inline
+segment_tree<_Tp, _MarkT, _Func>::
+segment_tree(size_type __beg, size_type __end)
+	: _M_root(new segment_tree_node<_Tp, _MarkT>(__beg, __end)), _M_inf(), _M_func()
+{
+}
+
+template<typename _Tp, typename _MarkT, typename _Func>
 template<typename _Sequence>
 inline
 segment_tree<_Tp, _MarkT, _Func>::
@@ -406,6 +406,16 @@ segment_tree<_Tp, _MarkT, _Func>::
 ~segment_tree() noexcept
 {
 	delete _M_root;
+}
+
+template<typename _Tp, typename _MarkT, typename _Func>
+inline segment_tree<_Tp, _MarkT, _Func>&
+segment_tree<_Tp, _MarkT, _Func>::
+construct(size_type __begin, size_type __end)
+{
+	_M_destroy();
+	_M_root = new segment_tree_node<_Tp, _MarkT>(__begin, __end);
+	return *this;
 }
 
 template<typename _Tp, typename _MarkT, typename _Func>
@@ -557,6 +567,19 @@ modify(size_type __begin, size_type __end, const value_type& __x,
 }
 
 template<typename _Tp, typename _MarkT, typename _Func>
+template<typename _ModifyFunc, typename _MarkFunc>
+inline segment_tree<_Tp, _MarkT, _Func>&
+segment_tree<_Tp, _MarkT, _Func>::
+modify_d(size_type __begin, size_type __end, const value_type& __x,
+	const _ModifyFunc& __func, const _MarkFunc& __mark)
+{
+	if (_M_root)
+		_M_modify_d(_M_root, __begin, __end, __x, __func, __mark);
+
+	return *this;
+}
+
+template<typename _Tp, typename _MarkT, typename _Func>
 template<typename _Sequence>
 void
 segment_tree<_Tp, _MarkT, _Func>::
@@ -649,6 +672,31 @@ _M_modify(node_type* __root, size_type __begin, size_type __end,
 
 	_M_modify(__root->left(), __begin, __end, __x, __func, __mark);
 	_M_modify(__root->right(), __begin, __end, __x, __func, __mark);
+
+	push_up(__root);
+}
+
+template<typename _Tp, typename _MarkT, typename _Func>
+template<typename _ModifyFunc, typename _MarkFunc>
+void
+segment_tree<_Tp, _MarkT, _Func>::
+_M_modify_d(node_type* __root, size_type __begin, size_type __end,
+	const value_type& __x, const _ModifyFunc& __func,
+	const _MarkFunc& __mark)
+{
+	if (__begin >= __root->end() || __end <= __root->begin())
+		return;
+
+	if (__begin <= __root->begin() && __end >= __root->end())
+	{
+		__func(__root, __x);
+		return;
+	}
+
+	push_down(__root, __mark);
+
+	_M_modify(__root->left_d(), __begin, __end, __x, __func, __mark);
+	_M_modify(__root->right_d(), __begin, __end, __x, __func, __mark);
 
 	push_up(__root);
 }

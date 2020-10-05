@@ -25,7 +25,7 @@
 /** @file     graph
  *  @brief    Graph library
  *  @author   Polaris Zhao
- *  @version  3.0
+ *  @version  0.8.0
  *  @todo     Incomplete.
  *
  *  This is a Polaris C++ Library header.
@@ -34,11 +34,9 @@
 #ifndef _POLLIB_GRAPH
 #define _POLLIB_GRAPH 1
 
-#pragma GCC system_header
-
-#include <polaris/version>
-#include <polaris/bits/graph/adjmatrix>
-#include <polaris/bits/graph/adjlist>
-#include <polaris/bits/graph/edgeset_array>
+#include <pol/version>
+#include <pol/bits/graph/adjmatrix>
+#include <pol/bits/graph/adjlist>
+#include <pol/bits/graph/edgeset_array>
 
 #endif /* _POLLIB_GRAPH */

@@ -1,4 +1,4 @@
-// Binary tree classes -*- C++ -*-
+// Binary tree -*- C++ -*-
 
 // Copyright (C) 1997-2017 Free Software Foundation, Inc.
 //
@@ -23,34 +23,126 @@
 // <http://www.gnu.org/licenses/>.
 
 /** @file        bits/bintree.h
- *  @headerfile  binary_tree
- *  @brief       Binary tree classes
+ *  @brief       Binary tree
  *  @author      Polaris Zhao
- *  @version     3.0
+ *  @version     0.8.0
  *  @todo        Incomplete.
  *
  *  This is an internal header file, included by other library headers.
- *  Do not attempt to use it directly.
+ *  Do not attempt to use it directly. @headername{binary_tree}
 **/
 
 #ifndef _POL_BINTREE_H
 #define _POL_BINTREE_H 1
 
-namespace polaris
+namespace pol
 {
 
-template<typename _Tp>
-class binary_tree_node
+// TODO: Allocator support (optional?)
+// 1. Make it a template parameter [static/member?]
+// 2. Make it a function parameter [maybe better?]
+#if POL_NEWLIB
+template<typename _Alloc>
+#endif
+class binary_tree_node_base
 {
 public:
-    typedef _Tp                    value_type;
-    typedef binary_tree_node<_Tp>  node_type;
-    typedef std::size_t            size_type;
+    using base_type = binary_tree_node_base;
+    using size_type = size_t;
+#if POL_NEWLIB
+    using allocator_type = _Alloc;
+#endif
 
 protected:
-    node_type* _M_parent;
-    node_type* _M_left;
-    node_type* _M_right;
+    base_type* _M_parent;
+    base_type* _M_left;
+    base_type* _M_right;
+#if POL_NEWLIB
+    // TODO: Static approach?
+    _Alloc* _M_alloc;
+#endif
+
+public:
+    binary_tree_node_base() noexcept;
+
+    ~binary_tree_node_base() noexcept = default;
+
+    base_type*&
+    parent() noexcept;
+
+    base_type*
+    parent() const noexcept;
+
+    base_type*&
+    child(bool __n) noexcept;
+
+    base_type*
+    child(bool __n) const noexcept;
+
+    base_type*&
+    child(size_type __n);
+
+    base_type*
+    child(size_type __n) const;
+
+    template<typename _IntTp>
+    base_type*&
+    child(_IntTp __n);
+
+    template<typename _IntTp>
+    base_type*
+    child(_IntTp __n) const;
+
+    base_type*&
+    left() noexcept;
+
+    base_type*
+    left() const noexcept;
+
+    base_type*&
+    left_d();
+
+    template<typename _Al>
+    base_type*&
+    left_d(_Al& __alloc);
+
+    base_type*&
+    right() noexcept;
+
+    base_type*
+    right() const noexcept;
+
+    base_type*&
+    right_d();
+
+    template<typename _Al>
+    base_type*&
+    right_d(_Al& __alloc);
+
+    bool
+    is_branch() const noexcept;
+
+    bool
+    is_leaf() const noexcept;
+
+    size_type
+    degree() const noexcept;
+
+    size_type
+    depth() const noexcept;
+};
+
+// @binary_tree_node
+template<typename _Tp>
+class binary_tree_node : public binary_tree_node_base
+{
+public:
+    using value_type = _Tp;
+    using base_type = binary_tree_node_base;
+    using node_type = binary_tree_node<_Tp>;
+    using size_type = size_t;
+
+protected:
     value_type _M_data;
 
 public:
@@ -58,7 +150,9 @@ public:
 
     binary_tree_node(const value_type& __x);
 
-    ~binary_tree_node() noexcept;
+    binary_tree_node(value_type&& __x);
+
+    ~binary_tree_node() noexcept = default;
 
     node_type&
     construct(const value_type& __x);
@@ -66,64 +160,104 @@ public:
     node_type&
     destroy();
 
-    node_type*&
-    parent();
+    node_type&
+    assign(const value_type& __x);
 
-    const node_type*&
-    parent() const;
+    node_type&
+    assign(value_type&& __x);
 
-    node_type*&
-    child(bool __x);
+    node_type&
+    operator = (const value_type& __x);
 
-    const node_type*&
-    child(bool __x) const;
-
-    node_type*&
-    left();
-
-    const node_type*&
-    left() const;
+    node_type&
+    operator = (value_type&& __x);
 
     node_type*&
-    right();
+    parent() noexcept;
 
-    const node_type*&
-    right() const;
+    node_type*
+    parent() const noexcept;
+
+    node_type*&
+    child(bool __n) noexcept;
+
+    node_type*
+    child(bool __n) const noexcept;
+
+    node_type*&
+    child(size_type __n);
+
+    node_type*
+    child(size_type __n) const;
+
+    template<typename _IntTp>
+    node_type*&
+    child(_IntTp __n);
+
+    template<typename _IntTp>
+    node_type*
+    child(_IntTp __n) const;
+
+    node_type*&
+    left() noexcept;
+
+    node_type*
+    left() const noexcept;
+
+    template<typename _Al>
+    node_type*&
+    left_d(_Al& __alloc);
+
+    node_type*&
+    right() noexcept;
+
+    node_type*
+    right() const noexcept;
+
+    template<typename _Al>
+    node_type*&
+    right_d(_Al& __alloc);
 
     value_type&
-    data();
+    data() noexcept;
 
-    const value_type&
-    data() const;
-
-    bool
-    is_branch() const;
-
-    bool
-    is_leaf() const;
-
-    size_type
-    degree() const;
-
-    size_type
-    depth() const;
+    value_type
+    data() const noexcept;
 
 private:
     void
+    _M_construct(std::string_view __s);
+#if POL_NEWLIB
+    template<typename _Al>
+    void
+    _M_construct(std::string_view __s, _Al& __a);
+#endif
+
+    // TODO: Remove this.
+    void
     _M_construct(const value_type& __x);
 
+    // NOTE: Only destroy child nodes.
+    // TODO: Using global allocator?
     void
     _M_destroy();
+#if POL_NEWLIB
+    // TODO: With allocator.
+    template<typename _Al>
+    void
+    _M_destroy(_Al& __a);
+#endif
 };
 
 template<typename _Tp>
 class binary_tree
 {
 public:
-    typedef _Tp value_type;
-    typedef binary_tree_node<_Tp> node_type;
-    typedef binary_tree<_Tp> tree_type;
-    typedef std::size_t size_type;
+    using value_type = _Tp;
+    using base_type = binary_tree_node_base;
+    using node_type = binary_tree_node<_Tp>;
+    using tree_type = binary_tree<_Tp>;
+    using size_type = size_t;
 
 protected:
     node_type* _M_root;
@@ -153,11 +287,11 @@ public:
 
     template<typename _Func>
     void
-    preorder_tr(_Func&& __f);
+    preorder_travel(_Func&& __f);
 
     template<typename _Func>
     void
-    postorder_tr(_Func&& __f);
+    postorder_travel(_Func&& __f);
 
 private:
     template<typename _Seq>
@@ -170,4 +304,4 @@ private:
 
 }
 
-#endif
+#endif /* _POL_BINTREE_H */

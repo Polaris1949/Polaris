@@ -39,8 +39,9 @@
 
 #if __has_include(<fmt/format.h>)
 #include <string>
+#include <string_view>
 #include <utility>
-#include <mutex>
+#include <ostream>
 #include <fmt/format.h>
 #include <fmt/color.h>
 #include <fmt/ostream.h>
@@ -56,72 +57,136 @@ template<typename... _Args>
 format(_Args&&... __args)
 { return fmt::format(std::forward<_Args&&>(__args)...); }
 
+template<typename... _Args>
+inline void
+print(_Args&&... __args)
+{ fmt::print(std::forward<_Args&&>(__args)...); }
+
+template<typename... _Args>
+inline void
+println(const std::string& __fmt, _Args&&... __args)
+{ fmt::print(__fmt, std::forward<_Args&&>(__args)...); fmt::print("\n"); }
+
+template<typename... _Args>
+inline void
+println(std::FILE* __f, const std::string& __fmt, _Args&&... __args)
+{ fmt::print(__f, __fmt, std::forward<_Args&&>(__args)...); fmt::print(__f, "\n"); }
+
+class ftext;
+
+inline std::ostream&
+operator << (std::ostream& __out, const ftext& __x);
+
 class ftext
 {
 public:
     ftext() = default;
 
     template<typename... _Args>
-    ftext(fmt::text_style __s, _Args&&... __args);
+    ftext(fmt::text_style __s, const std::string& __fmt, _Args&&... __args);
 
     friend std::ostream&
     operator << (std::ostream& __out, const ftext& __x);
 
-    friend std::ofstream&
-    operator << (std::ofstream& __out, const ftext& __x);
-
 private:
     fmt::text_style _M_style;
     std::string _M_text;
+
+    friend struct fmt::formatter<pol::ftext>;
+
+    inline void
+    _M_format(std::string_view __fmt);
+
+    template<typename _Tp, typename... _Args>
+    void
+    _M_format(std::string_view __fmt, _Tp&& __a, _Args&&... __args);
 };
 
 template<typename... _Args>
 ftext::
-ftext(fmt::text_style __s, _Args&&... __args)
-    : _M_style{__s}, _M_text{format(std::forward<_Args&&>(__args)...)}
-{ }
+ftext(fmt::text_style __s, const std::string& __fmt, _Args&&... __args)
+    : _M_style{__s}, _M_text{}
+{ this->_M_format(std::string_view(__fmt), std::forward<_Args&&>(__args)...); }
 
-namespace __format
+void
+ftext::
+_M_format(std::string_view __fmt)
+{ this->_M_text += format(this->_M_style, std::string(__fmt)); }
+
+template<typename _Tp, typename... _Args>
+void
+ftext::
+_M_format(std::string_view __fmt, _Tp&& __a, _Args&&... __args)
 {
-/** @brief  Global buffer for storing the result of @c cformat()
-**/
-extern std::string buffer;
-
-#if POL_DEPRECATED
-/** @brief  Global mutex for multi-thread support for @c cformat()
- *  @note   You shall invoke @c cfmt_lock() and @c cfmt_unlock()
- *          in order to control this mutex.
-**/
-[[deprecated]] extern std::mutex mutex; 
-#endif
+    auto __it = __fmt.begin();
+    auto __last = __it;
+    auto __end = __fmt.end();
+    while (__it != __end && *__it != '{') ++__it;
+    this->_M_text += format(this->_M_style, std::string(__last, __it));
+    __last = __it;
+    while (__it != __end && *__it != '}') ++__it;
+    if (__it != __end) ++__it;
+    if (typeid(_Tp) == typeid(ftext))
+        this->_M_text += format(std::string(__last, __it), std::forward<_Tp&&>(__a));
+    else
+        this->_M_text += format(this->_M_style, std::string(__last, __it),
+            std::forward<_Tp&&>(__a));
+    this->_M_format(std::string_view(__it, __end), std::forward<_Args&&>(__args)...);
 }
 
-#if POL_DEPRECATED
-/** @brief  Lock global mutex for @c cformat()
-**/
-[[deprecated]] void
-cfmt_lock();
-
-/** @brief  Unlock global mutex for @c cformat()
-**/
-[[deprecated]] void
-cfmt_unlock();
-
-/** @brief   Text formatter (C-style)
- *  @return  A C-style string of formatted result.
- *  @note    This function itself only supports single thread.
- *           In order to support multi-thread, you shall invoke
- *           @c cfmt_lock() before and @c cfmt_unlock() after
- *           invoking this function.
-**/
-template<typename... _Args>
-[[deprecated]] [[nodiscard]] inline const char*
-cformat(_Args&&... __args)
+std::ostream&
+operator << (std::ostream& __out, const ftext& __x)
 {
-    __format::buffer = fmt::format(std::forward<_Args&&>(__args)...);
-    return __format::buffer.data();
+    __out << __x._M_text;
+    return __out;
 }
-#endif
+
+namespace ftext_literals
+{
+
+class ftl_helper
+{
+public:
+    ftl_helper(const char* __t) noexcept
+        : _M_text(__t)
+    { }
+
+    ftext
+    operator() (fmt::text_style __s)
+    { return ftext(__s, this->_M_text); }
+
+private:
+    const char* _M_text;
+};
+
+ftl_helper
+operator""_ft (const char* __t, size_t) noexcept
+{ return ftl_helper(__t); }
+
+}
+
+}
+
+namespace fmt
+{
+
+template<>
+struct formatter<pol::ftext>
+    : public formatter<std::string>
+{
+    constexpr auto parse(format_parse_context& __ctx)
+    {
+        auto __it = __ctx.begin();
+        auto __end = __ctx.end();
+        if (__it != __end && *__it != '}')
+            throw format_error("invalid format");
+        return __it;
+    }
+
+    template<typename _FormatContext>
+    auto format(const pol::ftext& __x, _FormatContext& __ctx)
+    { return formatter<std::string>::format(__x._M_text, __ctx); }
+};
 
 }
 #else

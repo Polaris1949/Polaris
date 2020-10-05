@@ -37,6 +37,7 @@
 #include <utility>
 #include <memory> // for std::addressof
 #include <string_view>
+#include <sstream>
 
 namespace pol
 {
@@ -51,7 +52,7 @@ bit_cast(_From& __x) noexcept
 
 template<typename _Tp>
 inline constexpr bool
-signbit(_Tp __x)
+signbit(_Tp __x) noexcept
 {
     static_assert(std::is_integral_v<_Tp>, "require an integral type");
     if constexpr (std::is_signed_v<_Tp>)
@@ -68,16 +69,46 @@ inline constexpr _Tp&
 flip(_Tp& __x)
 { return __x = ~__x; }
 
-// TODO: deprecated
+// TODO
 template<typename _Tp>
 inline _Tp
-from_string(std::string_view __s) = delete;
+from_string(std::string_view __s)
+{
+    _Tp __ret;
+    std::stringstream __ss;
+    __ss << __s;
+    __ss >> __ret;
+    if (!__ss)
+        throw std::runtime_error("pol::from_string");
+    return __ret;
+}
 
 template<>
 inline std::string
 from_string(std::string_view __s)
 { return std::string(__s.data(), __s.size()); }
 
+template<typename _Tp>
+inline _Tp
+from_string(std::string const& __s)
+{ return from_string<_Tp>(std::string_view(__s)); }
+
+template<>
+inline std::string
+from_string(std::string const& __s)
+{ return __s; }
+
+template<typename _Tp>
+inline _Tp
+from_string(char const* __s)
+{ return from_string<_Tp>(std::string_view(__s)); }
+
 }
+
+#include <type_traits>
+
+// TODO: Move part of the following to <pol/numeric>
+#include <pol/bits/utility.h>
+#include <pol/bits/utility.tcc>
 
 #endif /* _POLLIB_UTILITY */

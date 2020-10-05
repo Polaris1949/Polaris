@@ -1,0 +1,21 @@
+#ifndef _POLLIB_STRING
+#define _POLLIB_STRING
+
+#include <pol/version>
+#include <string>
+#include <string_view>
+#include <vector>
+
+namespace pol
+{
+
+std::vector<std::string_view>
+split(std::string_view s, std::string_view t);
+
+std::string
+join(std::vector<std::string_view> const& r);
+
+}
+
+#endif
+

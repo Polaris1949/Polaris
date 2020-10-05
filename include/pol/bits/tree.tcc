@@ -213,13 +213,13 @@ operator-- ()
     return *this;
 }
 
-bool
+inline bool
 operator == (const tree_base_iterator& __lhs, const tree_base_iterator& __rhs)
 {
     return __lhs._M_root == __rhs._M_root && __lhs._M_st == __rhs._M_st;
 }
 
-bool
+inline bool
 operator != (const tree_base_iterator& __lhs, const tree_base_iterator& __rhs)
 {
     return !(__lhs == __rhs);

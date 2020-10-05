@@ -25,7 +25,7 @@
 /** @file     exception
  *  @brief    Exception library
  *  @author   Polaris Zhao
- *  @version  3.0
+ *  @version  0.8.0
  *
  *  This is a Polaris C++ Library header.
 **/
@@ -39,11 +39,77 @@
 #include <stdexcept>
 #include <string>
 
-#warning not implemented
+// TODO: Better implementation
 
 namespace pol
 {
 
+using __std_exception = std::exception;
+
+std::string
+__gen_what(const std::string& __type, const std::string& __loc, const std::string& __msg);
+
+class exception : public __std_exception
+{
+public:
+    exception(const std::string& __type, const std::string& __loc, const std::string& __msg);
+    virtual ~exception() noexcept = default;
+    virtual const char* what() const noexcept override;
+
+private:
+    std::string _M_what;
+};
+
+#if POL_NEWLIB
+std::pair<std::string_view, std::string_view>
+__ex_std_what_split(const char* __beg)
+{
+    const char* __mid = __beg;
+    while (*__mid && *__mid != ':') ++__mid;
+    const char* __end = __mid;
+    while (*__end) ++__end;
+    if (*__mid)
+        return std::pair(std::string_view(__beg, __mid),
+            std::string_view(__mid + 1 + int((*(__mid + 1) == ' ')), __end));
+    else
+        return std::pair(std::string_view("standard library"), std::string_view(__beg, __end));
+}
+#endif
+
+template<typename _Tp>
+exception
+ex_from_std(const _Tp& __e)
+{
+#if POL_NEWLIB
+    auto&& __r = __ex_std_what_split(__e.what());
+    return exception(check_type<_Tp>(), std::string(__r.first), std::string(__r.second));
+#else
+    return exception(check_type<_Tp>(), "standard library", __e.what());
+#endif
+}
+
+#if 0
+class raw_exception : public __std_exception
+{
+public:
+    raw_exception(const std::string& __type, const std::string& __loc, const std::string& __msg);
+    virtual ~raw_exception() noexcept = default;
+    virtual const char* what() const noexcept override;
+    const char* type() const noexcept;
+    const char* location() const noexcept;
+    const char* message() const noexcept;
+
+private:
+    void _M_check_what();
+
+    std::string _M_type;
+    std::string _M_loc;
+    std::string _M_msg;
+    std::string _M_what;
+};
+#endif
+
+#if 0
 class exception
 {
 public:
@@ -86,6 +152,7 @@ private:
 };
 
 void throw_ex(exception&& __e);
+#endif
 
 }
 

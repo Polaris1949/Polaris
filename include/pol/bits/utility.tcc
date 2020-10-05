@@ -5,10 +5,10 @@
 #include <climits>
 #include <cmath>
 
-namespace polaris
+namespace pol
 {
 
-template<typename _Tp, typename =
+template<typename _Tp, typename _Req =
     decltype(std::declval<_Tp>() == std::declval<_Tp>())>
 bool fully_equal_to(_Tp&& __x, _Tp&& __y)
 {
@@ -183,7 +183,7 @@ _Tp powmod(_Tp __x, _Tp __y, _Tp __mod)
 template<typename _Tp>
 _Tp qpow(_Tp __x, _Tp __y)
 {
-    pol::expect(__y >= 0, "exponent should be an non-negative integer");
+    pol::expect(__y >= 0, "exponent should be a non-negative integer");
 
     _Tp __res{1};
     _Tp __tmp{__x};
@@ -219,7 +219,7 @@ _Tp qpowmod(_Tp __x, _Tp __y, _Tp __mod)
 template<typename _Tp, typename _Cont>
 _Tp& exqpowmod(_Tp __x, _Tp __y, _Tp __mod, _Cont& __c)
 {
-    pol::expect(__y >= 0, "exponent should be a non-negative integer");
+    POL_EXPECT_E(__y >= 0, "exponent should be a non-negative integer");
     if (__x == 0 && __y != 0) return __c[__y] = 0;
     return __exqpowmod_impl(__x % __mod, __y, __mod, __c) %= __mod;
 }

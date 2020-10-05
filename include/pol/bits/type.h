@@ -1,11 +1,10 @@
 #ifndef _POL_TYPE_H
 #define _POL_TYPE_H 1
 
-#include <polaris/version>
 #include <iosfwd>
 #include <type_traits>
 
-namespace polaris
+namespace pol
 {
 
 template<typename _Tp>

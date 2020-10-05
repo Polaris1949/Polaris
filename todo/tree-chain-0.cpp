@@ -1,7 +1,7 @@
-#include <polaris/version>
-#include <polaris/tree>
+#include <pol/version>
+#include <pol/tree>
 
-namespace polaris
+namespace pol
 {
 
 template<typename _Tp>

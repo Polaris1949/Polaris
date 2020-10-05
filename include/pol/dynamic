@@ -1,9 +1,48 @@
+// Dynamic types library -*- C++ -*-
+
+// Copyright (C) 1997-2017 Free Software Foundation, Inc.
+//
+// This file is part of the Polaris C++ Library.  This library is free
+// software; you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the
+// Free Software Foundation; either version 3, or (at your option)
+// any later version.
+
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// Under Section 7 of GPL version 3, you are granted additional
+// permissions described in the GCC Runtime Library Exception, version
+// 3.1, as published by the Free Software Foundation.
+
+// You should have received a copy of the GNU General Public License and
+// a copy of the GCC Runtime Library Exception along with this program;
+// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+// <http://www.gnu.org/licenses/>.
+
+/** @file     dynamic
+ *  @brief    Dynamic types library
+ *  @author   Polaris Zhao
+ *  @version  0.8.0
+ *  @todo     Partial support. Revision required.
+ *  @note     This library attempts to create dynamic types in C++.
+ *            Constexpr RTTI makes this possible.
+ *
+ *  This is a Polaris C++ Library header.
+**/
+
 #ifndef _POL_DYNAMIC
 #define _POL_DYNAMIC 1
 
-#include <polaris/version>
+#include <pol/version>
 #include <typeinfo>
 #include <any>
+
+#if !POL_REQ_CPPVER(2a)
+#error dynamic library requires c++2a or later versions
+#endif
 
 namespace pol
 {
@@ -35,4 +74,4 @@ private:
 
 }
 
-#endif
+#endif /* _POL_DYNAMIC */

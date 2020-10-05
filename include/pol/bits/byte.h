@@ -23,7 +23,7 @@
 // <http://www.gnu.org/licenses/>.
 
 /** @file        bits/byte.h
- *  @brief       Byte classes
+ *  @brief       Byte
  *  @author      Polaris Zhao
  *  @version     0.8.0
  *

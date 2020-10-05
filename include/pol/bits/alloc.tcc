@@ -39,17 +39,17 @@ namespace pol
 
 inline void*
 allocator::
-allocate(size_t __n)
+allocate(size_t __n) const
 { return ::operator new (__n); }
 
 inline void
 allocator::
-deallocate(void* __p) noexcept
+deallocate(void* __p) const noexcept
 { ::operator delete (__p); }
 
 inline void*
 allocator::
-reallocate(void* __p, size_t __n)
+reallocate(void* __p, size_t __n) const
 {
 #if POL_UNSAFE
     this->deallocate(__p);
@@ -63,17 +63,17 @@ reallocate(void* __p, size_t __n)
 
 inline void*
 nt_allocator::
-allocate(size_t __n) noexcept
+allocate(size_t __n) const noexcept
 { return ::operator new (__n, std::nothrow); }
 
 inline void
 nt_allocator::
-deallocate(void* __p) noexcept
+deallocate(void* __p) const noexcept
 { ::operator delete (__p); }
 
 inline void*
 nt_allocator::
-reallocate(void* __p, size_t __n) noexcept
+reallocate(void* __p, size_t __n) const noexcept
 {
     void* __tmp = this->allocate(__n);
     if (__tmp) this->deallocate(__p);
@@ -82,7 +82,7 @@ reallocate(void* __p, size_t __n) noexcept
 
 inline void*
 c_allocator::
-allocate(size_t __n)
+allocate(size_t __n) const
 {
     void* __tmp = std::malloc(__n);
     if (!__tmp) throw std::bad_alloc();
@@ -91,12 +91,12 @@ allocate(size_t __n)
 
 inline void
 c_allocator::
-deallocate(void* __p) noexcept
+deallocate(void* __p) const noexcept
 { std::free(__p); }
 
 inline void*
 c_allocator::
-reallocate(void* __p, size_t __n)
+reallocate(void* __p, size_t __n) const
 { 
     void* __tmp = std::realloc(__p, __n);
     if (!__tmp) throw std::bad_alloc();
@@ -105,34 +105,80 @@ reallocate(void* __p, size_t __n)
 
 inline void*
 c_nt_allocator::
-allocate(size_t __n) noexcept
+allocate(size_t __n) const noexcept
 { return std::malloc(__n); }
 
 inline void
 c_nt_allocator::
-deallocate(void* __p) noexcept
+deallocate(void* __p) const noexcept
 { std::free(__p); }
 
 inline void*
 c_nt_allocator::
-reallocate(void* __p, size_t __n) noexcept
+reallocate(void* __p, size_t __n) const noexcept
 { return std::realloc(__p, __n); }
 
-template<typename _Alloc, typename _Tp>
+template<typename _Alloc, typename _Fun1, typename _Fun2, typename _Fun3>
+debug_alloc_adapter<_Alloc, _Fun1, _Fun2, _Fun3>::
+debug_alloc_adapter(_Fun1&& __f1, _Fun2&& __f2, _Fun3&& __f3)
+    : _M_f1(std::move(__f1)), _M_f2(std::move(__f2)), _M_f3(std::move(__f3))
+{ }
+
+template<typename _Alloc, typename _Fun1, typename _Fun2, typename _Fun3>
+void*
+debug_alloc_adapter<_Alloc, _Fun1, _Fun2, _Fun3>::
+allocate(size_t __n)
+{
+    void* __ret = nullptr;
+    std::exception_ptr __eptr;
+    try { __ret = this->_Alloc::allocate(__n); }
+    catch (...) { __eptr = std::current_exception(); }
+    this->_M_f1(__n,  __ret);
+    if (__eptr) std::rethrow_exception(__eptr);
+    return __ret;
+}
+
+template<typename _Alloc, typename _Fun1, typename _Fun2, typename _Fun3>
+void
+debug_alloc_adapter<_Alloc, _Fun1, _Fun2, _Fun3>::
+deallocate(void* __p)
+{
+    std::exception_ptr __eptr;
+    try { this->_Alloc::deallocate(__p); }
+    catch (...) { __eptr = std::current_exception(); }
+    this->_M_f2(__p);
+    if (__eptr) std::rethrow_exception(__eptr);
+}
+
+template<typename _Alloc, typename _Fun1, typename _Fun2, typename _Fun3>
+void*
+debug_alloc_adapter<_Alloc, _Fun1, _Fun2, _Fun3>::
+reallocate(void* __p, size_t __n)
+{
+    void* __ret = nullptr;
+    std::exception_ptr __eptr;
+    try { __ret = this->_Alloc::reallocate(__p, __n); }
+    catch (...) { __eptr = std::current_exception(); }
+    this->_M_f3(__p, __n, __ret);
+    if (__eptr) std::rethrow_exception(__eptr);
+    return __ret;
+}
+
+template<typename _Tp, typename _Alloc>
 inline _Tp*
-typed_alloc_adapter<_Alloc, _Tp>::
+typed_alloc_adapter<_Tp, _Alloc>::
 allocate(size_type __n)
 { return static_cast<_Tp*>(this->_Alloc::allocate(__n)); }
 
-template<typename _Alloc, typename _Tp>
+template<typename _Tp, typename _Alloc>
 inline void
-typed_alloc_adapter<_Alloc, _Tp>::
+typed_alloc_adapter<_Tp, _Alloc>::
 deallocate(pointer __p) noexcept
 { this->_Alloc::deallocate(static_cast<void*>(__p)); }
 
-template<typename _Alloc, typename _Tp>
+template<typename _Tp, typename _Alloc>
 inline _Tp*
-typed_alloc_adapter<_Alloc, _Tp>::
+typed_alloc_adapter<_Tp, _Alloc>::
 reallocate(pointer __p, size_type __n)
 {
     if constexpr (has_reallocate<_Alloc>)
@@ -153,29 +199,29 @@ reallocate(pointer __p, size_type __n)
     }
 }
 
-template<typename _Alloc, typename _Tp>
+template<typename _Tp, typename _Alloc>
 template<typename... _Args>
 inline _Tp*
-typed_alloc_adapter<_Alloc, _Tp>::
+typed_alloc_adapter<_Tp, _Alloc>::
 construct(_Args&&... __args)
 {
     _Tp* __mem = this->allocate(sizeof(_Tp));
     return new (__mem) _Tp{std::forward<_Args&&>(__args)...};
 }
 
-template<typename _Alloc, typename _Tp>
+template<typename _Tp, typename _Alloc>
 void
-typed_alloc_adapter<_Alloc, _Tp>::
+typed_alloc_adapter<_Tp, _Alloc>::
 destroy(pointer __p) noexcept
 {
     __p->~_Tp();
     this->deallocate(__p);
 }
 
-template<typename _Alloc, typename _Tp>
+template<typename _Tp, typename _Alloc>
 template<typename... _Args>
 _Tp*
-typed_alloc_adapter<_Alloc, _Tp>::
+typed_alloc_adapter<_Tp, _Alloc>::
 reconstruct(pointer __p, _Args&&... __args)
 {
 #if POL_UNSAFE
@@ -186,6 +232,49 @@ reconstruct(pointer __p, _Args&&... __args)
     this->destroy(__p);
     return __tmp;
 #endif
+}
+
+template<typename _Tp, typename _Alloc, bool _Move, bool _Equal>
+std_alloc_adapter<_Tp, _Alloc, _Move, _Equal>::
+std_alloc_adapter(const std_alloc_adapter& __o) noexcept
+    : _Alloc(static_cast<_Alloc>(__o))
+{ }
+
+template<typename _Tp, typename _Alloc, bool _Move, bool _Equal>
+template<typename _Up>
+std_alloc_adapter<_Tp, _Alloc, _Move, _Equal>::
+std_alloc_adapter(const std_alloc_adapter<_Up, _Alloc, _Move, _Equal>& __o) noexcept
+    : _Alloc(static_cast<_Alloc>(__o))
+{ }
+
+template<typename _Tp, typename _Alloc, bool _Move, bool _Equal>
+_Tp*
+std_alloc_adapter<_Tp, _Alloc, _Move, _Equal>::
+allocate(size_t __n)
+{
+    return static_cast<_Tp*>(this->_Alloc::allocate(sizeof(_Tp) * __n));
+}
+
+template<typename _Tp, typename _Alloc, bool _Move, bool _Equal>
+void
+std_alloc_adapter<_Tp, _Alloc, _Move, _Equal>::
+deallocate(_Tp* __p, [[maybe_unused]] size_t __n)
+{
+    if constexpr (has_deallocate_1<_Alloc>)
+        return this->_Alloc::deallocate(static_cast<void*>(__p));
+    else // has_deallocate_2<_Alloc>
+        return this->_Alloc::deallocate(static_cast<void*>(__p), sizeof(_Tp) * __n);
+}
+
+template<typename _T1, typename _T2, typename _Alloc0, bool _Move0, bool _Equal0>
+bool
+operator == (const std_alloc_adapter<_T1, _Alloc0, _Move0, _Equal0>& __lhs,
+    const std_alloc_adapter<_T2, _Alloc0, _Move0, _Equal0>& __rhs)
+{
+    if constexpr (_Equal0)
+        return true;
+    else
+        return static_cast<_Alloc0>(__lhs) == static_cast<_Alloc0>(__rhs);
 }
 
 }

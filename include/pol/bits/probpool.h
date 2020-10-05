@@ -1,9 +1,6 @@
 #ifndef _POL_PROBPOOL_H
 #define _POL_PROBPOOL_H 1
 
-#include <random>
-#include <vector>
-
 namespace pol
 {
 
@@ -25,6 +22,16 @@ private:
     std::vector<_Tp> _M_data;
 };
 
+template<typename _Tp, typename _Up>
+struct __prp_data
+{
+    _Tp value;
+    _Up prob;
+
+    __prp_data(const _Tp& v, _Up p) : value(v), prob(p) {}
+    operator _Up() const { return prob; }
+};
+
 template<typename _Tp, typename _Up = uint64_t>
 class prq_pool
 {
@@ -33,14 +40,7 @@ public:
     using prob_type = _Up;
 
 private:
-    struct prq_data
-    {
-        _Tp value;
-        _Up prob;
-
-        prq_data(const _Tp& v, _Up p) : value(v), prob(p) {}
-        operator _Up() const { return prob; }
-    };
+    using prq_data = __prp_data<_Tp, _Up>;
 
 public:
     prq_pool();
@@ -63,21 +63,18 @@ public:
     using prob_type = _Up;
 
 private:
-    struct prf_data
-    {
-        _Tp value;
-        _Up prob;
-
-        prf_data(const _Tp& v, _Up p) : value(v), prob(p) {}
-        operator _Up() const { return prob; }
-    };
+    using prf_data = __prp_data<_Tp, _Up>;
 
 public:
     prf_pool();
 
     void insert(const value_type&, prob_type);
 
+    bool full() const;
+    explicit operator bool() const;
     void check() const;
+
+    void complete(const value_type&);
 
     value_type take();
 

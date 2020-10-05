@@ -34,9 +34,9 @@
 #ifndef _POLLIB_SEGMENT_TREE
 #define _POLLIB_SEGMENT_TREE 1
 
-#include <polaris/version>
+#include <pol/version>
 #include <functional>
-#include <polaris/bits/segtree.h>
-#include <polaris/bits/segtree.tcc>
+#include <pol/bits/segtree.h>
+#include <pol/bits/segtree.tcc>
 
 #endif /* _POLLIB_SEGMENT_TREE */

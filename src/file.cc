@@ -42,5 +42,5 @@ c_file(const std::ofstream& __f)
 }
 
 #else
-#error library extension required
+#error gnu library extension required
 #endif

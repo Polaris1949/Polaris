@@ -34,11 +34,11 @@
 #ifndef _POLLIB_TREE_ARRAY
 #define _POLLIB_TREE_ARRAY 1
 
-#include <polaris/version>
-#include <polaris/functional> // for pol::plus_eq, pol::max_f
-#include <polaris/type_traits> // for pol::false_v
+#include <pol/version>
+#include <pol/functional> // for pol::plus_eq, pol::max_f
+#include <pol/type_traits> // for pol::false_v
 #include <vector>
-#include <polaris/bits/treearr.h>
-#include <polaris/bits/treearr.tcc>
+#include <pol/bits/treearr.h>
+#include <pol/bits/treearr.tcc>
 
 #endif /* _POLLIB_TREE_ARRAY */

@@ -1,8 +1,6 @@
 #ifndef _POL_PROBPOOL_TCC
 #define _POL_PROBPOOL_TCC 1
 
-#include <algorithm>
-
 namespace pol
 {
 
@@ -73,12 +71,34 @@ insert(const value_type& __x, prob_type __p)
 }
 
 template<typename _Tp, typename _Up>
+inline bool
+prf_pool<_Tp, _Up>::
+full() const
+{ return this->_M_sum == prob_type(1.0); }
+
+template<typename _Tp, typename _Up>
+inline
+prf_pool<_Tp, _Up>::
+operator bool() const
+{ return this->full(); }
+
+template<typename _Tp, typename _Up>
 void
 prf_pool<_Tp, _Up>::
 check() const
 {
-    if (this->_M_sum != prob_type(1.0))
+    if (!this->full())
         throw std::runtime_error("prf_pool::check");
+}
+
+template<typename _Tp, typename _Up>
+void
+prf_pool<_Tp, _Up>::
+complete(const value_type& __x)
+{
+    if (this->full()) return;
+    this->_M_data.push_back(prf_data(__x, this->_M_sum));
+    this->_M_sum = 1.0;
 }
 
 template<typename _Tp, typename _Up>

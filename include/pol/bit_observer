@@ -1,4 +1,4 @@
-// Bit distribution observing -*- C++ -*-
+// Bit distribution observer -*- C++ -*-
 
 // Copyright (C) 1997-2017 Free Software Foundation, Inc.
 //
@@ -23,7 +23,7 @@
 // <http://www.gnu.org/licenses/>.
 
 /** @file      bit_observer
- *  @brief     Bit distribution observing
+ *  @brief     Bit distribution observer
  *  @author    Polaris Zhao
  *  @version   0.8.0
  *

@@ -39,12 +39,10 @@
 #if __has_include(<nlohmann/json.hpp>)
 #include <nlohmann/json.hpp>
 
-namespace pol
-{
-
-using namespace nlohmann;
-
-}
+#ifndef _POL_SHORTNS_NLO
+#define _POL_SHORTNS_NLO 1
+namespace nlo = nlohmann;
+#endif
 
 #else
 #error required library not found

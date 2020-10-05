@@ -1,4 +1,4 @@
-// Bitmask library -*- C++ -*-
+// Type adapters -*- C++ -*-
 
 // Copyright (C) 1997-2017 Free Software Foundation, Inc.
 //
@@ -22,25 +22,19 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
-/** @file     bitmask
- *  @brief    Bitmask library
+/** @file     type_adapter
+ *  @brief    Type adapters
  *  @author   Polaris Zhao
  *  @version  0.8.0
- *  @todo     This library is incompelete.
  *
  *  This is a Polaris C++ Library header.
 **/
 
-#ifndef _POLLIB_BITMASK
-#define _POLLIB_BITMASK 1
+#ifndef _POLLIB_TYPE_ADAPTER
+#define _POLLIB_TYPE_ADAPTER 1
 
 #include <pol/version>
-#include <vector>
-#include <string>
-#include <bitset>
-#include <pol/bits/wbmask.h>
-#include <pol/bits/wbmask.tcc>
-#include <pol/bits/bmask.h>
-#include <pol/bits/bmask.tcc>
+#include <pol/bits/type.h>
+#include <pol/bits/type.tcc>
 
-#endif /* _POLLIB_BITMASK */
+#endif /* _POLLIB_TYPE_ADAPTER */

@@ -4,6 +4,7 @@
 namespace pol
 {
 
+#if POL_OLD
 std::ostream&
 operator << (std::ostream& __out, const ftext& __x)
 {
@@ -19,23 +20,13 @@ operator << (std::ofstream& __out, const ftext& __x)
     fmt::print(__dev, __x._M_style, __x._M_text);
     return __out;
 }
-
-namespace __format
+#else
+std::ostream&
+operator << (std::ostream& __out, const ftext& __x)
 {
-std::string buffer;
-#if POL_DEPRECATED
-std::mutex mutex;
-#endif
+    __out << __x._M_text;
+    return __out;
 }
-
-#if POL_DEPRECATED
-void
-cfmt_lock()
-{ __format::mutex.lock(); }
-
-void
-cfmt_unlock()
-{ __format::mutex.unlock(); }
 #endif
 
 }

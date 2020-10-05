@@ -34,9 +34,9 @@
 #ifndef _POLLIB_DJSET
 #define _POLLIB_DJSET 1
 
-#include <polaris/version>
-#include <polaris/type>
-#include <polaris/contract>
+#include <pol/version>
+#include <pol/type>
+#include <pol/contract>
 
 namespace pol
 {
@@ -96,7 +96,7 @@ using djset64nr = seq_djset<uint64_t, void>;
 
 }
 
-#include <polaris/bits/djset.h>
-#include <polaris/bits/djset.tcc>
+#include <pol/bits/djset.h>
+#include <pol/bits/djset.tcc>
 
 #endif /* _POLLIB_DJSET */

@@ -1,7 +1,7 @@
 #ifndef _POL_UTILITY_H
 #define _POL_UTILITY_H 1
 
-namespace polaris
+namespace pol
 {
 
 template<typename _Tp, typename =
